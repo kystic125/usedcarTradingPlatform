@@ -24,4 +24,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     // 소셜 가입 여부 확인
     Optional<User> findByProviderAndProviderId(Provider provider, String providerId);
+
+    Optional<User> findByProviderId(String providerId);
 }

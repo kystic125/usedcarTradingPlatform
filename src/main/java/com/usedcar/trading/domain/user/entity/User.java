@@ -38,6 +38,7 @@ public class User extends BaseEntity {
     private String phone;
 
     @Enumerated(EnumType.STRING)
+    @Builder.Default
     private Provider provider = Provider.LOCAL;
 
     private String providerId;
@@ -46,7 +47,27 @@ public class User extends BaseEntity {
     private Role role;
 
     @Enumerated(EnumType.STRING)
+    @Builder.Default
     private UserStatus userStatus = UserStatus.ACTIVE;
+
+    public void upgradeToOwner() {
+        this.role = Role.COMPANY_OWNER;
+    }
+
+    public void linkSocial(Provider provider, String providerId) {
+        //this.provider = provider;
+        this.providerId = providerId;
+    }
+
+    public void unlinkSocial() {
+        this.provider = Provider.LOCAL;
+        this.providerId = null;
+    }
+
+    public void updateInfo(String email, String phone) {
+        this.email = email;
+        this.phone = phone;
+    }
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Favorite> favoriteList = new ArrayList<>();

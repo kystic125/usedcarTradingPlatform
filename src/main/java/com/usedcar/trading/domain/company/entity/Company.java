@@ -42,18 +42,24 @@ public class Company extends BaseEntity {
     private String bankAccount;
 
     @Enumerated(EnumType.STRING)
+    @Builder.Default
     private CompanyStatus companyStatus = CompanyStatus.ACTIVE;
 
+    @Builder.Default
     private BigDecimal averageRating = new BigDecimal("0.0");
 
+    @Builder.Default
     private int totalReviews = 0;
 
+    @Builder.Default
     private int totalSales = 0;
 
     // int 형으로 관리할건지 확인하기
+    @Builder.Default
     private int trustScore = 0;
 
     @OneToMany(mappedBy = "company")
+    @Builder.Default
     private List<Employee> employees = new ArrayList<>();
 
     // 연관관계 편의 메서드
@@ -86,11 +92,14 @@ public class Company extends BaseEntity {
     }
 
     @OneToMany(mappedBy = "company")
+    @Builder.Default
     private List<Transaction> transactions = new ArrayList<>();
 
     @OneToMany(mappedBy = "company")
+    @Builder.Default
     private List<Settlement> settlements = new ArrayList<>();
 
     @OneToMany(mappedBy = "company")
+    @Builder.Default
     private List<Review> reviews = new ArrayList<>();
 }

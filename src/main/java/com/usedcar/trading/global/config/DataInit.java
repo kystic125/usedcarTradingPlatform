@@ -1,0 +1,96 @@
+package com.usedcar.trading.global.config;
+
+import com.usedcar.trading.domain.company.entity.Company;
+import com.usedcar.trading.domain.company.entity.CompanyStatus;
+import com.usedcar.trading.domain.company.repository.CompanyRepository;
+import com.usedcar.trading.domain.employee.entity.Employee;
+import com.usedcar.trading.domain.employee.entity.EmployeePosition;
+import com.usedcar.trading.domain.employee.repository.EmployeeRepository;
+import com.usedcar.trading.domain.user.entity.Provider;
+import com.usedcar.trading.domain.user.entity.Role;
+import com.usedcar.trading.domain.user.entity.User;
+import com.usedcar.trading.domain.user.entity.UserStatus;
+import com.usedcar.trading.domain.user.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Component;
+
+@Component
+@RequiredArgsConstructor
+public class DataInit implements CommandLineRunner {
+
+    private final UserRepository userRepository;
+    private final CompanyRepository companyRepository;
+    private final EmployeeRepository employeeRepository;
+    private final PasswordEncoder passwordEncoder;
+
+    @Override
+    public void run(String... args) throws Exception {
+
+        // 1. 관리자 (ADMIN) 계정 생성
+        if (!userRepository.existsByEmail("admin@smartpick.com")) {
+            userRepository.save(User.builder()
+                    .email("admin@smartpick.com")
+                    .password(passwordEncoder.encode("admin1234")) // 비번: admin1234
+                    .name("총관리자")
+                    .phone("010-0000-0000")
+                    .role(Role.ADMIN) // [핵심] ADMIN 권한
+                    .provider(Provider.LOCAL)
+                    .userStatus(UserStatus.ACTIVE)
+                    .build());
+            System.out.println("관리자 계정 생성 완료: admin@smartpick.com / admin1234");
+        }
+
+        // 2. 테스트용 사장님 & 회사 & 직원 세트 생성
+        if (!userRepository.existsByEmail("boss@test.com")) {
+            // 사장님
+            User boss = userRepository.save(User.builder()
+                    .email("boss@test.com")
+                    .password(passwordEncoder.encode("1234"))
+                    .name("김사장")
+                    .phone("010-1111-1111")
+                    .role(Role.COMPANY_OWNER)
+                    .provider(Provider.LOCAL)
+                    .userStatus(UserStatus.ACTIVE)
+                    .build());
+
+            // 회사
+            Company company = companyRepository.save(Company.builder()
+                    .owner(boss)
+                    .businessName("스마트 중고차")
+                    .businessNumber("123-45-67890")
+                    .address("서울시 강남구")
+                    .companyStatus(CompanyStatus.ACTIVE)
+                    .build());
+
+            employeeRepository.save(Employee.builder()
+                    .user(boss)
+                    .company(company)
+                    .employeePosition(EmployeePosition.LEADER)
+                    .isActive(true)
+                    .build());
+
+            // 직원 (로그인용)
+            User staffUser = userRepository.save(User.builder()
+                    .email("staff@test.com")
+                    .password(passwordEncoder.encode("1234"))
+                    .name("이직원")
+                    .phone("010-2222-2222")
+                    .role(Role.COMPANY_EMPLOYEE)
+                    .provider(Provider.LOCAL)
+                    .userStatus(UserStatus.ACTIVE)
+                    .build());
+
+            // 직원 (소속 연결)
+            employeeRepository.save(Employee.builder()
+                    .user(staffUser)
+                    .company(company)
+                    .employeePosition(EmployeePosition.DEALER)
+                    .isActive(true)
+                    .build());
+
+            System.out.println("테스트용 사장/직원 계정 생성 완료");
+        }
+    }
+}
