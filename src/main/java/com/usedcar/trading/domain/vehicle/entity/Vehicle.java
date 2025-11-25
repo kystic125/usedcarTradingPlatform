@@ -118,8 +118,14 @@ public class Vehicle extends BaseEntity {
         this.registeredBy = employee;
     }
 
+    public void approve(User admin) {
+        this.vehicleStatus = VehicleStatus.SALE;
+        this.approvedAt = LocalDateTime.now();
+        this.approvedBy = admin;
+    }
+
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "approved_by", nullable = false)
+    @JoinColumn(name = "approved_by") //, nullable = false)
     private User approvedBy;
 
     @OneToMany(mappedBy = "vehicle")

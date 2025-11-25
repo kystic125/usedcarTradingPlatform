@@ -11,10 +11,17 @@ import com.usedcar.trading.domain.user.entity.Role;
 import com.usedcar.trading.domain.user.entity.User;
 import com.usedcar.trading.domain.user.entity.UserStatus;
 import com.usedcar.trading.domain.user.repository.UserRepository;
+import com.usedcar.trading.domain.vehicle.entity.FuelType;
+import com.usedcar.trading.domain.vehicle.entity.Transmission;
+import com.usedcar.trading.domain.vehicle.entity.Vehicle;
+import com.usedcar.trading.domain.vehicle.entity.VehicleStatus;
+import com.usedcar.trading.domain.vehicle.repository.VehicleRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
+
+import java.math.BigDecimal;
 
 @Component
 @RequiredArgsConstructor
@@ -23,6 +30,7 @@ public class DataInit implements CommandLineRunner {
     private final UserRepository userRepository;
     private final CompanyRepository companyRepository;
     private final EmployeeRepository employeeRepository;
+    private final VehicleRepository vehicleRepository;
     private final PasswordEncoder passwordEncoder;
 
     @Override
@@ -91,6 +99,35 @@ public class DataInit implements CommandLineRunner {
                     .build());
 
             System.out.println("테스트용 사장/직원 계정 생성 완료");
+        }
+
+        // 3. 관리자 테스트용 가짜 매물 생성
+        if (vehicleRepository.count() == 0) {
+
+            User staffUser = userRepository.findByEmail("staff@test.com").orElse(null);
+
+            if (staffUser != null) {
+                Employee dealer = employeeRepository.findByUserUserId(staffUser.getUserId()).orElseThrow();
+                Company company = dealer.getCompany();
+
+                Vehicle pendingCar = Vehicle.builder()
+                        .company(company)
+                        .registeredBy(dealer)
+                        .brand("현대")
+                        .model("그랜저")
+                        .modelYear(2024)
+                        .mileage(5000)
+                        .fuelType(FuelType.GASOLINE)
+                        .transmission(Transmission.AUTO)
+                        .price(new BigDecimal("35000000"))
+                        .vehicleStatus(VehicleStatus.PENDING)
+                        .color("화이트")
+                        .description("관리자가 승인해야 하는 테스트 차량입니다.")
+                        .build();
+
+                vehicleRepository.save(pendingCar);
+                System.out.println("테스트용 '승인 대기(PENDING)' 차량 생성 완료");
+            }
         }
     }
 }
