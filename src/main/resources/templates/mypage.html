@@ -1,127 +1,230 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
 <head>
     <meta charset="UTF-8">
-    <title>마이페이지 - 스마트픽</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MyPage - SmartPick</title>
+
+    <link rel="apple-touch-icon" sizes="180x180" th:href="@{/images/favicon/apple-touch-icon.png}">
+    <link rel="icon" type="image/png" sizes="32x32" th:href="@{/images/favicon/favicon-32x32.png}">
+    <link rel="icon" type="image/png" sizes="16x16" th:href="@{/images/favicon/favicon-16x16.png}">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Antonio:wght@100..700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" th:href="@{/libs/owl.carousel/dist/assets/owl.carousel.min.css}">
+    <link rel="stylesheet" th:href="@{/libs/owl.carousel/dist/assets/owl.theme.default.min.css}">
+    <link rel="stylesheet" th:href="@{/libs/simplebar/dist/simplebar.min.css}">
+    <noscript>
+        <style>
+            .simplebar-content-wrapper { scrollbar-width: auto; -ms-overflow-style: auto; }
+            .simplebar-content-wrapper::-webkit-scrollbar, .simplebar-hide-scrollbar::-webkit-scrollbar { display: initial; width: initial; height: initial; }
+        </style>
+    </noscript>
+
+    <link rel="stylesheet" th:href="@{/libs/jarallax/dist/jarallax.min.css}">
+    <link rel="stylesheet" th:href="@{/css/style.min.css}">
+    <link id="templateColorScheme" rel="stylesheet" th:href="@{/css/color-schemes/tc_red.css}">
+    <link rel="stylesheet" th:href="@{/css/preloader.css}">
+
+    <script th:src="@{/js/preloader.js}"></script>
 </head>
-<body class="bg-light">
 
-<nav class="navbar navbar-dark bg-dark mb-4">
-    <div class="container">
-        <a class="navbar-brand fw-bold" href="/">SmartPick 🚗</a>
-        <a href="/logout" class="btn btn-danger btn-sm">로그아웃</a>
-    </div>
-</nav>
+<body>
 
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <h2 class="mb-4 fw-bold text-center">마이페이지</h2>
-
-            <div class="card shadow-sm mb-4">
-                <div class="card-header bg-white fw-bold d-flex justify-content-between align-items-center">
-                    <span>👤 내 정보</span>
-                    <a href="/mypage/edit" class="btn btn-sm btn-outline-primary">정보 수정</a>
-                </div>
-                <div class="card-body">
-                    <div class="row mb-3">
-                        <label class="col-sm-3 col-form-label text-secondary">이름</label>
-                        <div class="col-sm-9">
-                            <input type="text" readonly class="form-control-plaintext fw-bold" th:value="${user.name}">
-                        </div>
-                    </div>
-                    <div class="row mb-3">
-                        <label class="col-sm-3 col-form-label text-secondary">이메일</label>
-                        <div class="col-sm-9">
-                            <input type="text" readonly class="form-control-plaintext" th:value="${user.email}">
-                        </div>
-                    </div>
-                    <div class="row mb-3">
-                        <label class="col-sm-3 col-form-label text-secondary">전화번호</label>
-                        <div class="col-sm-9">
-                            <input type="text" readonly class="form-control-plaintext" th:value="${user.phone}">
-                        </div>
-                    </div>
-                    <div class="row mb-3">
-                        <label class="col-sm-3 col-form-label text-secondary">회원 유형</label>
-                        <div class="col-sm-9">
-                            <span th:if="${user.role.name() == 'CUSTOMER'}" class="badge bg-primary">일반 회원 (구매자)</span>
-                            <span th:if="${user.role.name() == 'COMPANY_OWNER'}" class="badge bg-dark">기업 회원 (대표)</span>
-                            <span th:if="${user.role.name() == 'COMPANY_EMPLOYEE'}" class="badge bg-warning text-dark">기업 회원 (직원)</span>
-                            <span th:if="${user.role.name() == 'ADMIN'}" class="badge bg-danger">관리자</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="card shadow-sm mb-4 border-primary" th:if="${user.role.name() == 'CUSTOMER'}">
-                <div class="card-body d-flex justify-content-between align-items-center">
-                    <div>
-                        <h5 class="fw-bold mb-1">💼 사장님이신가요?</h5>
-                        <p class="text-muted mb-0 small">업체 정보를 등록하고 차량 판매를 시작해보세요.</p>
-                    </div>
-                    <a href="/company/register" class="btn btn-primary fw-bold">판매자<br></br>등록하기</a>
-                </div>
-            </div>
-
-            <div class="card shadow-sm mb-4" th:if="${user.provider.name() == 'LOCAL' and user.role.name() != 'ADMIN'}">
-                <div class="card-header bg-white fw-bold">
-                    🔗 계정 연동
-                </div>
-                <div class="card-body d-flex justify-content-between align-items-center">
-
-                    <div th:if="${user.providerId != null}" class="d-flex w-100 justify-content-between align-items-center">
-                        <div>
-                            <h6 class="fw-bold text-success mb-1">✅ 카카오 계정과 연결됨</h6>
-                            <p class="text-muted mb-0 small">카카오톡 아이디로 로그인할 수 있습니다.</p>
-                        </div>
-                        <form action="/auth/unlink" method="post" onsubmit="return confirm('연동을 해제하시겠습니까?');">
-                            <button type="submit" class="btn btn-outline-secondary btn-sm">연동 해제</button>
-                        </form>
-                    </div>
-
-                    <div th:if="${user.providerId == null}" class="d-flex w-100 justify-content-between align-items-center">
-                        <div>
-                            <h6 class="fw-bold text-dark mb-1">카카오 계정 연결하기</h6>
-                            <p class="text-muted mb-0 small">연결하면 카카오톡으로도 로그인할 수 있습니다.</p>
-                        </div>
-                        <a href="/oauth2/authorization/kakao" class="btn btn-warning text-dark fw-bold btn-sm">
-                            <img src="https://developers.kakao.com/assets/img/about/logos/kakaolink/kakaolink_btn_small.png" width="20"/>
-                            연동하기
-                        </a>
-                    </div>
-
-                </div>
-            </div>
-
-            <div class="card shadow-sm mb-4 border-warning" sec:authorize="hasAnyRole('COMPANY_OWNER', 'COMPANY_EMPLOYEE')">
-                <div class="card-header bg-warning bg-opacity-10 fw-bold text-dark">
-                    🏢 판매자 메뉴
-                </div>
-                <div class="card-body">
-                    <p class="card-text">판매 차량을 등록하거나 관리할 수 있습니다.</p>
-                    <div class="d-grid gap-2 d-md-block">
-                        <a href="/company/sales" class="btn btn-warning">내 차량 관리</a>
-                        <a href="/vehicles/register" class="btn btn-outline-dark">차량 등록하기</a>
-                        <a href="/company/employees" class="btn btn-outline-secondary" sec:authorize="hasRole('COMPANY_OWNER')">직원 관리</a>
-                    </div>
-                </div>
-            </div>
-
-            <div class="text-center mt-4 d-flex justify-content-center">
-                <a href="/" class="btn btn-secondary me-2">홈으로 돌아가기</a>
-
-                <form th:unless="${user.role.name() == 'COMPANY_EMPLOYEE' or user.role.name() == 'ADMIN'}"
-                      action="/auth/withdraw" method="post"
-                      onsubmit="return confirm('정말로 탈퇴하시겠습니까? 모든 정보가 삭제됩니다.');">
-                    <button type="submit" class="btn btn-outline-danger">회원 탈퇴</button>
-                </form>
-            </div>
+<div class="preloader">
+    <div class="loader">
+        <div class="loader-inner ball-scale-multiple">
+            <div></div>
+            <div></div>
+            <div></div>
         </div>
     </div>
 </div>
+
+<header th:replace="~{fragments/header :: main-header}"></header>
+
+<main>
+    <div class="container py-5 mb-md-4">
+        <div class="row">
+
+            <section class="col-12">
+
+                <div class="bg-body-tertiary border rounded p-2 mb-4">
+                    <ul class="nav flex-wrap border-transparent">
+                        <li class="nav-item my-1">
+                            <a class="btn btn-sm d-flex align-items-center nav-link px-3 px-lg-4 mx-1 bg-body text-body-emphasis text-primary custom-color border border-light-subtle" href="/mypage">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-layout-dashboard me-2"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 4h4a1 1 0 0 1 1 1v6a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1v-6a1 1 0 0 1 1 -1" /><path d="M5 16h4a1 1 0 0 1 1 1v2a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1v-2a1 1 0 0 1 1 -1" /><path d="M15 12h4a1 1 0 0 1 1 1v6a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1v-6a1 1 0 0 1 1 -1" /><path d="M15 4h4a1 1 0 0 1 1 1v2a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1v-2a1 1 0 0 1 1 -1" /></svg>
+                                Dashboard
+                            </a>
+                        </li>
+
+                        <li class="nav-item my-1" sec:authorize="hasAnyRole('COMPANY_OWNER', 'COMPANY_EMPLOYEE')">
+                            <a class="btn btn-sm d-flex align-items-center nav-link px-3 px-lg-4 mx-1 bg-body-tertiary text-body-secondary fs-6" href="/company/sales">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-list-details me-2"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M13 5h8" /><path d="M13 9h5" /><path d="M13 15h8" /><path d="M13 19h5" /><path d="M3 4m0 1a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v4a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1z" /><path d="M3 14m0 1a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v4a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1z" /></svg>
+                                Listings
+                            </a>
+                        </li>
+
+                        <li class="nav-item my-1" sec:authorize="hasRole('COMPANY_OWNER')">
+                            <a class="btn btn-sm d-flex align-items-center nav-link px-3 px-lg-4 mx-1 bg-body-tertiary text-body-secondary fs-6" href="/company/employees">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-users me-2"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 7m-4 0a4 4 0 1 0 8 0a4 4 0 1 0 -8 0" /><path d="M3 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" /><path d="M16 3.13a4 4 0 0 1 0 7.75" /><path d="M21 21v-2a4 4 0 0 0 -3 -3.85" /></svg>
+                                Employees
+                            </a>
+                        </li>
+
+                        <li class="nav-item my-1" th:if="${user.role.name() == 'CUSTOMER'}">
+                            <a class="btn btn-sm d-flex align-items-center nav-link px-3 px-lg-4 mx-1 bg-body-tertiary text-body-secondary fs-6" href="#">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-heart-check me-2"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M19.5 12.572l-3 2.928m-5.5 3.5a8916.99 8916.99 0 0 0 -6.5 -6.428a5 5 0 1 1 7.5 -6.566a5 5 0 1 1 7.5 6.572" /><path d="M15 19l2 2l4 -4" /></svg>
+                                Favorites
+                            </a>
+                        </li>
+
+                        <li class="nav-item my-1">
+                            <a class="btn btn-sm d-flex align-items-center nav-link px-3 px-lg-4 mx-1 bg-body-tertiary text-body-secondary fs-6" href="/mypage/settings/edit">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-layout-dashboard me-2"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M10.325 4.317c.426 -1.756 2.924 -1.756 3.35 0a1.724 1.724 0 0 0 2.573 1.066c1.543 -.94 3.31 .826 2.37 2.37a1.724 1.724 0 0 0 1.065 2.572c1.756 .426 1.756 2.924 0 3.35a1.724 1.724 0 0 0 -1.066 2.573c.94 1.543 -.826 3.31 -2.37 2.37a1.724 1.724 0 0 0 -2.572 1.065c-.426 1.756 -2.924 1.756 -3.35 0a1.724 1.724 0 0 0 -2.573 -1.066c-1.543 .94 -3.31 -.826 -2.37 -2.37a1.724 1.724 0 0 0 -1.065 -2.572c-1.756 -.426 -1.756 -2.924 0 -3.35a1.724 1.724 0 0 0 1.066 -2.573c-.94 -1.543 .826 -3.31 2.37 -2.37c1 .608 2.296 .07 2.572 -1.065z" /><path d="M9 12a3 3 0 1 0 6 0a3 3 0 0 0 -6 0" /></svg>
+                                Setting
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="row mt-2">
+
+                    <div class="col-lg-6">
+                        <div class="card border mb-4">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="d-flex">
+                                            <div class="me-3" style="width:114px">
+                                                <img th:src="@{/images/team/06.jpg}" class="img-fluid rounded-1 lazy" alt="...">
+                                            </div>
+                                            <div class="flex-grow-1">
+                                                <h5 class="mb-1">Hello,</h5>
+                                                <h4 class="mb-3 h3" th:text="${user.name}">Martin Jones</h4>
+
+                                                <span class="badge rounded-pill text-body-emphasis fw-medium border d-inline-flex align-items-center text-uppercase bg-body">
+                                                        <svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" width="18px" height="18px" class="me-1" viewBox="0 0 122.88 116.87"><defs><style>.cls-1{fill:#10a64a;fill-rule:evenodd;}.cls-2{fill:#fff;}</style></defs><title>verified-symbol</title><polygon class="cls-1" points="61.37 8.24 80.43 0 90.88 17.79 111.15 22.32 109.15 42.85 122.88 58.43 109.2 73.87 111.15 94.55 91 99 80.43 116.87 61.51 108.62 42.45 116.87 32 99.08 11.73 94.55 13.73 74.01 0 58.43 13.68 42.99 11.73 22.32 31.88 17.87 42.45 0 61.37 8.24 61.37 8.24"></polygon><path class="cls-2" d="M37.92,65c-6.07-6.53,3.25-16.26,10-10.1,2.38,2.17,5.84,5.34,8.24,7.49L74.66,39.66C81.1,33,91.27,42.78,84.91,49.48L61.67,77.2a7.13,7.13,0,0,1-9.9.44C47.83,73.89,42.05,68.5,37.92,65Z"></path></svg>
+                                                        <span th:text="${user.role.name()}">MEMBER</span>
+                                                    </span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-auto text-end">
+                                        <div class="dropdown">
+                                            <button id="dash-dropdown-user-widget" class="btn btn-secondary btn-sm bg-body border-0 text-body-secondary" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-dots"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 12m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"/><path d="M12 12m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"/><path d="M19 12m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"/></svg>
+                                            </button>
+                                            <div class="dropdown-menu dropdown-menu-end p-0 overflow-hidden" aria-labelledby="dash-dropdown-user-widget">
+                                                <a class="dropdown-item d-flex align-items-center text-body-secondary custom-color" href="/mypage/settings/edit">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-edit me-2"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-1"/><path d="M20.385 6.585a2.1 2.1 0 0 0 -2.97 -2.97l-8.415 8.385v3h3l8.385 -8.415z"/><path d="M16 5l3 3"/></svg>
+                                                    Edit Profile
+                                                </a>
+                                                <div class="dropdown-divider m-0"></div>
+                                                <a class="dropdown-item d-flex align-items-center text-danger" href="/mypage/settings/delete" onclick="confirmWithdraw(); return false;"
+                                                   th:unless="${user.role.name() == 'COMPANY_EMPLOYEE' or user.role.name() == 'ADMIN'}">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-user-x me-2"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0"/><path d="M6 21v-2a4 4 0 0 1 4 -4h3.5"/><path d="M22 22l-5 -5"/><path d="M17 22l5 -5"/></svg>
+                                                    Delete Account
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <ul class="list-inline py-3 border-bottom">
+                                    <li class="list-inline-item mb-sm-0 mb-2 me-sm-3">
+                                        <a href="#" class="link-body-emphasis text-decoration-none">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-mail me-1 text-body-secondary" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 7a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v10a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-10z"/><path d="M3 7l9 6l9 -6"/></svg>
+                                            <span th:text="${user.email}">email</span>
+                                        </a>
+                                    </li>
+                                    <li class="list-inline-item mb-sm-0 mb-2">
+                                        <a href="#" class="link-body-emphasis text-decoration-none">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-phone me-1 text-body-secondary" width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 4h4l2 5l-2.5 1.5a11 11 0 0 0 5 5l1.5 -2.5l5 2v4a2 2 0 0 1 -2 2a16 16 0 0 1 -15 -15a2 2 0 0 1 2 -2"/></svg>
+                                            <span th:text="${user.phone}">phone</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-6">
+                        <div class="dashboard-stats">
+
+                            <th:block sec:authorize="hasAnyRole('COMPANY_OWNER', 'COMPANY_EMPLOYEE')">
+                                <div class="row g-3 mb-4">
+                                    <div class="col-sm-6 col-lg-6">
+                                        <div class="card border bg-light-subtle">
+                                            <div class="card-body text-center">
+                                                <div class="mb-3 text-primary custom-color"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l11 0" /><path d="M9 12l11 0" /><path d="M9 18l11 0" /><path d="M5 6l0 .01" /><path d="M5 12l0 .01" /><path d="M5 18l0 .01" /></svg></div>
+                                                <h3 class="fs-6 fw-bold mt-0 mb-2 custom-color">0</h3>
+                                                <p class="text-body-secondary mb-0">Active Listings</p>
+                                            </div>
+                                            <a href="/company/sales" class="stretched-link"></a>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6 col-lg-6">
+                                        <div class="card border bg-light-subtle">
+                                            <div class="card-body text-center">
+                                                <div class="mb-3 text-warning custom-color"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 17.75l-6.172 3.245l1.179 -6.873l-5 -4.867l6.9 -1l3.086 -6.253l3.086 6.253l6.9 1l-5 4.867l1.179 6.873z" /></svg></div>
+                                                <h3 class="fs-6 fw-bold mt-0 mb-2 custom-color">0.0</h3>
+                                                <p class="text-body-secondary mb-0">Average Rating</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </th:block>
+
+                            <th:block th:if="${user.role.name() == 'CUSTOMER'}">
+                                <div class="row g-3 mb-4">
+                                    <div class="col-sm-6 col-lg-6">
+                                        <div class="card border bg-light-subtle">
+                                            <div class="card-body text-center">
+                                                <div class="mb-3 text-danger custom-color"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19.5 12.572l-3 2.928m-5.5 3.5a8916.99 8916.99 0 0 0 -6.5 -6.428a5 5 0 1 1 7.5 -6.566a5 5 0 1 1 7.5 6.572" /></svg></div>
+                                                <h3 class="fs-6 fw-bold mt-0 mb-2 custom-color">0</h3>
+                                                <p class="text-body-secondary mb-0">Favorites</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6 col-lg-6">
+                                        <div class="card border bg-light-subtle">
+                                            <div class="card-body text-center">
+                                                <div class="mb-3 text-info custom-color"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 17.75l-6.172 3.245l1.179 -6.873l-5 -4.867l6.9 -1l3.086 -6.253l3.086 6.253l6.9 1l-5 4.867l1.179 6.873z" /></svg></div>
+                                                <h3 class="fs-6 fw-bold mt-0 mb-2 custom-color">0</h3>
+                                                <p class="text-body-secondary mb-0">Reviews Written</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </th:block>
+
+                        </div>
+                    </div>
+                </div>
+
+            </section>
+        </div>
+    </div>
+</main>
+
+<footer th:replace="~{fragments/footer :: main-footer}"></footer>
+
+<script th:src="@{/libs/jquery/dist/jquery.min.js}"></script>
+<script th:src="@{/libs/jquery-lazy/jquery.lazy.min.js}"></script>
+<script th:src="@{/libs/simplebar/dist/simplebar.min.js}"></script>
+<script th:src="@{/libs/bootstrap/dist/js/bootstrap.bundle.min.js}"></script>
+<script th:src="@{/libs/jarallax/dist/jarallax.min.js}"></script>
+<script th:src="@{/libs/fly-to/dist/js/fly-to.min.js}"></script>
+<script th:src="@{/js/script.min.js}"></script>
 
 </body>
 </html>

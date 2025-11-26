@@ -67,11 +67,32 @@ public class MypageController {
     }
 
     // 1. 정보 수정 페이지 보여주기
-    @GetMapping("/mypage/edit")
+    @GetMapping("/mypage/settings/edit")
     public String editPage(Model model, @AuthenticationPrincipal Object principal) {
         User user = findUser(principal);
         model.addAttribute("user", user);
-        return "user-edit";
+        return "user-edit-profile";
+    }
+
+    @GetMapping("/mypage/settings/social")
+    public String settingsSocial(Model model, @AuthenticationPrincipal Object principal) {
+        User user = findUser(principal);
+        model.addAttribute("user", user);
+        return "user-edit-social";
+    }
+
+    @GetMapping("/mypage/settings/dealer")
+    public String settingsDealer(Model model, @AuthenticationPrincipal Object principal) {
+        User user = findUser(principal);
+        model.addAttribute("user", user);
+        return "user-edit-dealer";
+    }
+
+    @GetMapping("/mypage/settings/delete")
+    public String settingsDelete(Model model, @AuthenticationPrincipal Object principal) {
+        User user = findUser(principal);
+        model.addAttribute("user", user);
+        return "user-edit-delete";
     }
 
     // 2. 정보 수정 처리
@@ -88,7 +109,7 @@ public class MypageController {
         try {
             userService.updateUserInfo(user.getUserId(), email, phone);
         } catch (IllegalArgumentException e) {
-            return "redirect:/mypage/edit?error=" + e.getMessage();
+            return "redirect:/mypage/settings/edit?error=" + e.getMessage();
         }
 
         if (isEmailChanged) {

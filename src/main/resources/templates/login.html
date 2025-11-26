@@ -1,40 +1,129 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="kr" xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
-    <title>로그인 - 스마트픽</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - SmartPick</title>
+
+    <link rel="apple-touch-icon" sizes="180x180" th:href="@{/images/favicon/apple-touch-icon.png}">
+    <link rel="icon" type="image/png" sizes="32x32" th:href="@{/images/favicon/favicon-32x32.png}">
+    <link rel="icon" type="image/png" sizes="16x16" th:href="@{/images/favicon/favicon-16x16.png}">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Antonio:wght@100..700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" th:href="@{/libs/simplebar/dist/simplebar.min.css}">
+    <noscript>
+        <style>
+            .simplebar-content-wrapper { scrollbar-width: auto; -ms-overflow-style: auto; }
+            .simplebar-content-wrapper::-webkit-scrollbar, .simplebar-hide-scrollbar::-webkit-scrollbar { display: initial; width: initial; height: initial; }
+        </style>
+    </noscript>
+
+    <link rel="stylesheet" th:href="@{/libs/jarallax/dist/jarallax.min.css}">
+    <link rel="stylesheet" th:href="@{/css/style.min.css}">
+    <link id="templateColorScheme" rel="stylesheet" th:href="@{/css/color-schemes/tc_red.css}">
+    <link rel="stylesheet" th:href="@{/css/preloader.css}">
+
+    <script th:src="@{/js/preloader.js}"></script>
 </head>
-<body class="bg-light">
-<div class="container mt-5" style="max-width: 400px;">
-    <h2 class="text-center mb-4">로그인</h2>
 
-    <form action="/login" method="post" class="card p-4 shadow-sm">
-        <div th:if="${param.error}" class="alert alert-danger">
-            이메일 또는 비밀번호가 틀렸습니다.
+<body>
+
+<div class="preloader">
+    <div class="loader">
+        <div class="loader-inner ball-scale-multiple">
+            <div></div>
+            <div></div>
+            <div></div>
         </div>
-
-        <div class="mb-3">
-            <label class="form-label">이메일</label>
-            <input type="email" name="email" class="form-control" placeholder="name@example.com" required>
-        </div>
-        <div class="mb-3">
-            <label class="form-label">비밀번호</label>
-            <input type="password" name="password" class="form-control" required>
-        </div>
-        <button type="submit" class="btn btn-primary w-100">로그인</button>
-    </form>
-
-    <div class="text-center my-3">또는</div>
-
-    <a href="/oauth2/authorization/kakao" class="btn btn-warning w-100 text-dark fw-bold">
-        카카오 로그인
-    </a>
-
-    <div class="text-center mt-3">
-        <a href="/signup">계정이 없으신가요? 회원가입</a> | <a href="/">홈으로</a>
     </div>
 </div>
+
+<header th:replace="~{fragments/header :: main-header}"></header>
+
+<div class="breadcrumb-style-2 position-relative z-1 py-1" style="--bs-bg-opacity: 0.9">
+    <div class="container d-lg-flex position-relative z-1 justify-content-between align-items-center py-2 py-lg-3">
+        <div class="order-lg-1 pe-lg-4 text-center text-lg-start">
+            <h1 class="h3 mb-3 mb-lg-0">Login</h1>
+        </div>
+        <div class="order-lg-2 mb-0">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb flex-lg-nowrap justify-content-center justify-content-lg-start m-0 fs-sm">
+                    <li class="breadcrumb-item">
+                        <a class="link-body-emphasis text-nowrap link-offset-2 link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-50-hover" href="./index.html">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-home mt-n1-sm me-1" width="16" height="16" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                <path d="M5 12l-2 0l9 -9l9 9l-2 0"></path>
+                                <path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7"></path>
+                                <path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6"></path>
+                            </svg>Home
+                        </a>
+                    </li>
+                    <li class="breadcrumb-item text-nowrap active" aria-current="page">Login</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+</div>
+<main>
+    <div class="bg-body-tertiary py-5">
+        <div class="container py-5 p-0">
+            <div class="row py-5">
+                <div class="col-lg-4 col-md-6 col-sm-8 col-10 bg-body p-4 rounded shadow-sm mx-auto">
+
+                    <form id="login-form" action="/login" method="post">
+
+                        <div th:if="${param.error}" class="alert alert-danger text-center p-2 small mb-3">
+                            이메일 또는 비밀번호가 일치하지 않습니다.
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="user-name" class="form-label fw-bold">Email</label>
+                            <input type="text" class="form-control custom-color" id="user-name" name="email" placeholder="name@example.com" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="user-password" class="form-label fw-bold">Password</label>
+                            <input type="password" class="form-control custom-color" id="user-password" name="password" required>
+                        </div>
+                        <div class="mb-3 d-flex justify-content-between">
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input custom-color" id="login-remember" name="login-remember">
+                                <label class="form-check-label" for="login-remember">Remember Me</label>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <button type="submit" class="btn btn-success w-100 text-uppercase fw-semibold custom-color color-override">Login</button>
+
+                            <span class="d-block text-center fs-5 fw-bold my-3">OR</span>
+
+                            <div class="row row-cols-1 g-3"> <div>
+                                <a href="/oauth2/authorization/kakao" class="btn btn-warning w-100 d-flex justify-content-center align-items-center text-uppercase fw-semibold fs-sm py-2 text-dark">
+                                    <img th:src="@{/images/kakao_logo.png}" width="20" height="20" class="me-2" onerror="this.style.display='none'"/>
+                                    Kakao Login
+                                </a>
+                            </div>
+                            </div>
+                        </div>
+                    </form>
+                    <div class="mb-3 text-center">
+                        <p class="mb-0 mt-3">Don't have an account ? <a class="link-body-emphasis link-offset-2 link-underline-opacity-25 link-underline-opacity-75-hover fw-bold" th:href="@{/signup}">Sign Up</a>
+                        </p>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+</main>
+
+<footer th:replace="~{fragments/footer :: main-footer}"></footer>
 
 <div id="loadingOverlay" class="d-none position-fixed top-0 start-0 w-100 h-100 d-flex justify-content-center align-items-center"
      style="background: rgba(255, 255, 255, 0.8); z-index: 9999;">
@@ -42,19 +131,26 @@
         <div class="spinner-border text-primary" role="status" style="width: 3rem; height: 3rem;">
             <span class="visually-hidden">Loading...</span>
         </div>
-        <p class="mt-3 fw-bold text-dark">로그인 처리 중입니다...</p>
+        <p class="mt-3 fw-bold text-dark">Processing...</p>
     </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script th:src="@{/libs/jquery/dist/jquery.min.js}"></script>
+<script th:src="@{/libs/jquery-lazy/jquery.lazy.min.js}"></script>
+<script th:src="@{/libs/simplebar/dist/simplebar.min.js}"></script>
+<script th:src="@{/libs/bootstrap/dist/js/bootstrap.bundle.min.js}"></script>
+<script th:src="@{/libs/jarallax/dist/jarallax.min.js}"></script>
+<script th:src="@{/libs/jarallax/dist/jarallax-video.min.js}"></script>
+<script th:src="@{/libs/fly-to/dist/js/fly-to.min.js}"></script>
+<script th:src="@{/js/script.min.js}"></script>
 
 <script>
-    // 1. 일반 로그인 폼 제출 시 로딩화면 켜기
+    // 1. 폼 제출 시 로딩
     document.querySelector('form').addEventListener('submit', function() {
         document.getElementById('loadingOverlay').classList.remove('d-none');
     });
 
-    // 2. 카카오 로그인 버튼 클릭 시 로딩화면 켜기
+    // 2. 카카오 버튼 클릭 시 로딩
     const kakaoBtn = document.querySelector('a[href*="kakao"]');
     if (kakaoBtn) {
         kakaoBtn.addEventListener('click', function() {
@@ -62,12 +158,13 @@
         });
     }
 
-    // 3. 브라우저 뒤로가기 했을 때 로딩화면 끄기
+    // 3. 뒤로가기 시 로딩 끄기
     window.onpageshow = function(event) {
         if (event.persisted) {
             document.getElementById('loadingOverlay').classList.add('d-none');
         }
     };
 </script>
+
 </body>
 </html>

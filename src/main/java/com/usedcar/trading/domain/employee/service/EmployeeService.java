@@ -12,6 +12,8 @@ import com.usedcar.trading.domain.user.entity.User;
 import com.usedcar.trading.domain.user.entity.UserStatus;
 import com.usedcar.trading.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -64,11 +66,11 @@ public class EmployeeService {
 
     // 2. 우리 회사 직원 목록 조회
     @Transactional(readOnly = true)
-    public List<Employee> getMyEmployees(Long ownerId) {
+    public Page<Employee> getMyEmployees(Long ownerId, Pageable pageable) {
         Company company = companyRepository.findByOwner_UserId(ownerId)
                 .orElseThrow(() -> new IllegalArgumentException("회사를 찾을 수 없습니다."));
 
-        return employeeRepository.findByCompanyCompanyId(company.getCompanyId());
+        return employeeRepository.findByCompanyCompanyId(company.getCompanyId(), pageable);
     }
 
     // 3. 직원 해고

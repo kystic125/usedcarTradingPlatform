@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <link rel="stylesheet" th:href="@{/libs/simplebar/dist/simplebar.min.css}">
+    <link rel="stylesheet" th:href="@{/css/style.min.css}">
+</head>
+<body>
+<header th:fragment="main-header" class="z-1030 position-relative z-2 shadow-sm bg-white">
+    <nav class="top-bar-1 py-0 bg-body-tertiary border-bottom fs-sm">
+        <div class="container d-flex flex-wrap align-items-center">
+            <ul class="nav me-auto">
+                <li class="nav-item"><a href="/" class="nav-link link-body-emphasis px-2 active">Home</a></li>
+            </ul>
+            <div class="dropdown user-dropdown text-end mx-2" sec:authorize="isAuthenticated()">
+                <a href="/mypage" class="d-block link-body-emphasis text-decoration-none my-1">
+                    <span class="fw-bold me-2" sec:authentication="principal.user.name">사용자</span>님
+                </a>
+            </div>
+            <ul class="nav">
+                <li class="nav-item" sec:authorize="isAnonymous()">
+                    <a th:href="@{/login}" class="nav-link link-body-emphasis px-2">Login</a>
+                </li>
+                <li class="nav-item" sec:authorize="isAnonymous()">
+                    <a th:href="@{/signup}" class="nav-link link-body-emphasis px-2">Sign up</a>
+                </li>
+
+                <li class="nav-item" sec:authorize="isAuthenticated()">
+                    <a th:href="@{/logout}" class="nav-link link-body-emphasis px-2 text-danger">Logout</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container d-flex flex-wrap justify-content-between align-items-center py-4 pb-0 pb-md-4 border-bottom overflow-hidden">
+        <div class="logo mb-3 mx-auto m-lg-0 mb-lg-0">
+            <a class="d-flex align-items-center mb-3 mb-lg-0 me-lg-auto text-decoration-none" href="/">
+                <img class="logo-dark" th:src="@{/images/logo.png}" alt="CARMART">
+                <img class="logo-light" th:src="@{/images/logo-light.png}" alt="CARMART">
+            </a>
+        </div>
+        <div class="header-widgets col-12 col-lg-auto mb-1 mb-md-3 mb-lg-0">
+            <div class="row g-4 g-md-5 row-cols-1 row-cols-md-2">
+                <div class="h-widget-contact pb-md-0 pb-4 d-inline-flex align-items-center justify-content-center position-relative">
+                    <div class="h-widget-icon me-3 text-primary custom-color">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-phone" width="34" height="34" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                            <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                            <path d="M5 4h4l2 5l-2.5 1.5a11 11 0 0 0 5 5l1.5 -2.5l5 2v4a2 2 0 0 1 -2 2a16 16 0 0 1 -15 -15a2 2 0 0 1 2 -2"></path>
+                        </svg>
+                    </div>
+                    <div class="h-widget-content">
+                        <p class="m-0 text-nowrap">+82 (02) 123 4567
+                            <br>
+                            <span class="text-muted">info@carmart.com</span>
+                        </p>
+                    </div>
+                    <div class="vr opacity-15 position-absolute end-0 top-0 h-100 d-none d-md-block m-0 ms-md-3 ms-lg-0"></div>
+                    <hr class="hr opacity-15 position-absolute end-0 bottom-0 w-100 d-block d-md-none m-0">
+                </div>
+                <div class="h-widget-time pb-md-0 pb-4 d-inline-flex align-items-center justify-content-center">
+                    <div class="h-widget-icon me-3 text-primary custom-color">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="34" height="34" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                            <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                            <path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0"></path>
+                            <path d="M12 7v5l3 3"></path>
+                        </svg>
+                    </div>
+                    <div class="h-widget-content">
+                        <p class="m-0 text-nowrap">Mon - Fri: 9AM - 5PM
+                            <br>
+                            <span class="text-muted">Weekend Closed</span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="main-nav-1 container p-0 position-relative d-flex">
+        <nav class="navbar navbar-expand-lg z-1030 p-0" aria-label="Main navigation">
+            <div class="container d-flex flex-wrap p-2 p-lg-0">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0 me-auto">
+                    <li class="nav-item"><a class="nav-link link-body-emphasis px-3 py-3 fw-bold custom-color" href="/">Home</a></li>
+                    <li class="nav-item"><a class="nav-link link-body-emphasis px-3 py-3 fw-bold custom-color" href="/mypage">MyPage</a></li>
+                </ul>
+            </div>
+        </nav>
+    </div>
+</header>
+</body>
+</html>

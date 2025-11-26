@@ -1,6 +1,8 @@
 package com.usedcar.trading.domain.employee.repository;
 
 import com.usedcar.trading.domain.employee.entity.Employee;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -18,5 +20,7 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long> {
 
     // 특정 회원의 Employee 정보 조회
     Optional<Employee> findByUserUserId(Long userId);
+
+    Page<Employee> findByCompanyCompanyId(Long companyId, Pageable pageable);
 
 }

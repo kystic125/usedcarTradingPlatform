@@ -1,129 +1,71 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>스마트픽 - 중고차 거래 플랫폼</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        .hero-section {
-            background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80');
-            background-size: cover;
-            background-position: center;
-            color: white;
-            padding: 100px 0;
-            text-align: center;
-        }
-        .car-card img {
-            height: 200px;
-            object-fit: cover;
-        }
-    </style>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home - SmartPick</title>
+
+    <link rel="apple-touch-icon" sizes="180x180" th:href="@{/images/favicon/apple-touch-icon.png}">
+    <link rel="icon" type="image/png" sizes="32x32" th:href="@{/images/favicon/favicon-32x32.png}">
+    <link rel="icon" type="image/png" sizes="16x16" th:href="@{/images/favicon/favicon-16x16.png}">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Antonio:wght@100..700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" th:href="@{/libs/owl.carousel/dist/assets/owl.carousel.min.css}">
+    <link rel="stylesheet" th:href="@{/libs/owl.carousel/dist/assets/owl.theme.default.min.css}">
+    <link rel="stylesheet" th:href="@{/libs/simplebar/dist/simplebar.min.css}">
+    <noscript>
+        <style>
+            .simplebar-content-wrapper { scrollbar-width: auto; -ms-overflow-style: auto; }
+            .simplebar-content-wrapper::-webkit-scrollbar, .simplebar-hide-scrollbar::-webkit-scrollbar { display: initial; width: initial; height: initial; }
+        </style>
+    </noscript>
+
+    <link rel="stylesheet" th:href="@{/libs/jarallax/dist/jarallax.min.css}">
+    <link rel="stylesheet" th:href="@{/css/style.min.css}">
+    <link id="templateColorScheme" rel="stylesheet" th:href="@{/css/color-schemes/tc_red.css}">
+    <link rel="stylesheet" th:href="@{/css/preloader.css}">
+
+    <script th:src="@{/js/preloader.js}"></script>
 </head>
+
 <body>
 
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <div class="container">
-        <a class="navbar-brand fw-bold" href="/">SmartPick 🚗</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav me-auto">
-                <li class="nav-item"><a class="nav-link active" href="/">홈</a></li>
-                <li class="nav-item"><a class="nav-link" href="/vehicles">차량 검색</a></li>
-
-                <li class="nav-item">
-                    <a class="nav-link" href="/mypage">마이페이지</a>
-                </li>
-
-                <li class="nav-item" sec:authorize="hasRole('ADMIN')">
-                    <a class="nav-link text-danger fw-bold" href="/admin">관리자 페이지</a>
-                </li>
-
-                <li class="nav-item" sec:authorize="hasAnyRole('COMPANY_OWNER', 'COMPANY_EMPLOYEE')">
-                    <a class="nav-link text-warning" href="/company/sales">내 판매 차량 관리</a>
-                </li>
-            </ul>
-
-            <div class="d-flex align-items-center">
-
-                <div sec:authorize="isAnonymous()">
-                    <a href="/login" class="btn btn-outline-light me-2">로그인</a>
-                    <a href="/signup" class="btn btn-warning text-dark fw-bold">회원가입</a>
-                </div>
-
-                <div sec:authorize="isAuthenticated()" class="text-white d-flex align-items-center">
-                    <span class="me-3">
-                        반갑습니다, <strong sec:authentication="principal.user.name">사용자</strong>님!
-                    </span>
-                    <a href="/logout" class="btn btn-danger btn-sm">로그아웃</a>
-                </div>
-            </div>
-        </div>
-    </div>
-</nav>
-
-<div class="hero-section">
-    <div class="container">
-        <h1 class="display-4 fw-bold">믿을 수 있는 중고차, 스마트픽</h1>
-        <p class="lead">허위매물 없는 투명한 거래를 시작하세요.</p>
-        <div class="mt-4">
-            <input type="text" class="form-control d-inline-block w-50" placeholder="어떤 차를 찾으세요? (예: 그랜저, 아반떼)">
-            <button class="btn btn-primary btn-lg ms-2">검색</button>
+<div class="preloader">
+    <div class="loader">
+        <div class="loader-inner ball-scale-multiple">
+            <div></div>
+            <div></div>
+            <div></div>
         </div>
     </div>
 </div>
 
-<div class="container my-5">
-    <h2 class="mb-4 fw-bold text-center">🔥 금주의 추천 매물</h2>
-    <div class="row">
-        <div class="col-md-4 mb-4">
-            <div class="card car-card shadow-sm">
-                <img src="https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?auto=format&fit=crop&w=600&q=80" class="card-img-top" alt="Car">
-                <div class="card-body">
-                    <h5 class="card-title fw-bold">제네시스 G80</h5>
-                    <p class="card-text text-muted">2023년형 | 15,000km | 가솔린</p>
-                    <h6 class="text-primary fw-bold">5,200만원</h6>
-                    <a href="#" class="btn btn-outline-dark w-100 mt-2">상세보기</a>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4 mb-4">
-            <div class="card car-card shadow-sm">
-                <img src="https://images.unsplash.com/photo-1583121274602-3e2820c69888?auto=format&fit=crop&w=600&q=80" class="card-img-top" alt="Car">
-                <div class="card-body">
-                    <h5 class="card-title fw-bold">메르세데스 벤츠 E-Class</h5>
-                    <p class="card-text text-muted">2021년형 | 40,000km | 디젤</p>
-                    <h6 class="text-primary fw-bold">6,500만원</h6>
-                    <a href="#" class="btn btn-outline-dark w-100 mt-2">상세보기</a>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4 mb-4">
-            <div class="card car-card shadow-sm">
-                <img src="https://images.unsplash.com/photo-1552519507-da3b142c6e3d?auto=format&fit=crop&w=600&q=80" class="card-img-top" alt="Car">
-                <div class="card-body">
-                    <h5 class="card-title fw-bold">포르쉐 파나메라</h5>
-                    <p class="card-text text-muted">2022년형 | 12,000km | 하이브리드</p>
-                    <h6 class="text-primary fw-bold">1억 4,000만원</h6>
-                    <a href="#" class="btn btn-outline-dark w-100 mt-2">상세보기</a>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+<header th:replace="~{fragments/header :: main-header}"></header>
 
-<footer class="bg-dark text-light py-4 mt-5">
-    <div class="container text-center">
-        <p class="mb-0">&copy; 2025 SmartPick. All Rights Reserved.</p>
-        <small class="text-muted">사업자등록번호: 000-00-00000 | 대표: 홍길동</small>
-    </div>
-</footer>
+<main>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+
+
+</main>
+
+<footer th:replace="~{fragments/footer :: main-footer}"></footer>
+
+<script th:src="@{/libs/jquery/dist/jquery.min.js}"></script>
+<script th:src="@{/libs/jquery-lazy/jquery.lazy.min.js}"></script>
+<script th:src="@{/libs/simplebar/dist/simplebar.min.js}"></script>
+<script th:src="@{/libs/bootstrap/dist/js/bootstrap.bundle.min.js}"></script>
+<script th:src="@{/libs/jarallax/dist/jarallax.min.js}"></script>
+<script th:src="@{/libs/fly-to/dist/js/fly-to.min.js}"></script>
+<script th:src="@{/js/script.min.js}"></script>
 
 </body>
 </html>

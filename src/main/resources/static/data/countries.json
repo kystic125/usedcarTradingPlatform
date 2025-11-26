@@ -1,0 +1,536 @@
+[
+  {
+    "country": "United States",
+    "regions": [
+      {
+        "region": "California",
+        "cities": [
+          "Los Angeles",
+          "San Francisco",
+          "San Diego",
+          "Sacramento",
+          "San Jose"
+        ]
+      },
+      {
+        "region": "Texas",
+        "cities": [
+          "Houston",
+          "Dallas",
+          "Austin",
+          "San Antonio",
+          "Fort Worth"
+        ]
+      },
+      {
+        "region": "New York",
+        "cities": [
+          "New York City",
+          "Buffalo",
+          "Rochester",
+          "Yonkers",
+          "Syracuse"
+        ]
+      },
+      {
+        "region": "Florida",
+        "cities": [
+          "Miami",
+          "Orlando",
+          "Tampa",
+          "Jacksonville",
+          "Tallahassee"
+        ]
+      },
+      {
+        "region": "Illinois",
+        "cities": [
+          "Chicago",
+          "Aurora",
+          "Naperville",
+          "Springfield",
+          "Peoria"
+        ]
+      }
+    ]
+  },
+  {
+    "country": "Brazil",
+    "regions": [
+      {
+        "region": "São Paulo",
+        "cities": [
+          "São Paulo",
+          "Campinas",
+          "Santos",
+          "Ribeirão Preto",
+          "Sorocaba"
+        ]
+      },
+      {
+        "region": "Rio de Janeiro",
+        "cities": [
+          "Rio de Janeiro",
+          "Niterói",
+          "Petrópolis",
+          "Volta Redonda",
+          "Campos dos Goytacazes"
+        ]
+      },
+      {
+        "region": "Bahia",
+        "cities": [
+          "Salvador",
+          "Feira de Santana",
+          "Vitória da Conquista",
+          "Camaçari",
+          "Ilhéus"
+        ]
+      },
+      {
+        "region": "Minas Gerais",
+        "cities": [
+          "Belo Horizonte",
+          "Uberlândia",
+          "Contagem",
+          "Juiz de Fora",
+          "Betim"
+        ]
+      },
+      {
+        "region": "Paraná",
+        "cities": [
+          "Curitiba",
+          "Londrina",
+          "Maringá",
+          "Ponta Grossa",
+          "Cascavel"
+        ]
+      }
+    ]
+  },
+  {
+    "country": "Australia",
+    "regions": [
+      {
+        "region": "New South Wales",
+        "cities": [
+          "Sydney",
+          "Newcastle",
+          "Wollongong",
+          "Central Coast",
+          "Dubbo"
+        ]
+      },
+      {
+        "region": "Victoria",
+        "cities": [
+          "Melbourne",
+          "Geelong",
+          "Ballarat",
+          "Bendigo",
+          "Shepparton"
+        ]
+      },
+      {
+        "region": "Queensland",
+        "cities": [
+          "Brisbane",
+          "Gold Coast",
+          "Cairns",
+          "Townsville",
+          "Toowoomba"
+        ]
+      },
+      {
+        "region": "Western Australia",
+        "cities": [
+          "Perth",
+          "Fremantle",
+          "Bunbury",
+          "Geraldton",
+          "Albany"
+        ]
+      },
+      {
+        "region": "South Australia",
+        "cities": [
+          "Adelaide",
+          "Mount Gambier",
+          "Whyalla",
+          "Gawler",
+          "Port Lincoln"
+        ]
+      }
+    ]
+  },
+  {
+    "country": "China",
+    "regions": [
+      {
+        "region": "Guangdong",
+        "cities": [
+          "Guangzhou",
+          "Shenzhen",
+          "Dongguan",
+          "Foshan",
+          "Zhuhai"
+        ]
+      },
+      {
+        "region": "Beijing",
+        "cities": [
+          "Beijing"
+        ]
+      },
+      {
+        "region": "Shanghai",
+        "cities": [
+          "Shanghai"
+        ]
+      },
+      {
+        "region": "Zhejiang",
+        "cities": [
+          "Hangzhou",
+          "Ningbo",
+          "Wenzhou",
+          "Shaoxing",
+          "Jinhua"
+        ]
+      },
+      {
+        "region": "Sichuan",
+        "cities": [
+          "Chengdu",
+          "Mianyang",
+          "Deyang",
+          "Luzhou",
+          "Yibin"
+        ]
+      }
+    ]
+  },
+  {
+    "country": "South Africa",
+    "regions": [
+      {
+        "region": "Gauteng",
+        "cities": [
+          "Johannesburg",
+          "Pretoria",
+          "Benoni",
+          "Vereeniging",
+          "Krugersdorp"
+        ]
+      },
+      {
+        "region": "Western Cape",
+        "cities": [
+          "Cape Town",
+          "Stellenbosch",
+          "Paarl",
+          "George",
+          "Worcester"
+        ]
+      },
+      {
+        "region": "KwaZulu-Natal",
+        "cities": [
+          "Durban",
+          "Pietermaritzburg",
+          "Richards Bay",
+          "Newcastle",
+          "Margate"
+        ]
+      },
+      {
+        "region": "Eastern Cape",
+        "cities": [
+          "Port Elizabeth",
+          "East London",
+          "Uitenhage",
+          "Mthatha",
+          "Queenstown"
+        ]
+      },
+      {
+        "region": "Free State",
+        "cities": [
+          "Bloemfontein",
+          "Welkom",
+          "Sasolburg",
+          "Bethlehem",
+          "Kroonstad"
+        ]
+      }
+    ]
+  },
+  {
+    "country": "Germany",
+    "regions": [
+      {
+        "region": "Bavaria",
+        "cities": [
+          "Munich",
+          "Nuremberg",
+          "Augsburg",
+          "Regensburg",
+          "Würzburg"
+        ]
+      },
+      {
+        "region": "North Rhine-Westphalia",
+        "cities": [
+          "Cologne",
+          "Düsseldorf",
+          "Dortmund",
+          "Essen",
+          "Duisburg"
+        ]
+      },
+      {
+        "region": "Baden-Württemberg",
+        "cities": [
+          "Stuttgart",
+          "Karlsruhe",
+          "Mannheim",
+          "Freiburg",
+          "Heidelberg"
+        ]
+      },
+      {
+        "region": "Hesse",
+        "cities": [
+          "Frankfurt",
+          "Wiesbaden",
+          "Kassel",
+          "Darmstadt",
+          "Offenbach"
+        ]
+      },
+      {
+        "region": "Lower Saxony",
+        "cities": [
+          "Hanover",
+          "Braunschweig",
+          "Oldenburg",
+          "Osnabrück",
+          "Wolfsburg"
+        ]
+      }
+    ]
+  },
+  {
+    "country": "India",
+    "regions": [
+      {
+        "region": "Maharashtra",
+        "cities": [
+          "Mumbai",
+          "Pune",
+          "Nagpur",
+          "Nashik",
+          "Aurangabad"
+        ]
+      },
+      {
+        "region": "Karnataka",
+        "cities": [
+          "Bengaluru",
+          "Mysore",
+          "Mangalore",
+          "Hubli-Dharwad",
+          "Belgaum"
+        ]
+      },
+      {
+        "region": "Tamil Nadu",
+        "cities": [
+          "Chennai",
+          "Coimbatore",
+          "Madurai",
+          "Tiruchirappalli",
+          "Salem"
+        ]
+      },
+      {
+        "region": "West Bengal",
+        "cities": [
+          "Kolkata",
+          "Asansol",
+          "Siliguri",
+          "Durgapur",
+          "Howrah"
+        ]
+      },
+      {
+        "region": "Uttar Pradesh",
+        "cities": [
+          "Lucknow",
+          "Kanpur",
+          "Ghaziabad",
+          "Agra",
+          "Varanasi"
+        ]
+      }
+    ]
+  },
+  {
+    "country": "Russia",
+    "regions": [
+      {
+        "region": "Moscow Oblast",
+        "cities": [
+          "Moscow",
+          "Khimki",
+          "Podolsk",
+          "Korolyov",
+          "Mytishchi"
+        ]
+      },
+      {
+        "region": "Saint Petersburg",
+        "cities": [
+          "Saint Petersburg"
+        ]
+      },
+      {
+        "region": "Novosibirsk Oblast",
+        "cities": [
+          "Novosibirsk",
+          "Berdsk",
+          "Iskitim",
+          "Koltsovo",
+          "Kuybyshev"
+        ]
+      },
+      {
+        "region": "Sverdlovsk Oblast",
+        "cities": [
+          "Yekaterinburg",
+          "Nizhny Tagil",
+          "Kamensk-Uralsky",
+          "Pervouralsk",
+          "Serov"
+        ]
+      },
+      {
+        "region": "Krasnodar Krai",
+        "cities": [
+          "Krasnodar",
+          "Sochi",
+          "Novorossiysk",
+          "Armavir",
+          "Yeysk"
+        ]
+      }
+    ]
+  },
+  {
+    "country": "Japan",
+    "regions": [
+      {
+        "region": "Tokyo",
+        "cities": [
+          "Tokyo"
+        ]
+      },
+      {
+        "region": "Osaka",
+        "cities": [
+          "Osaka",
+          "Sakai",
+          "Hirakata",
+          "Toyonaka",
+          "Takatsuki"
+        ]
+      },
+      {
+        "region": "Hokkaido",
+        "cities": [
+          "Sapporo",
+          "Asahikawa",
+          "Hakodate",
+          "Kushiro",
+          "Obihiro"
+        ]
+      },
+      {
+        "region": "Fukuoka",
+        "cities": [
+          "Fukuoka",
+          "Kitakyushu",
+          "Kurume",
+          "Omuta",
+          "Iizuka"
+        ]
+      },
+      {
+        "region": "Kanagawa",
+        "cities": [
+          "Yokohama",
+          "Kawasaki",
+          "Sagamihara",
+          "Yokosuka",
+          "Fujisawa"
+        ]
+      }
+    ]
+  },
+  {
+    "country": "Nigeria",
+    "regions": [
+      {
+        "region": "Lagos",
+        "cities": [
+          "Lagos",
+          "Ikeja",
+          "Epe",
+          "Badagry",
+          "Ikorodu"
+        ]
+      },
+      {
+        "region": "Kano",
+        "cities": [
+          "Kano",
+          "Wudil",
+          "Bichi",
+          "Rano",
+          "Gaya"
+        ]
+      },
+      {
+        "region": "Rivers",
+        "cities": [
+          "Port Harcourt",
+          "Obio-Akpor",
+          "Oyigbo",
+          "Okrika",
+          "Ahoada"
+        ]
+      },
+      {
+        "region": "Kaduna",
+        "cities": [
+          "Kaduna",
+          "Zaria",
+          "Kafanchan",
+          "Kachia",
+          "Saminaka"
+        ]
+      },
+      {
+        "region": "Oyo",
+        "cities": [
+          "Ibadan",
+          "Ogbomosho",
+          "Oyo",
+          "Iseyin",
+          "Shaki"
+        ]
+      }
+    ]
+  }
+]

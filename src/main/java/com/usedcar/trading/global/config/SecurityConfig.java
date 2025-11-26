@@ -29,7 +29,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         // 1. 누구나 접근 가능 (메인, 검색, 차량 상세 보기 등)
                         .requestMatchers("/", "/search/**", "/vehicles/**", "/auth/**", "/oauth2/**", "/signup", "/login", "/api/**").permitAll()
-                        .requestMatchers("/css/**", "/images/**", "/js/**", "/h2-console/**", "/favicon.ico").permitAll()
+                        .requestMatchers("/css/**", "/images/**", "/js/**", "/libs/**", "/data/**", "/h2-console/**", "/favicon.ico").permitAll()
 
                         // 2. 관리자 전용 (사이트 전체 관리)
                         .requestMatchers("/admin/**").hasRole("ADMIN")
@@ -60,7 +60,9 @@ public class SecurityConfig {
                         .loginPage("/login")
                         .userInfoEndpoint(userInfo -> userInfo
                                 .userService(customOAuth2UserService))
-                        .defaultSuccessUrl("/mypage")
+                        .successHandler((request, response, authentication) -> {
+                            response.sendRedirect("/");
+                        })
                 )
 
                 .logout(logout -> logout

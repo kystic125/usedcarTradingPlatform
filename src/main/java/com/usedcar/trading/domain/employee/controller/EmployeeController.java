@@ -6,6 +6,10 @@ import com.usedcar.trading.domain.employee.service.EmployeeService;
 import com.usedcar.trading.domain.user.entity.User;
 import com.usedcar.trading.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.oauth2.core.user.OAuth2User;
@@ -29,18 +33,30 @@ public class EmployeeController {
 
     // 1. 직원 목록 페이지
     @GetMapping
-    public String employeeList(Model model, @AuthenticationPrincipal Object principal) {
+    public String employeeList(Model model, @AuthenticationPrincipal Object principal, @PageableDefault(size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
         User owner = findUser(principal);
 
-        List<Employee> employees = employeeService.getMyEmployees(owner.getUserId());
+        Page<Employee> employees = employeeService.getMyEmployees(owner.getUserId(), pageable);
+
+        int nowPage = employees.getPageable().getPageNumber() + 1;
+        int startPage = Math.max(nowPage - 2, 1);
+        int endPage = Math.min(nowPage + 2, employees.getTotalPages());
+        if (endPage == 0) endPage = 1;
+
+        model.addAttribute("user", owner);
         model.addAttribute("employees", employees);
+        model.addAttribute("nowPage", nowPage);
+        model.addAttribute("startPage", startPage);
+        model.addAttribute("endPage", endPage);
 
         return "company/employee-list";
     }
 
     // 2. 직원 등록 페이지
     @GetMapping("/register")
-    public String registerPage() {
+    public String registerPage(Model model, @AuthenticationPrincipal Object principal) {
+        User owner = findUser(principal);
+        model.addAttribute("user", owner);
         return "company/employee-register";
     }
 

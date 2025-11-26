@@ -1,0 +1,666 @@
+[
+  {
+    "name": "Abarth",
+    "models": ["595", "124 Spider"],
+    "image": "",
+    "logo": "../images/brand-logo/abarth.png",
+    "symbol": "",
+    "offers": 8
+  },
+  {
+    "name": "Acura",
+    "models": ["RT2", "568 Spider"],
+    "image": "",
+    "logo": "../images/brand-logo/acura.png",
+    "symbol": "",
+    "offers": 2
+  },
+  {
+    "name": "Alfa Romeo",
+    "models": ["Giulia", "Stelvio", "Giulietta", "4C", "Mito"],
+    "image": "../icons/brands/alfaromeo.svg",
+    "logo": "../images/brand-logo/alfa-romeo.png",
+    "symbol": "",
+    "offers": 8
+  },
+  {
+    "name": "Alpina",
+    "models": ["A110"],
+    "image": "",
+    "logo": "../images/brand-logo/alpina.png",
+    "symbol": "",
+    "offers": 8
+  },
+  {
+    "name": "Aston Martin",
+    "models": ["DB11", "Vantage", "DBS Superleggera", "Rapide", "Valhalla"],
+    "image": "../icons/brands/astonmartin.svg",
+    "logo": "../images/brand-logo/aston-martin.png",
+    "symbol": "",
+    "offers": 15
+  },
+  {
+    "name": "Audi",
+    "models": ["A3", "A4", "A5", "Q5", "Q7", "Q3", "A6"],
+    "image": "../icons/brands/audi.svg",
+    "logo": "../images/brand-logo/audi.png",
+    "symbol": "",
+    "offers": 3
+  },
+  {
+    "name": "Baojun",
+    "models": ["Baojun A", "Baojun B"],
+    "image": "",
+    "logo": "../images/brand-logo/baojun.png",
+    "symbol": "",
+    "offers": 2
+  },
+  {
+    "name": "Bentley",
+    "models": ["Continental GT", "Bentayga", "Flying Spur", "Mulsanne"],
+    "image": "../icons/brands/bentley.svg",
+    "logo": "../images/brand-logo/bentley.png",
+    "symbol": "",
+    "offers": 7
+  },
+  {
+    "name": "Bertone",
+    "models": ["Bertone GT", "Bertone AB"],
+    "image": "",
+    "logo": "../images/brand-logo/bertone.png",
+    "symbol": "",
+    "offers":6
+  },
+  {
+    "name": "BMW",
+    "models": ["3 Series", "5 Series", "X3", "X5", "1 Series", "7 Series", "X1"],
+    "image": "../icons/brands/bmw.svg",
+    "logo": "../images/brand-logo/bmw.png",
+    "symbol": "",
+    "offers": 12
+  },
+  {
+    "name": "Borgward",
+    "models": ["Borgward A", "Borgward B"],
+    "image": "",
+    "logo": "../images/brand-logo/borgward.png",
+    "symbol": "",
+    "offers": 3
+  },
+  {
+    "name": "Bugatti",
+    "models": ["Veyron", "Chiron", "Royale"],
+    "image": "../icons/brands/bugatti.svg",
+    "logo": "../images/brand-logo/bugatti.png",
+    "symbol": "",
+    "offers": 1
+  },
+  {
+    "name": "Buick",
+    "models": ["Buick A", "Buick B", "Buick C"],
+    "image": "",
+    "logo": "../images/brand-logo/buick.png",
+    "symbol": "",
+    "offers": 5
+  },
+  {
+    "name": "BYD",
+    "models": ["BYD A", "BYD B", "BYD C"],
+    "image": "",
+    "logo": "../images/brand-logo/byd.png",
+    "symbol": "",
+    "offers": 7
+  },
+  {
+    "name": "Cadillac",
+    "models": ["Cadillac A", "Cadillac B", "Escalade"],
+    "image": "",
+    "logo": "../images/brand-logo/cadillac.png",
+    "symbol": "",
+    "offers": 5
+  },
+  {
+    "name": "Changan",
+    "models": ["Changan A", "Changan B"],
+    "image": "",
+    "logo": "../images/brand-logo/changan.png",
+    "symbol": "",
+    "offers": 4
+  },
+  {
+    "name": "Chevrolet",
+    "models": ["Camaro", "Corvette", "Spark", "Trax", "Malibu"],
+    "image": "../icons/brands/chevrolet.svg",
+    "logo": "../images/brand-logo/chevrolet.png",
+    "symbol": "",
+    "offers": 19
+  },
+  {
+    "name": "Chrysler",
+    "models": ["300C", "Voyager", "Grand Voyager"],
+    "image": "../icons/brands/chrysler.svg",
+    "logo": "../images/brand-logo/chrysler.png",
+    "symbol": "",
+    "offers": 4
+  },
+  {
+    "name": "Citroen",
+    "models": ["C3", "C5 Aircross", "Berlingo", "C1", "C4 Picasso"],
+    "image": "../icons/brands/citroen.svg",
+    "logo": "../images/brand-logo/citroen.png",
+    "symbol": "",
+    "offers": 10
+  },
+  {
+    "name": "Corvette",
+    "models": ["Stingray"],
+    "image": "",
+    "logo": "../images/brand-logo/corvette.png",
+    "symbol": "",
+    "offers": 2
+  },
+  {
+    "name": "Cupra",
+    "models": ["Leon", "Ateca", "Formentor"],
+    "image": "",
+    "logo": "../images/brand-logo/cupra.png",
+    "symbol": "",
+    "offers": 8
+  },
+  {
+    "name": "Dacia",
+    "models": ["Sandero", "Duster", "Logan", "Stepway"],
+    "image": "",
+    "logo": "../images/brand-logo/dacia.png",
+    "symbol": "",
+    "offers": 8
+  },
+  {
+    "name": "Daewoo",
+    "models": ["Daewoo A", "Daewoo B", "Daewoo C", "Daewoo D"],
+    "image": "",
+    "logo": "../images/brand-logo/daewoo.png",
+    "symbol": "",
+    "offers": 6
+  },
+  {
+    "name": "Dodge",
+    "models": ["Dodge A", "Challenger"],
+    "image": "",
+    "logo": "../images/brand-logo/dodge.png",
+    "symbol": "",
+    "offers": 5
+  },
+  {
+    "name": "Faw",
+    "models": ["Faw A", "Faw B"],
+    "image": "",
+    "logo": "../images/brand-logo/faw.png",
+    "symbol": "",
+    "offers": 2
+  },
+  {
+    "name": "DS",
+    "models": ["3 Crossback", "7 Crossback"],
+    "image": "",
+    "logo": "../images/brand-logo/ds.png",
+    "symbol": "",
+    "offers": 8
+  },
+  {
+    "name": "Ferrari",
+    "models": ["488 GTB", "F8 Tributo", "812 Superfast", "Portofino", "SF90 Stradale"],
+    "image": "../icons/brands/ferrari.svg",
+    "logo": "../images/brand-logo/ferrari.png",
+    "symbol": "",
+    "offers": 9
+  },
+  {
+    "name": "Fiat",
+    "models": ["500", "Panda", "Tipo", "500X", "500L", "124 Spider"],
+    "image": "../icons/brands/fiat.svg",
+    "logo": "../images/brand-logo/fiat.png",
+    "symbol": "",
+    "offers": 2
+  },
+  {
+    "name": "Ford",
+    "models": ["Focus", "Kuga", "Mustang", "Fiesta", "Mondeo", "EcoSport", "Edge"],
+    "image": "../icons/brands/ford.svg",
+    "logo": "../images/brand-logo/ford.png",
+    "symbol": "",
+    "offers": 11
+  },
+  {
+    "name": "GAC Motor",
+    "models": ["GAC 1", "GAC 2"],
+    "image": "",
+    "logo": "../images/brand-logo/gac-motor.png",
+    "symbol": "",
+    "offers": 3
+  },
+  {
+    "name": "Genesis",
+    "models": ["Genesis 1", "Genesis 2"],
+    "image": "",
+    "logo": "../images/brand-logo/genesis.png",
+    "symbol": "",
+    "offers": 1
+  },
+  {
+    "name": "Gillet",
+    "models": ["Gillet 1", "Gillet 2"],
+    "image": "",
+    "logo": "../images/brand-logo/gillet.png",
+    "symbol": "",
+    "offers": 3
+  },
+  {
+    "name": "GMC",
+    "models": ["Terrain", "Acadia", "Yukon", "Canyon", "Sierra"],
+    "image": "../icons/brands/gmc.svg",
+    "logo": "../images/brand-logo/gmc.png",
+    "symbol": "",
+    "offers": 16
+  },
+  {
+    "name": "Honda",
+    "models": ["Civic", "CR-V", "Jazz", "HR-V", "Accord", "Civic Type R"],
+    "image": "../icons/brands/honda.svg",
+    "logo": "../images/brand-logo/honda.png",
+    "symbol": "",
+    "offers": 5
+  },
+  {
+    "name": "Hyundai",
+    "models": ["i30", "Tucson", "Kona", "Ioniq", "Santa Fe", "Veloster"],
+    "image": "../icons/brands/hyundai.svg",
+    "logo": "../images/brand-logo/hyundai.png",
+    "symbol": "",
+    "offers": 13
+  },
+  {
+    "name": "Infiniti",
+    "models": ["Q50", "QX50", "QX30", "Q60"],
+    "image": "../icons/brands/infiniti.svg",
+    "logo": "../images/brand-logo/infiniti.png",
+    "symbol": "",
+    "offers": 20
+  },
+  {
+    "name": "Iveco",
+    "models": ["Iveco A", "Iveco B"],
+    "image": "",
+    "logo": "../images/brand-logo/iveco.png",
+    "symbol": "",
+    "offers": 4
+  },
+  {
+    "name": "Jaguar",
+    "models": ["XE", "F-Pace", "I-Pace", "XF", "XJ", "E-Pace"],
+    "image": "../icons/brands/jaguar.svg",
+    "logo": "../images/brand-logo/jaguar.png",
+    "symbol": "",
+    "offers": 17
+  },
+  {
+    "name": "Jeep",
+    "models": ["Renegade", "Wrangler", "Grand Cherokee", "Compass", "Cherokee"],
+    "image": "../icons/brands/jeep.svg",
+    "logo": "../images/brand-logo/jeep.png",
+    "symbol": "",
+    "offers": 14
+  },
+  {
+    "name": "Kia",
+    "models": ["Ceed", "Sportage", "Niro", "Picanto", "Sorento", "Stinger", "Soul"],
+    "image": "../icons/brands/kia.svg",
+    "logo": "../images/brand-logo/kia.png",
+    "symbol": "",
+    "offers": 0
+  },
+  {
+    "name": "Koenigsegg",
+    "models": ["Agera", "Regera"],
+    "image": "",
+    "logo": "../images/brand-logo/koenigsegg.png",
+    "symbol": "",
+    "offers": 2
+  },
+  {
+    "name": "Lamborghini",
+    "models": ["Huracan", "Aventador", "Urus"],
+    "image": "../icons/brands/lamborghini.svg",
+    "logo": "../images/brand-logo/lamborghini.png",
+    "symbol": "",
+    "offers": 18
+  },
+  {
+    "name": "Lancia",
+    "models": ["Lancia 1", "Lancia 2", "Lancia 3"],
+    "image": "",
+    "logo": "../images/brand-logo/lancia.png",
+    "symbol": "",
+    "offers": 2
+  },
+  {
+    "name": "Land Rover",
+    "models": ["Discovery", "Range Rover", "Defender", "Range Rover Sport", "Discovery Sport"],
+    "image": "../icons/brands/landrover.svg",
+    "logo": "../images/brand-logo/landrover.png",
+    "symbol": "",
+    "offers": 6
+  },
+  {
+    "name": "Lexus",
+    "models": ["NX", "RX", "Model X"],
+    "image": "",
+    "logo": "../images/brand-logo/lexus.png",
+    "symbol": "",
+    "offers": 15
+  },
+  {
+    "name": "Lincoln",
+    "models": ["Lincoln 1", "Lincoln 2", "Lincoln X"],
+    "image": "",
+    "logo": "../images/brand-logo/lincoln.png",
+    "symbol": "",
+    "offers": 3
+  },
+  {
+    "name": "Lotus",
+    "models": ["Lotus 1", "Lotus 2", "Evija"],
+    "image": "",
+    "logo": "../images/brand-logo/lotus.png",
+    "symbol": "",
+    "offers": 2
+  },
+  {
+    "name": "Luxgen",
+    "models": ["Luxgen 1", "Luxgen 2", "Luxgen 3"],
+    "image": "",
+    "logo": "../images/brand-logo/luxgen.png",
+    "symbol": "",
+    "offers": 2
+  },
+  {
+    "name": "Maserati",
+    "models": ["Ghibli", "Levante", "Quattroporte", "GranTurismo", "GranCabrio"],
+    "image": "../icons/brands/maserati.svg",
+    "logo": "../images/brand-logo/maserati.png",
+    "symbol": "",
+    "offers": 3
+  },
+  {
+    "name": "Maybach",
+    "models": ["Maybach 1", "Maybach 2"],
+    "image": "",
+    "logo": "../images/brand-logo/maybach.png",
+    "symbol": "",
+    "offers": 4
+  },
+  {
+    "name": "Mazda",
+    "models": ["Mazda3", "CX-5", "MX-5", "Mazda2", "CX-30", "MX-30"],
+    "image": "../icons/brands/mazda.svg",
+    "logo": "../images/brand-logo/mazda.png",
+    "symbol": "",
+    "offers": 9
+  },
+  {
+    "name": "McLaren",
+    "models": ["570S", "720S", "Artura", "GT", "Senna"],
+    "image": "../icons/brands/mclaren.svg",
+    "logo": "../images/brand-logo/mclaren.png",
+    "symbol": "",
+    "offers": 17
+  },
+  {
+    "name": "Mercedes-Benz",
+    "models": ["C-Class", "E-Class", "GLC", "GLE", "A-Class", "S-Class", "GLA"],
+    "image": "../icons/brands/mercedes.svg",
+    "logo": "../images/brand-logo/mercedes-benz.png",
+    "symbol": "",
+    "offers": 8
+  },
+  {
+    "name": "Mercury",
+    "models": ["Mercury 1", "Mercury 2"],
+    "image": "",
+    "logo": "../images/brand-logo/mercury.png",
+    "symbol": "",
+    "offers": 2
+  },
+  {
+    "name": "MG",
+    "models": ["MG 1", "MG 2"],
+    "image": "",
+    "logo": "../images/brand-logo/mg.png",
+    "symbol": "",
+    "offers": 1
+  },
+  {
+    "name": "MINI",
+    "models": ["Hatch", "Countryman", "Clubman", "Convertible", "Paceman"],
+    "image": "../icons/brands/mini.svg",
+    "logo": "../images/brand-logo/mini.png",
+    "symbol": "",
+    "offers": 5
+  },
+  {
+    "name": "Mini Cooper",
+    "models": ["Hatchback", "Convertible", "Clubman", "Countryman", "Electric", "John Cooper Works"],
+    "image": "",
+    "logo": "../images/brand-logo/mini-cooper.png",
+    "symbol": "",
+    "offers": 5
+  },
+  {
+    "name": "Mitsubishi",
+    "models": ["Outlander", "L200", "ASX", "Eclipse Cross", "Shogun Sport"],
+    "image": "../icons/brands/mitsubishi.svg",
+    "logo": "../images/brand-logo/mitsubishi.png",
+    "symbol": "",
+    "offers": 11
+  },
+  {
+    "name": "Nissan",
+    "models": ["Qashqai", "Juke", "Leaf", "Micra", "X-Trail", "GT-R", "Navara"],
+    "image": "../icons/brands/nissan.svg",
+    "logo": "../images/brand-logo/nissan.png",
+    "symbol": "",
+    "offers": 13
+  },
+  {
+    "name": "OldMobile",
+    "models": ["OldMobile 1", "OldMobile 2", "OldMobile 3"],
+    "image": "",
+    "logo": "../images/brand-logo/oldmobile.png",
+    "symbol": "",
+    "offers": 5
+  },
+  {
+    "name": "Opel",
+    "models": ["Corsa", "Mokka", "Vivaro", "Astra", "Zafira"],
+    "image": "../icons/brands/opel.svg",
+    "logo": "../images/brand-logo/opel.png",
+    "symbol": "",
+    "offers": 4
+  },
+  {
+    "name": "Peterbilt",
+    "models": ["Peterbilt 1", "Peterbilt 2"],
+    "image": "",
+    "logo": "../images/brand-logo/peterbilt.png",
+    "symbol": "",
+    "offers": 16
+  },
+  {
+    "name": "Pontiac",
+    "models": ["Pontiac 1", "Pontiac 2"],
+    "image": "",
+    "logo": "../images/brand-logo/pontiac.png",
+    "symbol": "",
+    "offers": 16
+  },
+  {
+    "name": "Peugeot",
+    "models": ["208", "3008", "5008", "308", "2008", "508", "108"],
+    "image": "../icons/brands/peugeot.svg",
+    "logo": "../images/brand-logo/peugeot.png",
+    "symbol": "",
+    "offers": 16
+  },
+  {
+    "name": "Porsche",
+    "models": ["911", "Cayenne", "Panamera", "Macan", "718 Boxster", "Taycan"],
+    "image": "../icons/brands/porsche.svg",
+    "logo": "../images/brand-logo/porsche.png",
+    "symbol": "",
+    "offers": 10
+  },
+  {
+    "name": "Qoros",
+    "models": ["Qoros 1", "Qoros 2", "Qoros 3"],
+    "image": "",
+    "logo": "../images/brand-logo/qoros.png",
+    "symbol": "",
+    "offers": 1
+  },
+  {
+    "name": "Renault",
+    "models": ["Clio", "Megane", "Captur", "Kadjar", "Zoe", "Twingo"],
+    "image": "../icons/brands/renault.svg",
+    "logo": "../images/brand-logo/renault.png",
+    "symbol": "",
+    "offers": 1
+  },
+  {
+    "name": "Roewe",
+    "models": ["Roewe 1", "Roewe 2", "Roewe 3"],
+    "image": "",
+    "logo": "../images/brand-logo/roewe.png",
+    "symbol": "",
+    "offers": 2
+  },
+  {
+    "name": "Rolls Royce",
+    "models": ["Phantom", "Cullinan", "Ghost", "Wraith", "Dawn"],
+    "image": "../icons/brands/rollsroyce.svg",
+    "logo": "../images/brand-logo/abarth.png",
+    "symbol": "",
+    "offers": 19
+  },
+  {
+    "name": "Saab",
+    "models": ["Saab 1", "Saab 2", "Saab 3"],
+    "image": "",
+    "logo": "../images/brand-logo/saab.png",
+    "symbol": "",
+    "offers": 2
+  },
+  {
+    "name": "Saic Motor",
+    "models": ["Saic 1", "Saic 2", "Saic 3"],
+    "image": "",
+    "logo": "../images/brand-logo/saic-motor.png",
+    "symbol": "",
+    "offers": 2
+  },
+  {
+    "name": "Seat",
+    "models": ["Seat 1", "Seat 2", "Seat 3"],
+    "image": "",
+    "logo": "../images/brand-logo/seat.png",
+    "symbol": "",
+    "offers": 2
+  },
+  {
+    "name": "Skoda",
+    "models": ["Skoda 1", "Skoda 2", "Skoda 3"],
+    "image": "",
+    "logo": "../images/brand-logo/skoda.png",
+    "symbol": "",
+    "offers": 2
+  },
+  {
+    "name": "Subaru",
+    "models": ["Impreza", "Forester", "Outback", "XV", "BRZ"],
+    "image": "../icons/brands/subaru.svg",
+    "logo": "../images/brand-logo/subaru.png",
+    "symbol": "",
+    "offers": 2
+  },
+  {
+    "name": "Suzuki",
+    "models": ["Swift", "Vitara", "Jimny", "Ignis", "S-Cross", "Celerio"],
+    "image": "../icons/brands/suzuki.svg",
+    "logo": "../images/brand-logo/suzuki.png",
+    "symbol": "",
+    "offers": 7
+  },
+  {
+    "name": "Tata",
+    "models": ["Tata 3", "Tata S", "Tata 2"],
+    "image": "",
+    "logo": "../images/brand-logo/tata.png",
+    "symbol": "",
+    "offers": 12
+  },
+  {
+    "name": "Tesla",
+    "models": ["Model 3", "Model S", "Model X", "Model Y"],
+    "image": "../icons/brands/tesla.svg",
+    "logo": "../images/brand-logo/tesla.png",
+    "symbol": "",
+    "offers": 12
+  },
+  {
+    "name": "Toyota",
+    "models": ["Corolla", "RAV4", "Yaris", "C-HR", "Camry", "Aygo", "Supra"],
+    "image": "../icons/brands/toyota.svg",
+    "logo": "../images/brand-logo/toyota.png",
+    "symbol": "",
+    "offers": 18
+  },
+  {
+    "name": "Vauxhall",
+    "models": ["Corsa", "Astra", "Grandland", "Insignia", "Mokka", "Crossland"],
+    "image": "../icons/brands/vauxhall.svg",
+    "logo": "../images/brand-logo/vauxhall.png",
+    "symbol": "",
+    "offers": 14
+  },
+  {
+    "name": "Volkswagen",
+    "models": ["Golf", "Tiguan", "Polo", "Passat", "Up", "T-Roc", "ID.4"],
+    "image": "../icons/brands/volkswagen.svg",
+    "logo": "../images/brand-logo/volkswagen.png",
+    "symbol": "",
+    "offers": 20
+  },
+  {
+    "name": "Volvo",
+    "models": ["XC40", "XC60", "XC90", "V40", "V60", "S90", "V90"],
+    "image": "../icons/brands/volvo.svg",
+    "logo": "../images/brand-logo/volvo.png",
+    "symbol": "",
+    "offers": 15
+  },
+  {
+    "name": "Wiesmann",
+    "models": ["Wiesmann 1", "Wiesmann B", "Wiesmann C"],
+    "image": "",
+    "logo": "../images/brand-logo/wiesmann.png",
+    "symbol": "",
+    "offers": 15
+  },
+  {
+    "name": "Wuling",
+    "models": ["Wuling A", "Wuling B", "Wuling C"],
+    "image": "",
+    "logo": "../images/brand-logo/wuling.png",
+    "symbol": "",
+    "offers": 2
+  }
+]
