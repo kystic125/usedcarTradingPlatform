@@ -25,6 +25,7 @@ public class Transaction extends BaseEntity {
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
+    @Builder.Default
     private TransactionStatus transactionStatus = TransactionStatus.REQUESTED;
 
     @Column(nullable = false)
@@ -57,4 +58,14 @@ public class Transaction extends BaseEntity {
 
     @OneToOne(mappedBy = "transaction")
     private Review review;
+
+    // 거래 상태 변경 및 시간 기록
+    public void updateStatus(TransactionStatus status) {
+        this.transactionStatus = status;
+        if (status == TransactionStatus.APPROVED) {
+            this.approvedAt = LocalDateTime.now();
+        } else if (status == TransactionStatus.COMPLETED) {
+            this.completedAt = LocalDateTime.now();
+        }
+    }
 }

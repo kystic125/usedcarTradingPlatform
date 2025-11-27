@@ -70,6 +70,7 @@ public class User extends BaseEntity {
     }
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
     private List<Favorite> favoriteList = new ArrayList<>();
 
     public void addFavorite(Favorite favorite) {
@@ -83,9 +84,11 @@ public class User extends BaseEntity {
     }
 
     @OneToMany(mappedBy = "reporter")
+    @Builder.Default
     private List<Report> reportedReports = new ArrayList<>();
 
     @OneToMany(mappedBy = "handler")
+    @Builder.Default
     private List<Report> handledReports = new ArrayList<>();
 
     @OneToOne(mappedBy = "user")
@@ -103,8 +106,10 @@ public class User extends BaseEntity {
     */
 
     @OneToMany(mappedBy = "buyer")
+    @Builder.Default
     private List<Transaction> transactions = new ArrayList<>();
 
     @OneToMany(mappedBy = "user")
+    @Builder.Default
     private List<Review> reviews = new ArrayList<>();
 }

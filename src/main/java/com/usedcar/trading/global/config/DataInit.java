@@ -22,6 +22,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 @Component
 @RequiredArgsConstructor
@@ -128,6 +129,48 @@ public class DataInit implements CommandLineRunner {
                 vehicleRepository.save(pendingCar);
                 System.out.println("테스트용 '승인 대기(PENDING)' 차량 생성 완료");
             }
+        }
+
+        // 4. 테스트용 '판매 중(SALE)' 차량 생성
+        if (vehicleRepository.countByVehicleStatus(VehicleStatus.SALE) == 0) {
+            User staffUser = userRepository.findByEmail("staff@test.com").orElse(null);
+            if (staffUser != null) {
+                Employee dealer = employeeRepository.findByUserUserId(staffUser.getUserId()).orElseThrow();
+
+                Vehicle saleCar = Vehicle.builder()
+                        .company(dealer.getCompany())
+                        .registeredBy(dealer)
+                        .brand("기아")
+                        .model("쏘렌토")
+                        .modelYear(2023)
+                        .mileage(12000)
+                        .fuelType(FuelType.DIESEL)
+                        .transmission(Transmission.AUTO)
+                        .price(new BigDecimal("42000000"))
+                        .vehicleStatus(VehicleStatus.SALE)
+                        .color("블랙")
+                        .description("관리자가 이미 승인한, 즉시 구매 가능한 차량입니다.")
+                        .approvedBy(userRepository.findByEmail("admin@smartpick.com").orElse(null))
+                        .approvedAt(LocalDateTime.now())
+                        .build();
+
+                vehicleRepository.save(saleCar);
+                System.out.println("테스트용 '판매 중(SALE)' 차량 생성 완료: 기아 쏘렌토");
+            }
+        }
+
+        // 5. 테스트용 '구매자' 계정 생성
+        if (!userRepository.existsByEmail("buyer@test.com")) {
+            userRepository.save(User.builder()
+                    .email("buyer@test.com")
+                    .password(passwordEncoder.encode("1234"))
+                    .name("김구매")
+                    .phone("010-9999-9999")
+                    .role(Role.CUSTOMER)
+                    .provider(Provider.LOCAL)
+                    .userStatus(UserStatus.ACTIVE)
+                    .build());
+            System.out.println("테스트용 구매자 계정 생성 완료: buyer@test.com / 1234");
         }
     }
 }

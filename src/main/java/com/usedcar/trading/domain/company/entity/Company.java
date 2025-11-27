@@ -78,6 +78,7 @@ public class Company extends BaseEntity {
     private User owner;
 
     @OneToMany(mappedBy = "company")
+    @Builder.Default
     private List<Vehicle> vehicles = new ArrayList<>();
 
     // 연관관계 편의 메서드

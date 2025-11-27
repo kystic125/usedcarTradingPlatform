@@ -1,6 +1,7 @@
 package com.usedcar.trading.domain.settlement.entity;
 
 import com.usedcar.trading.domain.company.entity.Company;
+import com.usedcar.trading.domain.report.entity.ReportStatus;
 import com.usedcar.trading.domain.transaction.entity.Transaction;
 import com.usedcar.trading.global.audit.BaseEntity;
 import jakarta.persistence.*;
@@ -30,6 +31,7 @@ public class Settlement extends BaseEntity {
     private BigDecimal settlementAmount;
 
     @Enumerated(EnumType.STRING)
+    @Builder.Default
     private SettlementStatus settlementStatus = SettlementStatus.PENDING;
 
     private LocalDateTime settledAt;
@@ -41,4 +43,9 @@ public class Settlement extends BaseEntity {
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "transaction_id", unique = true, nullable = false)
     private Transaction transaction;
+
+    public void complete() {
+        this.settlementStatus = SettlementStatus.COMPLETED;
+        this.settledAt = LocalDateTime.now();
+    }
 }

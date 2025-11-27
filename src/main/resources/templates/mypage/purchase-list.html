@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Purchases - SmartPick</title>
+
+    <link rel="apple-touch-icon" sizes="180x180" th:href="@{/images/favicon/apple-touch-icon.png}">
+    <link rel="icon" type="image/png" sizes="32x32" th:href="@{/images/favicon/favicon-32x32.png}">
+    <link rel="icon" type="image/png" sizes="16x16" th:href="@{/images/favicon/favicon-16x16.png}">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Antonio:wght@100..700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" th:href="@{/libs/owl.carousel/dist/assets/owl.carousel.min.css}">
+    <link rel="stylesheet" th:href="@{/libs/owl.carousel/dist/assets/owl.theme.default.min.css}">
+    <link rel="stylesheet" th:href="@{/libs/simplebar/dist/simplebar.min.css}">
+    <noscript>
+        <style>
+            .simplebar-content-wrapper { scrollbar-width: auto; -ms-overflow-style: auto; }
+            .simplebar-content-wrapper::-webkit-scrollbar, .simplebar-hide-scrollbar::-webkit-scrollbar { display: initial; width: initial; height: initial; }
+        </style>
+    </noscript>
+
+    <link rel="stylesheet" th:href="@{/libs/jarallax/dist/jarallax.min.css}">
+    <link rel="stylesheet" th:href="@{/css/style.min.css}">
+    <link id="templateColorScheme" rel="stylesheet" th:href="@{/css/color-schemes/tc_red.css}">
+    <link rel="stylesheet" th:href="@{/css/preloader.css}">
+
+    <script th:src="@{/js/preloader.js}"></script>
+</head>
+
+<body>
+
+<div class="preloader">
+    <div class="loader">
+        <div class="loader-inner ball-scale-multiple">
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
+    </div>
+</div>
+
+<header th:replace="~{fragments/header :: main-header}"></header>
+
+
+
+<main>
+    <div class="container py-5 mb-md-4">
+        <div class="row">
+
+            <section class="col-12">
+
+                <div class="bg-body-tertiary border rounded p-2 mb-4">
+                    <ul class="nav flex-wrap border-transparent">
+                        <li class="nav-item my-1">
+                            <a class="btn btn-sm d-flex align-items-center nav-link px-3 px-lg-4 mx-1 bg-body-tertiary text-body-secondary fs-6" href="/mypage">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-layout-dashboard me-2"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 4h4a1 1 0 0 1 1 1v6a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1v-6a1 1 0 0 1 1 -1" /><path d="M5 16h4a1 1 0 0 1 1 1v2a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1v-2a1 1 0 0 1 1 -1" /><path d="M15 12h4a1 1 0 0 1 1 1v6a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1v-6a1 1 0 0 1 1 -1" /><path d="M15 4h4a1 1 0 0 1 1 1v2a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1v-2a1 1 0 0 1 1 -1" /></svg>
+                                Dashboard
+                            </a>
+                        </li>
+
+                        <li class="nav-item my-1" sec:authorize="hasAnyRole('COMPANY_OWNER', 'COMPANY_EMPLOYEE')">
+                            <a class="btn btn-sm d-flex align-items-center nav-link px-3 px-lg-4 mx-1 bg-body-tertiary text-body-secondary fs-6" href="/company/sales">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-list-details me-2"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M13 5h8" /><path d="M13 9h5" /><path d="M13 15h8" /><path d="M13 19h5" /><path d="M3 4m0 1a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v4a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1z" /><path d="M3 14m0 1a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v4a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1z" /></svg>
+                                Listings
+                            </a>
+                        </li>
+
+                        <li class="nav-item my-1" sec:authorize="hasRole('COMPANY_OWNER')">
+                            <a class="btn btn-sm d-flex align-items-center nav-link px-3 px-lg-4 mx-1 bg-body-tertiary text-body-secondary fs-6" href="/company/employees">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-users me-2"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 7m-4 0a4 4 0 1 0 8 0a4 4 0 1 0 -8 0" /><path d="M3 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" /><path d="M16 3.13a4 4 0 0 1 0 7.75" /><path d="M21 21v-2a4 4 0 0 0 -3 -3.85" /></svg>
+                                Employees
+                            </a>
+                        </li>
+
+                        <li class="nav-item my-1" th:if="${user.role.name() == 'CUSTOMER'}">
+                            <a class="btn btn-sm d-flex align-items-center nav-link px-3 px-lg-4 mx-1 bg-body text-body-emphasis text-primary custom-color border border-light-subtle" href="/mypage/purchases">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-shopping-cart me-2"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M6 19m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0"/><path d="M17 19m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0"/><path d="M17 17h-11v-14h-2"/><path d="M6 5l14 1l-1 7h-13"/></svg>
+                                My Purchases
+                            </a>
+                        </li>
+
+                        <li class="nav-item my-1" th:if="${user.role.name() == 'CUSTOMER'}">
+                            <a class="btn btn-sm d-flex align-items-center nav-link px-3 px-lg-4 mx-1 bg-body-tertiary text-body-secondary fs-6" href="#">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-heart-check me-2"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M19.5 12.572l-3 2.928m-5.5 3.5a8916.99 8916.99 0 0 0 -6.5 -6.428a5 5 0 1 1 7.5 -6.566a5 5 0 1 1 7.5 6.572" /><path d="M15 19l2 2l4 -4" /></svg>
+                                Favorites
+                            </a>
+                        </li>
+
+                        <li class="nav-item my-1">
+                            <a class="btn btn-sm d-flex align-items-center nav-link px-3 px-lg-4 mx-1 bg-body-tertiary text-body-secondary fs-6" href="/mypage/settings/edit">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-layout-dashboard me-2"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M10.325 4.317c.426 -1.756 2.924 -1.756 3.35 0a1.724 1.724 0 0 0 2.573 1.066c1.543 -.94 3.31 .826 2.37 2.37a1.724 1.724 0 0 0 1.065 2.572c1.756 .426 1.756 2.924 0 3.35a1.724 1.724 0 0 0 -1.066 2.573c.94 1.543 -.826 3.31 -2.37 2.37a1.724 1.724 0 0 0 -2.572 1.065c-.426 1.756 -2.924 1.756 -3.35 0a1.724 1.724 0 0 0 -2.573 -1.066c-1.543 .94 -3.31 -.826 -2.37 -2.37a1.724 1.724 0 0 0 -1.065 -2.572c-1.756 -.426 -1.756 -2.924 0 -3.35a1.724 1.724 0 0 0 1.066 -2.573c-.94 -1.543 .826 -3.31 2.37 -2.37c1 .608 2.296 .07 2.572 -1.065z" /><path d="M9 12a3 3 0 1 0 6 0a3 3 0 0 0 -6 0" /></svg>
+                                Setting
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card border mb-4 overflow-hidden">
+                            <div class="card-header p-3 border-bottom bg-body">
+                                <h5 class="card-title mb-0">Purchase History <span class="badge bg-primary bg-opacity-10 text-primary ms-2" th:text="${#lists.size(transactions)} + ' Items'">0 Items</span></h5>
+                            </div>
+
+                            <div class="account-listings table-responsive border-0">
+                                <table class="table align-middle p-4 mb-0 table-shrink">
+                                    <thead class="bg-body-tertiary text-uppercase fs-sm border-top border-bottom">
+                                    <tr>
+                                        <th class="border-0 bg-transparent text-body-secondary ps-3">Image</th>
+                                        <th class="border-0 bg-transparent text-body-secondary ps-3">Vehicle</th>
+                                        <th class="border-0 bg-transparent text-body-secondary ps-3">Price</th>
+                                        <th class="border-0 bg-transparent text-body-secondary ps-3">Date</th>
+                                        <th class="border-0 bg-transparent text-body-secondary ps-3">Status</th>
+                                        <th class="border-0 bg-transparent text-body-secondary ps-3 text-end pe-4">Action</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody class="border-top-0">
+                                    <tr th:if="${#lists.isEmpty(transactions)}">
+                                        <td colspan="6" class="text-center py-5 text-muted">No purchase history found.</td>
+                                    </tr>
+
+                                    <tr th:each="txn : ${transactions}">
+                                        <td class="ps-3">
+                                            <div class="listing-image rounded-1 overflow-hidden border border-light-subtle" style="width: 100px; height: 75px;">
+                                                <a th:href="@{/vehicles/{id}(id=${txn.vehicle.vehicleId})}">
+                                                    <img class="img-fluid object-fit-cover w-100 h-100 lazy" th:src="${txn.vehicle.thumbnailUrl} ?: '/images/default-car.jpg'" alt="">
+                                                </a>
+                                            </div>
+                                        </td>
+                                        <td class="ps-3">
+                                            <h6 class="m-0">
+                                                <a th:href="@{/vehicles/{id}(id=${txn.vehicle.vehicleId})}" class="fs-6 text-decoration-none link-body-emphasis fw-bold"
+                                                   th:text="${txn.vehicle.brand} + ' ' + ${txn.vehicle.model}">Model</a>
+                                            </h6>
+                                            <small class="text-muted" th:text="'Seller: ' + ${txn.company.businessName}">Seller</small>
+                                        </td>
+                                        <td class="ps-3">
+                                            <span class="text-primary custom-color fw-bold" th:text="${#numbers.formatInteger(txn.price, 0, 'COMMA')} + '원'">Price</span>
+                                        </td>
+                                        <td class="ps-3">
+                                            <span class="text-body-secondary" th:text="${#temporals.format(txn.createdAt, 'yyyy-MM-dd')}">Date</span>
+                                        </td>
+                                        <td class="ps-3">
+                                            <div class="d-flex align-items-center listing-status">
+                                                <span class="badge bg-warning me-2 status-pending" th:if="${txn.transactionStatus.name() == 'REQUESTED'}"></span>
+                                                <span class="text-body-secondary" th:if="${txn.transactionStatus.name() == 'REQUESTED'}">Requested</span>
+
+                                                <span class="badge bg-primary me-2" th:if="${txn.transactionStatus.name() == 'APPROVED'}"></span>
+                                                <span class="text-body-secondary" th:if="${txn.transactionStatus.name() == 'APPROVED'}">Approved</span>
+
+                                                <span class="badge bg-success me-2 status-published" th:if="${txn.transactionStatus.name() == 'COMPLETED'}"></span>
+                                                <span class="text-body-secondary" th:if="${txn.transactionStatus.name() == 'COMPLETED'}">Completed</span>
+
+                                                <span class="badge bg-secondary me-2 status-cancelled" th:if="${txn.transactionStatus.name() == 'CANCELLED' or txn.transactionStatus.name() == 'REJECTED'}"></span>
+                                                <span class="text-body-secondary" th:if="${txn.transactionStatus.name() == 'CANCELLED'}">Cancelled</span>
+                                                <span class="text-body-secondary" th:if="${txn.transactionStatus.name() == 'REJECTED'}">Rejected</span>
+                                            </div>
+                                        </td>
+                                        <td class="text-end pe-4">
+                                            <div th:if="${txn.transactionStatus.name() == 'REQUESTED' or txn.transactionStatus.name() == 'APPROVED'}">
+                                                <form th:action="@{/transactions/{id}/cancel(id=${txn.transactionId})}" method="post">
+                                                    <button class="btn btn-sm btn-outline-danger fw-bold" onclick="return confirm('Cancel request?')">Cancel</button>
+                                                </form>
+                                            </div>
+                                            <div th:if="${txn.transactionStatus.name() == 'COMPLETED'}">
+                                                <button class="btn btn-sm btn-light border disabled">Review</button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card-footer bg-body border-top-0 pt-0 pb-4" th:if="${totalPages > 0}">
+                        <nav aria-label="Content navigation">
+                            <ul class="pagination justify-content-center mb-0">
+                                <li class="page-item custom-color me-auto" th:classappend="${nowPage == 1} ? 'disabled'">
+                                    <a class="page-link page-prev border-0 p-0 bg-transparent"
+                                       th:href="${nowPage == 1} ? '#' : @{/mypage/purchases(page=${nowPage - 2})}"
+                                       aria-label="Previous">
+                                                <span class="d-flex align-items-center">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icon-tabler-chevron-left"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M15 6l-6 6l6 6" /></svg>
+                                                </span>
+                                        <span class="arrow-edge"></span>
+                                    </a>
+                                </li>
+                                <li class="page-item custom-color" th:each="page : ${#numbers.sequence(startPage, endPage)}">
+                                    <a class="page-link"
+                                       th:classappend="${page == nowPage} ? 'active'"
+                                       th:href="@{/mypage/purchases(page=${page - 1})}"
+                                       th:text="${page}">1</a>
+                                </li>
+                                <li class="page-item custom-color ms-auto" th:classappend="${nowPage == totalPages} ? 'disabled'">
+                                    <a class="page-link page-next border-0 p-0 bg-transparent"
+                                       th:href="${nowPage == totalPages} ? '#' : @{/mypage/purchases(page=${nowPage})}"
+                                       aria-label="Next">
+                                                <span class="d-flex align-items-center">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icon-tabler-chevron-right"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l6 6l-6 6" /></svg>
+                                                </span>
+                                        <span class="arrow-edge"></span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+</main>
+
+<footer th:replace="~{fragments/footer :: main-footer}"></footer>
+
+<script th:src="@{/libs/jquery/dist/jquery.min.js}"></script>
+<script th:src="@{/libs/jquery-lazy/jquery.lazy.min.js}"></script>
+<script th:src="@{/libs/simplebar/dist/simplebar.min.js}"></script>
+<script th:src="@{/libs/bootstrap/dist/js/bootstrap.bundle.min.js}"></script>
+<script th:src="@{/libs/jarallax/dist/jarallax.min.js}"></script>
+<script th:src="@{/libs/fly-to/dist/js/fly-to.min.js}"></script>
+<script th:src="@{/js/script.min.js}"></script>
+
+</body>
+</html>

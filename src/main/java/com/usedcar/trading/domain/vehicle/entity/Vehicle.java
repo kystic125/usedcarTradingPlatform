@@ -57,10 +57,12 @@ public class Vehicle extends BaseEntity {
     @Column(columnDefinition = "TEXT")
     private String description;
 
+    @Builder.Default
     private Boolean accidentHistory = false;
 
     private String options;
 
+    @Builder.Default
     private int viewCount = 0;
 
     private String thumbnailUrl;
@@ -74,6 +76,7 @@ public class Vehicle extends BaseEntity {
      * Vehicle : VehicleImage => 1 : n
      */
     @OneToMany(mappedBy = "vehicle", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
     private List<VehicleImage> images = new ArrayList<>();
 
     // 연관 관계 편의 메서드
@@ -89,6 +92,7 @@ public class Vehicle extends BaseEntity {
 
 
     @OneToMany(mappedBy = "vehicle", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
     private List<Favorite> favorites = new ArrayList<>();
 
     // 연관관계 편의 메서드
@@ -129,5 +133,21 @@ public class Vehicle extends BaseEntity {
     private User approvedBy;
 
     @OneToMany(mappedBy = "vehicle")
+    @Builder.Default
     private List<Transaction> transactions = new ArrayList<>();
+
+    public void reject(String reason, User admin) {
+        this.vehicleStatus = VehicleStatus.REJECTED;
+        this.rejectedReason = reason;
+        this.approvedBy = admin;
+        this.approvedAt = LocalDateTime.now();
+    }
+
+    public void changeStatus(VehicleStatus status) {
+        this.vehicleStatus = status;
+    }
+
+    public void increaseViewCount() {
+        this.viewCount++;
+    }
 }

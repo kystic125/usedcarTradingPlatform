@@ -25,6 +25,7 @@ public class Employee extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private EmployeePosition employeePosition;
 
+    @Builder.Default
     private Boolean isActive = true;
 
     private LocalDateTime joinedAt;
@@ -42,6 +43,7 @@ public class Employee extends BaseEntity {
     private User user;
 
     @OneToMany(mappedBy = "registeredBy")
+    @Builder.Default
     private List<Vehicle> vehicles = new ArrayList<>();
 
     // 연관관계 편의 메서드

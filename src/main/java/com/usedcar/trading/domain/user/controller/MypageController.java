@@ -1,10 +1,21 @@
 package com.usedcar.trading.domain.user.controller;
 
+import com.usedcar.trading.domain.company.entity.Company;
+import com.usedcar.trading.domain.company.repository.CompanyRepository;
+import com.usedcar.trading.domain.transaction.entity.Transaction;
+import com.usedcar.trading.domain.transaction.repository.TransactionRepository;
 import com.usedcar.trading.domain.user.entity.Provider;
+import com.usedcar.trading.domain.user.entity.Role;
 import com.usedcar.trading.domain.user.entity.User;
 import com.usedcar.trading.domain.user.repository.UserRepository;
 import com.usedcar.trading.domain.user.service.UserService;
+import com.usedcar.trading.domain.vehicle.entity.VehicleStatus;
+import com.usedcar.trading.domain.vehicle.repository.VehicleRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.oauth2.core.user.OAuth2User;
@@ -14,6 +25,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -23,6 +35,9 @@ public class MypageController {
 
     private final UserRepository userRepository;
     private final UserService userService;
+    private final VehicleRepository vehicleRepository;
+    private final CompanyRepository companyRepository;
+    private final TransactionRepository transactionRepository;
 
     @GetMapping("/mypage")
     public String myPage(Model model, @AuthenticationPrincipal Object principal) {
@@ -62,6 +77,22 @@ public class MypageController {
         }
 
         model.addAttribute("user", user);
+
+        long activeListingsCount = 0;
+
+        if (user.getRole() == Role.COMPANY_OWNER) {
+            activeListingsCount = companyRepository.findByOwner_UserId(user.getUserId())
+                    .map(c -> vehicleRepository.countByCompanyAndVehicleStatus(c, VehicleStatus.SALE))
+                    .orElse(0L);
+        }
+        else if (user.getRole() == Role.COMPANY_EMPLOYEE && user.getEmployee() != null) {
+            Company company = user.getEmployee().getCompany();
+            if (company != null) {
+                activeListingsCount = vehicleRepository.countByCompanyAndVehicleStatus(company, VehicleStatus.SALE);
+            }
+        }
+
+        model.addAttribute("activeListingsCount", activeListingsCount);
 
         return "mypage";
     }
@@ -117,6 +148,37 @@ public class MypageController {
         } else {
             return "redirect:/mypage";
         }
+    }
+
+    // 구매 내역 조회
+    @GetMapping("/mypage/purchases")
+    public String myPurchases(Model model,
+                              @AuthenticationPrincipal Object principal,
+                              @PageableDefault(size = 10) Pageable pageable) {
+        User user = findUser(principal);
+
+        List<Transaction> allTransactions = transactionRepository.findByBuyerOrderByCreatedAtDesc(user);
+
+        int start = (int) pageable.getOffset();
+        int end = Math.min((start + pageable.getPageSize()), allTransactions.size());
+        List<Transaction> pagedList = (start > allTransactions.size()) ? List.of() : allTransactions.subList(start, end);
+
+        Page<Transaction> transactionPage = new PageImpl<>(pagedList, pageable, allTransactions.size());
+
+        model.addAttribute("transactions", transactionPage);
+
+        int totalPages = transactionPage.getTotalPages();
+        int nowPage = transactionPage.getNumber() + 1;
+        int startPage = Math.max(nowPage - 2, 1);
+        int endPage = Math.min(nowPage + 2, totalPages);
+        if(endPage == 0) endPage = 1;
+
+        model.addAttribute("nowPage", nowPage);
+        model.addAttribute("startPage", startPage);
+        model.addAttribute("endPage", endPage);
+        model.addAttribute("totalPages", totalPages);
+
+        return "mypage/purchase-list";
     }
 
     private User findUser(Object principal) {

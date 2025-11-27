@@ -6,7 +6,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Settings - SmartPick</title>
+    <title>Settlements - SmartPick</title>
 
     <link rel="apple-touch-icon" sizes="180x180" th:href="@{/images/favicon/apple-touch-icon.png}">
     <link rel="icon" type="image/png" sizes="32x32" th:href="@{/images/favicon/favicon-32x32.png}">
@@ -71,7 +71,7 @@
                         </li>
 
                         <li class="nav-item my-1" sec:authorize="hasAnyRole('COMPANY_OWNER', 'COMPANY_EMPLOYEE')">
-                            <a class="btn btn-sm d-flex align-items-center nav-link px-3 px-lg-4 mx-1 bg-body-tertiary text-body-secondary fs-6" href="/company/settlements">
+                            <a class="btn btn-sm d-flex align-items-center nav-link px-3 px-lg-4 mx-1 bg-body text-body-emphasis text-primary custom-color border border-light-subtle" href="/company/settlements">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-wallet me-2"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M17 8v-3a1 1 0 0 0 -1 -1h-10a2 2 0 0 0 0 4h12a1 1 0 0 1 1 1v3m0 4v3a1 1 0 0 1 -1 1h-12a2 2 0 0 1 -2 -2v-12" /><path d="M20 12v4h-4a2 2 0 0 1 0 -4h4" /></svg>
                                 Settlements
                             </a>
@@ -99,7 +99,7 @@
                         </li>
 
                         <li class="nav-item my-1">
-                            <a class="btn btn-sm d-flex align-items-center nav-link px-3 px-lg-4 mx-1 bg-body text-body-emphasis text-primary custom-color border border-light-subtle" href="/mypage/settings/edit">
+                            <a class="btn btn-sm d-flex align-items-center nav-link px-3 px-lg-4 mx-1 bg-body-tertiary text-body-secondary fs-6" href="/mypage/settings/edit">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-layout-dashboard me-2"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M10.325 4.317c.426 -1.756 2.924 -1.756 3.35 0a1.724 1.724 0 0 0 2.573 1.066c1.543 -.94 3.31 .826 2.37 2.37a1.724 1.724 0 0 0 1.065 2.572c1.756 .426 1.756 2.924 0 3.35a1.724 1.724 0 0 0 -1.066 2.573c.94 1.543 -.826 3.31 -2.37 2.37a1.724 1.724 0 0 0 -2.572 1.065c-.426 1.756 -2.924 1.756 -3.35 0a1.724 1.724 0 0 0 -2.573 -1.066c-1.543 .94 -3.31 -.826 -2.37 -2.37a1.724 1.724 0 0 0 -1.065 -2.572c-1.756 -.426 -1.756 -2.924 0 -3.35a1.724 1.724 0 0 0 1.066 -2.573c-.94 -1.543 .826 -3.31 2.37 -2.37c1 .608 2.296 .07 2.572 -1.065z" /><path d="M9 12a3 3 0 1 0 6 0a3 3 0 0 0 -6 0" /></svg>
                                 Setting
                             </a>
@@ -108,107 +108,89 @@
                 </div>
 
                 <div class="row">
-                <div class="col-12 col-lg-4">
-
-                    <div class="d-lg-none mb-4">
-                        <button class="d-flex align-items-center bg-transparent border-0 p-0" type="button" data-bs-toggle="offcanvas" data-bs-target="#settingsOffcanvasNav" aria-controls="settingsOffcanvasNav">
-                                <span class="btn btn-primary">
-                                    <i class="bi bi-sliders"></i>
-                                </span>
-                            <span class="fs-6 fw-semibold d-lg-none mb-0 ms-3">Settings Menu</span>
-                        </button>
-                    </div>
-
-                    <nav class="navbar navbar-light navbar-expand-lg p-0">
-                        <div class="offcanvas offcanvas-start" tabindex="-1" id="settingsOffcanvasNav">
-                            <div class="offcanvas-header">
-                                <button type="button" class="btn-close text-reset ms-auto" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                    <div class="col-12">
+                        <div class="card border mb-4 overflow-hidden">
+                            <div class="card-header p-3 border-bottom bg-body">
+                                <h5 class="card-title mb-0">Settlement History</h5>
                             </div>
-                            <div class="offcanvas-body">
-                                <div class="card bg-body-tertiary border w-100">
-                                    <div class="card-body rounded p-2">
-                                        <ul class="nav flex-column border-transparent">
 
-                                            <li class="nav-item my-1">
-                                                <a class="btn btn-sm d-flex align-items-center nav-link px-3 px-lg-4 mx-1 bg-body text-body-emphasis text-primary custom-color border border-light-subtle" th:href="@{/mypage/settings/edit}">
-                                                    <i class="bi bi-person-gear me-3 fs-6"></i> Profile
-                                                </a>
-                                            </li>
+                            <div class="account-listings table-responsive border-0">
+                                <table class="table align-middle p-4 mb-0 table-shrink">
+                                    <thead class="bg-body-tertiary text-uppercase fs-sm border-top border-bottom">
+                                    <tr>
+                                        <th class="border-0 bg-transparent text-body-secondary ps-3">ID</th>
+                                        <th class="border-0 bg-transparent text-body-secondary ps-3">Vehicle</th>
+                                        <th class="border-0 bg-transparent text-body-secondary ps-3">Total</th>
+                                        <th class="border-0 bg-transparent text-body-secondary ps-3">Commission</th>
+                                        <th class="border-0 bg-transparent text-body-secondary ps-3">Payout</th>
+                                        <th class="border-0 bg-transparent text-body-secondary ps-3">Status</th>
+                                        <th class="border-0 bg-transparent text-body-secondary ps-3 text-end pe-4">Date</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody class="border-top-0">
+                                    <tr th:if="${#lists.isEmpty(settlements)}">
+                                        <td colspan="7" class="text-center py-5 text-muted">No settlement history.</td>
+                                    </tr>
 
-                                            <li class="nav-item my-1" th:if="${user.role.name() == 'CUSTOMER'}">
-                                                <a class="btn btn-sm d-flex align-items-center nav-link px-3 px-lg-4 mx-1 bg-body-tertiary text-body-secondary fs-6" th:href="@{/mypage/settings/dealer}">
-                                                    <i class="bi bi-briefcase me-3 fs-6"></i> Become a Dealer
-                                                </a>
-                                            </li>
+                                    <tr th:each="st : ${settlements}">
+                                        <td class="ps-3 text-secondary" th:text="'#' + ${st.settlementId}">#1</td>
+                                        <td class="ps-3">
+                                            <h6 class="m-0" th:text="${st.transaction.vehicle.model}">Model</h6>
+                                            <small class="text-muted" th:text="'Txn: #' + ${st.transaction.transactionId}">#10</small>
+                                        </td>
+                                        <td class="ps-3" th:text="${#numbers.formatInteger(st.totalAmount, 0, 'COMMA')}">1000</td>
+                                        <td class="ps-3 text-danger" th:text="'- ' + ${#numbers.formatInteger(st.commissionAmount, 0, 'COMMA')}">22</td>
+                                        <td class="ps-3 fw-bold text-primary custom-color" th:text="${#numbers.formatInteger(st.settlementAmount, 0, 'COMMA')}">978</td>
+                                        <td class="ps-3">
+                                            <span class="badge bg-warning text-dark status-pending me-2" th:if="${st.settlementStatus.name() == 'PENDING'}"></span>
+                                            <span class="text-body-secondary" th:if="${st.settlementStatus.name() == 'PENDING'}">Pending</span>
 
-                                            <li class="nav-item my-1" th:if="${user.provider.name() == 'LOCAL'}">
-                                                <a class="btn btn-sm d-flex align-items-center nav-link px-3 px-lg-4 mx-1 bg-body-tertiary text-body-secondary fs-6" th:href="@{/mypage/settings/social}">
-                                                    <i class="bi bi-link-45deg me-3 fs-6"></i> Linked Accounts
-                                                </a>
-                                            </li>
-
-                                            <li class="nav-item my-1">
-                                                <a class="btn btn-sm d-flex align-items-center nav-link px-3 px-lg-4 mx-1 bg-body-tertiary text-danger fs-6" th:href="@{/mypage/settings/delete}">
-                                                    <i class="bi bi-trash me-3 fs-6"></i> Delete Account
-                                                </a>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </div>
+                                            <span class="badge bg-success status-published me-2" th:if="${st.settlementStatus.name() == 'COMPLETED'}"></span>
+                                            <span class="text-body-secondary" th:if="${st.settlementStatus.name() == 'COMPLETED'}">Paid</span>
+                                        </td>
+                                        <td class="ps-3 text-end pe-4">
+                                            <span th:if="${st.settledAt}" th:text="${#temporals.format(st.settledAt, 'yyyy-MM-dd')}">2023-01-01</span>
+                                            <span th:unless="${st.settledAt}">-</span>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
                             </div>
-                        </div>
-                    </nav>
-                </div>
-
-                <div class="col-12 col-lg-8">
-
-                    <div class="card border">
-                        <div class="card-header p-3 border-bottom bg-body">
-                            <h5 class="card-title mb-0 py-1 fw-bold">Profile Settings</h5>
-                        </div>
-                        <div class="card-body rounded p-4 m-1">
-
-                            <form action="/mypage/update" method="post" onsubmit="return confirm('정보를 수정하시겠습니까? (이메일 변경 시 로그아웃됩니다)');">
-
-                                <div th:if="${param.error}" class="alert alert-danger text-center p-2 small mb-4">
-                                    <i class="bi bi-exclamation-circle me-2"></i> <span th:text="${param.error}"></span>
-                                </div>
-
-                                <div class="row">
-                                    <div class="col-12 col-md-6">
-                                        <div class="mb-3">
-                                            <label class="form-label fw-bold">Full Name</label>
-                                            <input type="text" class="form-control custom-color bg-light" th:value="${user.name}" disabled>
-                                            <div class="form-text text-muted small">이름은 변경할 수 없습니다.</div>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-12 col-md-6">
-                                        <div class="mb-3">
-                                            <label class="form-label fw-bold">Phone Number</label>
-                                            <input type="text" name="phone" class="form-control custom-color" th:value="${user.phone}" required>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="mb-3">
-                                    <label class="form-label fw-bold">Email Address (Login ID)</label>
-                                    <div class="input-group">
-                                        <input type="email" id="email" name="email" class="form-control custom-color" th:value="${user.email}" required>
-                                        <button type="button" id="checkBtn" class="btn btn-outline-secondary" onclick="checkEmail()">Check</button>
-                                    </div>
-                                    <div id="emailFeedback" class="form-text small mt-1"></div>
-                                </div>
-
-                                <div class="text-end mt-4">
-                                    <button type="submit" id="submitBtn" class="btn btn-primary custom-color px-4 fw-bold">Save Changes</button>
-                                </div>
-                            </form>
-
                         </div>
                     </div>
 
-                </div>
+                    <div class="card-footer bg-body border-top-0 pt-0 pb-4" th:if="${totalPages > 0}">
+                        <nav aria-label="Content navigation">
+                            <ul class="pagination justify-content-center mb-0">
+                                <li class="page-item custom-color me-auto" th:classappend="${nowPage == 1} ? 'disabled'">
+                                    <a class="page-link page-prev border-0 p-0 bg-transparent"
+                                       th:href="${nowPage == 1} ? '#' : @{/company/settlements(page=${nowPage - 2})}"
+                                       aria-label="Previous">
+                                                <span class="d-flex align-items-center">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icon-tabler-chevron-left"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M15 6l-6 6l6 6" /></svg>
+                                                </span>
+                                        <span class="arrow-edge"></span>
+                                    </a>
+                                </li>
+                                <li class="page-item custom-color" th:each="page : ${#numbers.sequence(startPage, endPage)}">
+                                    <a class="page-link"
+                                       th:classappend="${page == nowPage} ? 'active'"
+                                       th:href="@{/company/settlements(page=${page - 1})}"
+                                       th:text="${page}">1</a>
+                                </li>
+                                <li class="page-item custom-color ms-auto" th:classappend="${nowPage == totalPages} ? 'disabled'">
+                                    <a class="page-link page-next border-0 p-0 bg-transparent"
+                                       th:href="${nowPage == totalPages} ? '#' : @{/company/settlements(page=${nowPage})}"
+                                       aria-label="Next">
+                                                <span class="d-flex align-items-center">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icon-tabler-chevron-right"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l6 6l-6 6" /></svg>
+                                                </span>
+                                        <span class="arrow-edge"></span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </nav>
+                    </div>
                 </div>
             </section>
         </div>
@@ -216,57 +198,8 @@
 </main>
 
 <footer th:replace="~{fragments/footer :: main-footer}"></footer>
-
 <script th:src="@{/libs/jquery/dist/jquery.min.js}"></script>
-<script th:src="@{/libs/jquery-lazy/jquery.lazy.min.js}"></script>
-<script th:src="@{/libs/simplebar/dist/simplebar.min.js}"></script>
 <script th:src="@{/libs/bootstrap/dist/js/bootstrap.bundle.min.js}"></script>
-<script th:src="@{/libs/jarallax/dist/jarallax.min.js}"></script>
-<script th:src="@{/libs/fly-to/dist/js/fly-to.min.js}"></script>
 <script th:src="@{/js/script.min.js}"></script>
-
-<script th:inline="javascript">
-    const myCurrentEmail = [[${user.email}]];
-
-    function checkEmail() {
-        const emailInput = document.getElementById('email');
-        const feedback = document.getElementById('emailFeedback');
-        const submitBtn = document.getElementById('submitBtn');
-        const email = emailInput.value;
-
-        if (!email) { alert("Please enter email."); return; }
-
-        if (email === myCurrentEmail) {
-            feedback.style.color = 'green';
-            feedback.textContent = "Current email.";
-            submitBtn.disabled = false;
-            return;
-        }
-
-        fetch('/api/check-email?email=' + email)
-            .then(response => response.json())
-            .then(isDuplicate => {
-                if (isDuplicate) {
-                    feedback.style.color = 'red';
-                    feedback.textContent = "Email already in use.";
-                    submitBtn.disabled = true;
-                } else {
-                    feedback.style.color = 'green';
-                    feedback.textContent = "Email available.";
-                    submitBtn.disabled = false;
-                }
-            });
-    }
-
-    document.getElementById('email').addEventListener('input', function() {
-        if (this.value !== myCurrentEmail) {
-            document.getElementById('submitBtn').disabled = true;
-            document.getElementById('emailFeedback').textContent = "";
-        } else {
-            document.getElementById('submitBtn').disabled = false;
-        }
-    });
-</script>
-
 </body>
 </html>

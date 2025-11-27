@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${car.brand} + ' ' + ${car.model}">Car Details</title>
+
+    <link rel="apple-touch-icon" sizes="180x180" th:href="@{/images/favicon/apple-touch-icon.png}">
+    <link rel="icon" type="image/png" sizes="32x32" th:href="@{/images/favicon/favicon-32x32.png}">
+    <link rel="icon" type="image/png" sizes="16x16" th:href="@{/images/favicon/favicon-16x16.png}">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Antonio:wght@100..700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" th:href="@{/libs/owl.carousel/dist/assets/owl.carousel.min.css}">
+    <link rel="stylesheet" th:href="@{/libs/owl.carousel/dist/assets/owl.theme.default.min.css}">
+    <link rel="stylesheet" th:href="@{/libs/simplebar/dist/simplebar.min.css}">
+    <noscript>
+        <style>
+            .simplebar-content-wrapper { scrollbar-width: auto; -ms-overflow-style: auto; }
+            .simplebar-content-wrapper::-webkit-scrollbar, .simplebar-hide-scrollbar::-webkit-scrollbar { display: initial; width: initial; height: initial; }
+        </style>
+    </noscript>
+
+    <link rel="stylesheet" th:href="@{/libs/jarallax/dist/jarallax.min.css}">
+    <link rel="stylesheet" th:href="@{/css/style.min.css}">
+    <link id="templateColorScheme" rel="stylesheet" th:href="@{/css/color-schemes/tc_red.css}">
+    <link rel="stylesheet" th:href="@{/css/preloader.css}">
+
+    <script th:src="@{/js/preloader.js}"></script>
+</head>
+
+<body>
+
+<div class="preloader">
+    <div class="loader">
+        <div class="loader-inner ball-scale-multiple">
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
+    </div>
+</div>
+
+<header th:replace="~{fragments/header :: main-header}"></header>
+
+<div class="breadcrumb-style-1 bg-body-tertiary position-relative z-1 py-4">
+    <div class="container d-lg-flex position-relative z-1 justify-content-between align-items-center py-2 py-lg-3">
+        <div class="order-lg-2 mb-0">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb flex-lg-nowrap justify-content-center justify-content-lg-start m-0 fs-sm">
+                    <li class="breadcrumb-item">
+                        <a class="link-body-emphasis text-nowrap link-offset-2 link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-50-hover" href="/">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-home mt-n1-sm me-1" width="16" height="16" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                <path d="M5 12l-2 0l9 -9l9 9l-2 0"></path>
+                                <path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7"></path>
+                                <path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6"></path>
+                            </svg>Home
+                        </a>
+                    </li>
+                    <li class="breadcrumb-item text-nowrap">
+                        <a class="link-body-emphasis text-nowrap link-offset-2 link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-50-hover" href="#">Vehicles</a>
+                    </li>
+                    <li class="breadcrumb-item text-nowrap active" aria-current="page" th:text="${car.model}">Model</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+</div>
+
+<main>
+    <div class="container car-details py-5 mb-2 mb-md-4">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="row">
+                    <div class="col-lg-8 pb-4">
+                        <div class="h-100 car-title bg-body-tertiary border rounded-2 p-3 position-relative">
+                            <h1 class="fw-bold car-name fs-special fs-2 p-0 m-0 text-body-emphasis" th:text="${car.brand} + ' ' + ${car.model}">BMW X5</h1>
+                            <div class="mt-3 fs-sm">
+                                <div class="d-md-inline-flex d-flex justify-content-start">
+                                    <div class="car-id me-md-4">
+                                        <span class="car-id-icon text-uppercase fw-bold">Stock #:</span>
+                                        <span class="text-body-secondary" th:text="${car.vehicleId}">74587</span>
+                                    </div>
+                                    <div class="car-date me-md-4">
+                                        <span class="car-vin-icon text-uppercase fw-bold">Added:</span>
+                                        <span class="text-body-secondary" th:text="${#temporals.format(car.createdAt, 'yyyy-MM-dd')}">15, Aug 2023</span>
+                                    </div>
+                                </div>
+                                <div class="d-md-inline-flex d-flex justify-content-start">
+                                    <div class="car-views me-md-4">
+                                        <span class="car-vin-icon text-uppercase fw-bold">Views:</span>
+                                        <span class="text-body-secondary" th:text="${car.viewCount}">5314</span>
+                                    </div>
+                                    <div class="car-status">
+                                        <span class="badge text-bg-success text-uppercase rounded-1 fs-xs-alt fw-normal text-spacing-sm me-1" th:if="${car.vehicleStatus.name() == 'SALE'}">Sale</span>
+                                        <span class="badge text-bg-warning text-uppercase rounded-1 fs-xs-alt fw-normal text-spacing-sm me-1" th:if="${car.vehicleStatus.name() == 'PENDING'}">Pending</span>
+                                        <span class="badge text-bg-info text-uppercase rounded-1 fs-xs-alt fw-normal text-spacing-sm me-1" th:if="${car.vehicleStatus.name() == 'RESERVED'}">Reserved</span>
+                                        <span class="badge text-bg-secondary text-uppercase rounded-1 fs-xs-alt fw-normal text-spacing-sm me-1" th:if="${car.vehicleStatus.name() == 'SOLD'}">Sold</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-4 pb-4">
+                        <div class="h-100 bg-body-tertiary border rounded-2 p-3 d-flex justify-content-between">
+                            <div class="price-text">
+                                <span class="price-text d-block fs-2">Price</span>
+                                <span class="price-neg d-block text-body-secondary">Negotiable</span>
+                            </div>
+                            <div class="car-price text-end">
+                                <span class="price-val d-block fs-special fs-2 fw-bold text-body-emphasis text-primary custom-color"
+                                      th:id="displayPrice" th:text="${#numbers.formatInteger(car.price, 0, 'COMMA')} + '원'">$95,000</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-8">
+
+                <div class="car-photos mb-4 pb-3 position-relative">
+                    <div class="position-absolute end-0 top-0 pt-3 pe-3 z-2">
+                        <button type="button" class="btn btn-slider-zoomin p-0">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-zoom-in" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                <path d="M10 10m-7 0a7 7 0 1 0 14 0a7 7 0 1 0 -14 0"></path>
+                                <path d="M7 10l6 0"></path>
+                                <path d="M10 7l0 6"></path>
+                                <path d="M21 21l-6 -6"></path>
+                            </svg>
+                        </button>
+                    </div>
+
+                    <div id="sync1" class="owl-carousel owl-theme popup-gallery rounded-2">
+                        <th:block th:if="${!#lists.isEmpty(car.images)}">
+                            <div class="item rounded-2" th:each="img : ${car.images}">
+                                <a th:href="${img.imageUrl}" data-effect="mfp-zoom-in" title="">
+                                    <img class="img-fluid object-fit-cover rounded-2" th:src="${img.imageUrl}" alt="Car Image" style="height: 450px; width: 100%;">
+                                </a>
+                            </div>
+                        </th:block>
+                        <th:block th:if="${#lists.isEmpty(car.images)}">
+                            <div class="item rounded-2">
+                                <a href="/images/default-car.jpg" data-effect="mfp-zoom-in" title="Default Image">
+                                    <img class="img-fluid object-fit-cover rounded-2" src="/images/default-car.jpg" alt="Default Image" style="height: 450px; width: 100%;">
+                                </a>
+                            </div>
+                        </th:block>
+                    </div>
+
+                    <div id="sync2" class="owl-carousel owl-theme position-relative mt-2" th:if="${!#lists.isEmpty(car.images)}">
+                        <div class="item rounded-2" th:each="img : ${car.images}">
+                            <img class="img-fluid object-fit-cover rounded-2" th:src="${img.imageUrl}" alt="Thumbnail" style="height: 80px;">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="car-description mb-4 pb-3">
+                    <h2 class="fs-special fw-bold">Description</h2>
+                    <p th:text="${car.description}">Vehicle description...</p>
+                </div>
+
+                <div class="car-features mb-4 pb-3">
+                    <h2 class="fs-special fw-bold">Features</h2>
+                    <div class="accordion" id="accordionFeatures">
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button fs-5 fw-bold custom-color" type="button" data-bs-toggle="collapse" data-bs-target="#exteriorFeatures" aria-expanded="true" aria-controls="exteriorFeatures">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-car me-3" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                        <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                        <path d="M7 17m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0"></path>
+                                        <path d="M17 17m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0"></path>
+                                        <path d="M5 17h-2v-6l2 -5h9l4 5h1a2 2 0 0 1 2 2v4h-2m-4 0h-6m-6 -6h15m-6 0v-5"></path>
+                                    </svg> General Features
+                                </button>
+                            </h2>
+                            <div id="exteriorFeatures" class="accordion-collapse collapse show" data-bs-parent="#accordionFeatures">
+                                <div class="accordion-body">
+                                    <ul class="list-group list-group-horizontal list-group-flush row row-cols-1 row-cols-md-2 border-0">
+                                        <li class="list-group-item col border-0 custom-color"><strong>Brand: </strong> <span th:text="${car.brand}"></span></li>
+                                        <li class="list-group-item col border-0 custom-color"><strong>Model: </strong> <span th:text="${car.model}"></span></li>
+                                        <li class="list-group-item col border-0 custom-color"><strong>Year: </strong> <span th:text="${car.modelYear}"></span></li>
+                                        <li class="list-group-item col border-0 custom-color"><strong>Fuel: </strong> <span th:text="${car.fuelType}"></span></li>
+                                        <li class="list-group-item col border-0 custom-color"><strong>Transmission: </strong> <span th:text="${car.transmission}"></span></li>
+                                        <li class="list-group-item col border-0 custom-color"><strong>Color: </strong> <span th:text="${car.color}"></span></li>
+                                        <li class="list-group-item col border-0 custom-color"><strong>Mileage: </strong> <span th:text="${#numbers.formatInteger(car.mileage, 0, 'COMMA')}"></span> km</li>
+                                        <li class="list-group-item col border-0 custom-color"><strong>Accident: </strong> <span th:text="${car.accidentHistory ? 'Yes' : 'No'}"></span></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button fs-5 fw-bold custom-color collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#interiorFeatures" aria-expanded="false" aria-controls="interiorFeatures">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-dashboard me-3" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                        <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                        <path d="M12 13m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0"></path>
+                                        <path d="M13.45 11.55l2.05 -2.05"></path>
+                                        <path d="M6.4 20a9 9 0 1 1 11.2 0z"></path>
+                                    </svg> Vehicle Options
+                                </button>
+                            </h2>
+                            <div id="interiorFeatures" class="accordion-collapse collapse" data-bs-parent="#accordionFeatures">
+                                <div class="accordion-body">
+                                    <div th:if="${car.options != null}">
+                                        <ul class="list-group list-group-horizontal list-group-flush row row-cols-1 row-cols-md-2 border-0">
+                                            <li class="list-group-item col border-0 custom-color" th:each="opt : ${#strings.arraySplit(car.options, ',')}" th:text="${opt.trim()}">Option</li>
+                                        </ul>
+                                    </div>
+                                    <p th:if="${car.options == null}" class="text-muted ps-3">No specific options listed.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="financing-calculator bg-body-tertiary border rounded-2 p-3 p-sm-4 mb-5">
+                    <h5 class="fw-bold fs-special fs-4 pb-3 d-flex align-items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calculator me-3" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                            <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                            <path d="M4 3m0 2a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v14a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2z"></path>
+                            <path d="M8 7m0 1a1 1 0 0 1 1 -1h6a1 1 0 0 1 1 1v1a1 1 0 0 1 -1 1h-6a1 1 0 0 1 -1 -1z"></path>
+                            <path d="M8 14l0 .01"></path><path d="M12 14l0 .01"></path><path d="M16 14l0 .01"></path>
+                            <path d="M8 17l0 .01"></path><path d="M12 17l0 .01"></path><path d="M16 17l0 .01"></path>
+                        </svg>Financing Calculator
+                    </h5>
+                    <form id="loan-calculator-form">
+                        <div class="mb-3 row">
+                            <label class="col-sm-3 col-form-label text-sm-end">Car Price:</label>
+                            <div class="col-sm-9">
+                                <div class="input-group">
+                                    <span class="input-group-text rounded-start border">₩</span>
+                                    <input type="number" class="form-control rounded-end bg-body" id="carPriceInput" th:value="${car.price}" readonly>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-3 row">
+                            <label class="col-sm-3 col-form-label text-sm-end">Down Payment:</label>
+                            <div class="col-sm-9">
+                                <input type="number" class="form-control rounded bg-body" id="downPayment" value="0">
+                            </div>
+                        </div>
+                        <div class="mb-3 row">
+                            <label class="col-sm-3 col-form-label text-sm-end">Interest Rate:</label>
+                            <div class="col-sm-9">
+                                <div class="input-group">
+                                    <input type="number" class="form-control bg-body" id="interestRate" value="3.5" step="0.1">
+                                    <span class="input-group-text text-secondary rounded-end">%</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-3 row">
+                            <label class="col-sm-3 col-form-label text-sm-end">Loan Term:</label>
+                            <div class="col-sm-9">
+                                <div class="input-group">
+                                    <input type="number" class="form-control rounded-start bg-body" id="loanTerm" value="12">
+                                    <span class="input-group-text rounded-end border">Months</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-3 row">
+                            <div class="col-sm-9 ms-auto">
+                                <button class="btn btn-primary custom-color fs-sm px-4 py-2 text-uppercase fw-bold text-spacing-md" type="button" onclick="calculateLoan()">Calculate</button>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="loan-results" class="d-none mt-3 p-3 bg-white border rounded">
+                        <h6 class="fw-bold">Estimated Monthly Payment:</h6>
+                        <h3 class="text-primary" id="monthlyPaymentResult">0 원</h3>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="col-lg-4">
+                <div class="sticky-top">
+                    <div class="card border">
+                        <div class="card-body">
+                            <h5 class="fw-bold fs-special fs-4 mb-1">Overview</h5>
+                        </div>
+                        <ul class="list-group list-group-flush m-3 border-0 my-0">
+                            <li class="list-group-item d-flex justify-content-between list-group-item-light border mb-1 rounded-1">
+                                <span>Year</span><span class="fw-bold" th:text="${car.modelYear}"></span>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between list-group-item-light border mb-1 rounded-1">
+                                <span>Mileage</span><span class="fw-bold" th:text="${#numbers.formatInteger(car.mileage, 0, 'COMMA')} + ' km'"></span>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between list-group-item-light border mb-1 rounded-1">
+                                <span>Fuel</span><span class="fw-bold" th:text="${car.fuelType}"></span>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between list-group-item-light border mb-1 rounded-1">
+                                <span>Trans</span><span class="fw-bold" th:text="${car.transmission}"></span>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between list-group-item-light border mb-1 rounded-1">
+                                <span>Color</span><span class="fw-bold" th:text="${car.color}"></span>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between list-group-item-light border mb-1 rounded-1">
+                                <span>Seller</span><span class="fw-bold" th:text="${car.company.businessName}"></span>
+                            </li>
+                        </ul>
+                        <div class="card-body">
+                            <div class="container p-0">
+                                <div class="row row-cols-1 g-2">
+
+                                    <div class="col" th:if="${car.vehicleStatus.name() == 'SALE'}">
+                                        <div sec:authorize="isAuthenticated()">
+                                            <form action="/transactions/request" method="post" onsubmit="return confirm('판매자에게 구매 요청을 보내시겠습니까?');">
+                                                <input type="hidden" name="vehicleId" th:value="${car.vehicleId}">
+                                                <button type="submit" class="btn btn-warning w-100 d-flex justify-content-start align-items-center rounded-1">
+                                                    <span class="me-3">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-check" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                                            <path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 12l5 5l10 -10" />
+                                                        </svg>
+                                                    </span>
+                                                    <span class="">Purchase Request</span>
+                                                </button>
+                                            </form>
+                                        </div>
+                                        <div sec:authorize="isAnonymous()">
+                                            <a href="/login" class="btn btn-secondary w-100 d-flex justify-content-start align-items-center rounded-1">
+                                                <span class="">Login to Purchase</span>
+                                            </a>
+                                        </div>
+                                    </div>
+
+                                    <div class="col" th:if="${car.vehicleStatus.name() == 'RESERVED'}">
+                                        <button class="btn btn-secondary w-100 rounded-1 disabled">Reserved</button>
+                                    </div>
+                                    <div class="col" th:if="${car.vehicleStatus.name() == 'SOLD'}">
+                                        <button class="btn btn-dark w-100 rounded-1 disabled">Sold Out</button>
+                                    </div>
+
+                                    <div class="col">
+                                        <button type="button" class="btn btn-warning w-100 d-flex justify-content-start align-items-center rounded-1">
+                                            <span class="me-3">
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-steering-wheel" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                                    <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                                    <path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"></path>
+                                                    <path d="M12 12m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0"></path>
+                                                    <path d="M12 14l0 7"></path>
+                                                    <path d="M10 12l-6.75 -2"></path>
+                                                    <path d="M14 12l6.75 -2"></path>
+                                                </svg>
+                                            </span>
+                                            <span class="">Book Test Drive</span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="d-flex justify-content-center align-items-center my-2">
+                        <a href="javascript:void()" class="text-center link-secondary link-opacity-75 link-opacity-100-hover text-decoration-none">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-flag me-1">
+                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                <path d="M5 5a5 5 0 0 1 7 0a5 5 0 0 0 7 0v9a5 5 0 0 1 -7 0a5 5 0 0 0 -7 0v-9z" />
+                                <path d="M5 21v-7" />
+                            </svg>Report listing
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container-fluid p-0 bg-body-tertiary" th:if="${recentCars != null and !recentCars.isEmpty()}">
+        <div class="container py-5">
+            <div class="row">
+                <div class="col-12">
+                    <h3 class="fs-5 text-uppercase pb-3 mb-4 custom-color">Recently Viewed Cars</h3>
+                    <div class="recently-viewed-cars-carousel owl-carousel owl-theme">
+                        <div class="item" th:each="recent : ${recentCars}">
+                            <div class="card border">
+                                <div class="card-image position-relative">
+                                    <img th:src="${recent.thumbnailUrl} ?: '/images/default-car.jpg'"
+                                         class="img-fluid object-fit-cover rounded-top lazy" style="height: 200px; width: 100%;" alt="Car">
+                                </div>
+                                <div class="card-body">
+                                    <h3 class="card-title">
+                                        <a th:href="@{/vehicles/{id}(id=${recent.vehicleId})}" class="fw-bold fs-6 text-decoration-none link-body-emphasis link-opacity-100 link-opacity-75-hover" th:text="${recent.brand} + ' ' + ${recent.model}">Model</a>
+                                    </h3>
+                                    <p class="card-text">
+                                        <span class="car-price text-primary fs-special fs-6 fw-bold custom-color" th:text="${#numbers.formatInteger(recent.price, 0, 'COMMA')} + '원'">Price</span>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</main>
+
+<footer th:replace="~{fragments/footer :: main-footer}"></footer>
+
+<script th:src="@{/libs/jquery/dist/jquery.min.js}"></script>
+<script th:src="@{/libs/jquery-lazy/jquery.lazy.min.js}"></script>
+<script th:src="@{/libs/simplebar/dist/simplebar.min.js}"></script>
+<script th:src="@{/libs/bootstrap/dist/js/bootstrap.bundle.min.js}"></script>
+<script th:src="@{/libs/jarallax/dist/jarallax.min.js}"></script>
+<script th:src="@{/libs/fly-to/dist/js/fly-to.min.js}"></script>
+<script th:src="@{/js/script.min.js}"></script>
+<script th:src="@{/libs/owl.carousel/dist/owl.carousel.min.js}"></script>
+<script th:src="@{/libs/magnific-popup/dist/jquery.magnific-popup.min.js}"></script>
+
+<script>
+    // Financing Calculator
+    function calculateLoan() {
+        const price = parseFloat(document.getElementById('carPriceInput').value);
+        const rate = parseFloat(document.getElementById('interestRate').value) / 100 / 12;
+        const months = parseFloat(document.getElementById('loanTerm').value);
+        const downPayment = parseFloat(document.getElementById('downPayment').value);
+
+        const principal = price - downPayment;
+        if (principal <= 0) { alert("Down payment too high"); return; }
+
+        let monthlyPayment = 0;
+        if (rate === 0) {
+            monthlyPayment = principal / months;
+        } else {
+            monthlyPayment = (principal * rate * Math.pow(1 + rate, months)) / (Math.pow(1 + rate, months) - 1);
+        }
+
+        const resultDiv = document.getElementById('loan-results');
+        const resultText = document.getElementById('monthlyPaymentResult');
+        resultText.innerText = Math.round(monthlyPayment).toLocaleString() + " 원";
+        resultDiv.classList.remove('d-none');
+    }
+
+    // Initialize Recently Viewed Carousel (Explicitly)
+    $(document).ready(function(){
+        if($(".recently-viewed-cars-carousel").length > 0) {
+            $(".recently-viewed-cars-carousel").owlCarousel({
+                loop: false,
+                margin: 20,
+                nav: false,
+                dots: true,
+                responsive:{
+                    0:{ items: 1 },
+                    600:{ items: 2 },
+                    1000:{ items: 4 }
+                }
+            });
+        }
+    });
+</script>
+
+</body>
+</html>

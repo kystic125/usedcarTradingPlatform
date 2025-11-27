@@ -30,4 +30,17 @@ public class AdminService {
 
         vehicle.approve(admin);
     }
+
+    // 3. 매물 반려 처리
+    @Transactional
+    public void rejectVehicle(Long vehicleId, String reason, User admin) {
+        Vehicle vehicle = vehicleRepository.findById(vehicleId)
+                .orElseThrow(() -> new IllegalArgumentException("매물을 찾을 수 없습니다."));
+
+        if (vehicle.getVehicleStatus() != VehicleStatus.PENDING) {
+            throw new IllegalStateException("대기 중인 매물만 반려할 수 있습니다.");
+        }
+
+        vehicle.reject(reason, admin);
+    }
 }

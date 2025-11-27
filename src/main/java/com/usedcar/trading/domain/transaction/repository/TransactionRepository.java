@@ -47,4 +47,6 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long> 
     // 정산 대기중인 물품 조회
     @Query("SELECT t FROM Transaction t WHERE t.company = :company AND t.transactionStatus = 'COMPLETED' AND t.settlement IS NULL")
     List<Transaction> findPendingSettlementsByCompany(@Param("company") Company company);
+
+    boolean existsByBuyerAndVehicleAndTransactionStatus(User buyer, Vehicle vehicle, TransactionStatus status);
 }
