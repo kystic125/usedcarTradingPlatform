@@ -126,10 +126,8 @@
                                     <a href="/company/sales?filter=ALL" class="btn btn-sm rounded-pill px-3"
                                        th:classappend="${currentFilter == 'ALL' ? 'btn-dark' : 'btn-outline-secondary'}">All</a>
 
-                                    <a href="/company/sales?filter=REQUESTED" class="btn btn-sm rounded-pill px-3 position-relative"
-                                       th:classappend="${currentFilter == 'REQUESTED' ? 'btn-danger' : 'btn-outline-danger'}">
-                                        Requested <span class="position-absolute top-0 start-100 translate-middle p-1 bg-danger border border-light rounded-circle" th:if="${currentFilter != 'REQUESTED'}"><span class="visually-hidden">New alerts</span></span>
-                                    </a>
+                                    <a href="/company/sales?filter=REQUESTED" class="btn btn-sm rounded-pill px-3"
+                                       th:classappend="${currentFilter == 'REQUESTED' ? 'btn-danger' : 'btn-outline-danger'}">Requested</a>
 
                                     <a href="/company/sales?filter=SALE" class="btn btn-sm rounded-pill px-3"
                                        th:classappend="${currentFilter == 'SALE' ? 'btn-success' : 'btn-outline-success'}">On Sale</a>

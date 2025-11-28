@@ -108,7 +108,7 @@
                     <div class="col-12">
                         <div class="card border mb-4 overflow-hidden">
                             <div class="card-header p-3 border-bottom bg-body">
-                                <h5 class="card-title mb-0">Purchase History <span class="badge bg-primary bg-opacity-10 text-primary ms-2" th:text="${#lists.size(transactions)} + ' Items'">0 Items</span></h5>
+                                <h5 class="card-title mb-0">Purchase History <span class="badge bg-primary bg-opacity-10 text-primary ms-2" th:text="${transactions.totalElements} + ' Items'">0 Items</span></h5>
                             </div>
 
                             <div class="account-listings table-responsive border-0">

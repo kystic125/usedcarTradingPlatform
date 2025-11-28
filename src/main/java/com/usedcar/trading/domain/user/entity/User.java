@@ -112,4 +112,8 @@ public class User extends BaseEntity {
     @OneToMany(mappedBy = "user")
     @Builder.Default
     private List<Review> reviews = new ArrayList<>();
+
+    public void ban() {
+        this.userStatus = UserStatus.BANNED;
+    }
 }

@@ -13,6 +13,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository
@@ -154,4 +155,5 @@ public interface VehicleRepository extends JpaRepository<Vehicle, Long> {
     // 승인되지 않은 매물 개수
     long countByVehicleStatusIn(List<VehicleStatus> statuses); // [PENDING, REJECTED]
 
+    List<Vehicle> findByVehicleStatusAndExpirationDateBefore(VehicleStatus status, LocalDateTime date);
 }

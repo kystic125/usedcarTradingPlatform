@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Used Cars - SmartPick</title>
+
+    <link rel="apple-touch-icon" sizes="180x180" th:href="@{/images/favicon/apple-touch-icon.png}">
+    <link rel="icon" type="image/png" sizes="32x32" th:href="@{/images/favicon/favicon-32x32.png}">
+    <link rel="icon" type="image/png" sizes="16x16" th:href="@{/images/favicon/favicon-16x16.png}">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Antonio:wght@100..700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" th:href="@{/libs/simplebar/dist/simplebar.min.css}">
+    <noscript>
+        <style>
+            .simplebar-content-wrapper { scrollbar-width: auto; -ms-overflow-style: auto; }
+            .simplebar-content-wrapper::-webkit-scrollbar, .simplebar-hide-scrollbar::-webkit-scrollbar { display: initial; width: initial; height: initial; }
+        </style>
+    </noscript>
+
+    <link rel="stylesheet" th:href="@{/libs/jarallax/dist/jarallax.min.css}">
+    <link rel="stylesheet" th:href="@{/css/style.min.css}">
+    <link id="templateColorScheme" rel="stylesheet" th:href="@{/css/color-schemes/tc_red.css}">
+    <link rel="stylesheet" th:href="@{/css/preloader.css}">
+
+    <script th:src="@{/js/preloader.js}"></script>
+</head>
+
+<body>
+
+<div class="preloader">
+    <div class="loader">
+        <div class="loader-inner ball-scale-multiple">
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
+    </div>
+</div>
+
+<header th:replace="~{fragments/header :: main-header}"></header>
+
+<div class="breadcrumb-style-1 bg-body-tertiary position-relative z-1 py-4">
+    <div class="container d-lg-flex position-relative z-1 justify-content-between align-items-center py-2 py-lg-3">
+        <div class="order-lg-1 pe-lg-4 text-center text-lg-start">
+            <h3 class="h3 mb-3 mb-lg-0">Used Cars</h3>
+        </div>
+        <div class="order-lg-2 mb-0">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb flex-lg-nowrap justify-content-center justify-content-lg-start m-0 fs-sm">
+                    <li class="breadcrumb-item">
+                        <a class="link-body-emphasis text-decoration-none" href="/">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-home mt-n1-sm me-1" width="16" height="16" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                <path d="M5 12l-2 0l9 -9l9 9l-2 0"></path>
+                                <path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7"></path>
+                                <path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6"></path>
+                            </svg>Home
+                        </a>
+                    </li>
+                    <li class="breadcrumb-item active" aria-current="page">Used Cars</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+</div>
+
+<main>
+    <div class="container py-5 mb-md-4">
+        <div class="row">
+            <aside class="col-lg-3">
+                <div class="offcanvas-lg offcanvas-start" id="filter-widget">
+                    <div class="offcanvas-header">
+                        <h2 class="offcanvas-title">Filter</h2>
+                        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#filter-widget"></button>
+                    </div>
+                    <div class="offcanvas-body row filter-fields">
+
+                        <div class="col-12 mb-4">
+                            <h4 class="h5 mb-3">Search</h4>
+                            <form action="/vehicles" method="get">
+                                <input type="hidden" name="view" th:value="${viewType}">
+                                <div class="input-group">
+                                    <input type="text" class="form-control custom-color" name="keyword" placeholder="예: 그랜저, 현대..." th:value="${keyword}">
+                                    <button class="btn btn-primary custom-color border-0" type="submit">Go</button>
+                                </div>
+                            </form>
+                        </div>
+
+                        <div class="col-12">
+                            <div class="accordion accordion-flush w-100" id="accordionPanelsStayOpenExample">
+
+                                <div class="accordion-item">
+                                    <h4 class="accordion-header h2">
+                                        <button class="accordion-button px-0 fw-bold custom-color" type="button" data-bs-toggle="collapse" data-bs-target="#filter-price">
+                                            Price Range
+                                        </button>
+                                    </h4>
+                                    <div id="filter-price" class="accordion-collapse collapse show">
+                                        <div class="accordion-body px-0 pt-0 d-flex justify-content-between gap-2">
+                                            <input type="number" class="form-control form-control-sm" placeholder="Min Price">
+                                            <input type="number" class="form-control form-control-sm" placeholder="Max Price">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="accordion-item">
+                                    <h4 class="accordion-header h2">
+                                        <button class="accordion-button px-0 fw-bold custom-color collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#filter-year">
+                                            Year
+                                        </button>
+                                    </h4>
+                                    <div id="filter-year" class="accordion-collapse collapse">
+                                        <div class="accordion-body px-0 pt-0 d-flex justify-content-between gap-2">
+                                            <input type="number" class="form-control form-control-sm" placeholder="From (2010)">
+                                            <input type="number" class="form-control form-control-sm" placeholder="To (2025)">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="accordion-item">
+                                    <h4 class="accordion-header h2">
+                                        <button class="accordion-button px-0 fw-bold custom-color collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#filter-mileage">
+                                            Mileage (km)
+                                        </button>
+                                    </h4>
+                                    <div id="filter-mileage" class="accordion-collapse collapse">
+                                        <div class="accordion-body px-0 pt-0">
+                                            <input type="number" class="form-control form-control-sm" placeholder="Max Mileage (e.g 50000)">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="accordion-item">
+                                    <h4 class="accordion-header h2">
+                                        <button class="accordion-button px-0 fw-bold custom-color collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#filter-fuel">
+                                            Fuel Type
+                                        </button>
+                                    </h4>
+                                    <div id="filter-fuel" class="accordion-collapse collapse">
+                                        <div class="accordion-body px-0 pt-0">
+                                            <div class="form-check">
+                                                <input class="form-check-input custom-color" type="checkbox" id="fuel-gasoline">
+                                                <label class="form-check-label" for="fuel-gasoline">Gasoline (휘발유)</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input custom-color" type="checkbox" id="fuel-diesel">
+                                                <label class="form-check-label" for="fuel-diesel">Diesel (경유)</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input custom-color" type="checkbox" id="fuel-electric">
+                                                <label class="form-check-label" for="fuel-electric">Electric (전기)</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input custom-color" type="checkbox" id="fuel-hybrid">
+                                                <label class="form-check-label" for="fuel-hybrid">Hybrid (하이브리드)</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input custom-color" type="checkbox" id="fuel-lpg">
+                                                <label class="form-check-label" for="fuel-lpg">LPG</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="accordion-item">
+                                    <h4 class="accordion-header h2">
+                                        <button class="accordion-button px-0 fw-bold custom-color collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#filter-transmission">
+                                            Transmission
+                                        </button>
+                                    </h4>
+                                    <div id="filter-transmission" class="accordion-collapse collapse">
+                                        <div class="accordion-body px-0 pt-0">
+                                            <div class="form-check">
+                                                <input class="form-check-input custom-color" type="checkbox" id="trans-auto">
+                                                <label class="form-check-label" for="trans-auto">Automatic (자동)</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input custom-color" type="checkbox" id="trans-manual">
+                                                <label class="form-check-label" for="trans-manual">Manual (수동)</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <button class="btn btn-primary w-100 mt-4 fw-bold custom-color" disabled>
+                                Apply Filters (준비중)
+                            </button>
+                        </div>
+
+                    </div>
+                </div>
+            </aside>
+
+            <section class="cars col-lg-9">
+                <div class="cars-sorting bg-body-tertiary border rounded d-sm-flex align-items-center justify-content-between p-3 mb-4">
+                    <div class="d-flex align-items-center me-sm-4">
+                        <span class="me-2">Found <b th:text="${vehicles.totalElements}">0</b> cars</span>
+                    </div>
+
+                    <div class="view-type d-none d-sm-flex">
+                        <a class="nav-link nav-link-light p-1 me-2 border rounded-1 bg-body"
+                           th:href="@{/vehicles(view='list', keyword=${keyword})}">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-layout-list" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 4m0 2a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v2a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2z"/><path d="M4 14m0 2a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v2a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2z"/></svg>
+                        </a>
+                        <a class="nav-link nav-link-light p-1 active border rounded-1 bg-primary text-white custom-color"
+                           th:href="@{/vehicles(view='grid', keyword=${keyword})}">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-layout-grid" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 4m0 1a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v4a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1z"/><path d="M14 4m0 1a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v4a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1z"/><path d="M4 14m0 1a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v4a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1z"/><path d="M14 14m0 1a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v4a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1z"/></svg>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="row cars-grid">
+                    <div class="col-12 text-center py-5" th:if="${vehicles.isEmpty()}">
+                        <h3>No cars found.</h3>
+                    </div>
+
+                    <div class="col-sm-6 col-md-4 mb-4" th:each="car : ${vehicles}">
+                        <div class="card car-item border bg-body-tertiary h-100">
+                            <div class="position-absolute start-0 top-0 pt-3 ps-3 z-2 d-flex align-items-start">
+                                <span class="badge text-bg-success text-uppercase rounded-1 fs-xs-alt fw-normal text-spacing-sm me-1">Sale</span>
+                            </div>
+                            <div class="card-image">
+                                <a th:href="@{/vehicles/{id}(id=${car.vehicleId})}">
+                                    <img th:src="${car.thumbnailUrl} ?: '/images/default-car.jpg'"
+                                         class="card-img-top object-fit-cover lazy" style="height: 200px;" alt="car">
+                                </a>
+                            </div>
+                            <div class="card-body">
+                                <h3 class="card-title">
+                                    <a th:href="@{/vehicles/{id}(id=${car.vehicleId})}" class="fw-bold fs-5 text-decoration-none link-body-emphasis link-opacity-100 link-opacity-75-hover"
+                                       th:text="${car.brand} + ' ' + ${car.model}">Model</a>
+                                </h3>
+                                <p class="card-text">
+                                    <span class="car-price text-primary fs-special fs-5 fw-bold custom-color" th:text="${#numbers.formatInteger(car.price, 0, 'COMMA')} + '원'">Price</span>
+                                </p>
+
+                                <div class="card-text border-top pt-2 row row-cols-3 g-2">
+                                    <div>
+                                        <span class="icon-wrapper d-inline-flex align-items-center p-1 px-2 me-1 bg-body-secondary rounded-1 text-body-secondary bg-opacity-75 w-100 fs-sm">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="me-1 icon icon-tabler icon-tabler-calendar-bolt" width="20" height="20" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M13.5 21h-7.5a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v5"></path><path d="M16 3v4"></path><path d="M8 3v4"></path><path d="M4 11h16"></path><path d="M19 16l-2 3h4l-2 3"></path></svg>
+                                            <span th:text="${car.modelYear}">2022</span>
+                                        </span>
+                                    </div>
+                                    <div>
+                                        <span class="icon-wrapper d-inline-flex align-items-center p-1 px-2 me-1 bg-body-secondary rounded-1 text-body-secondary bg-opacity-75 w-100 fs-sm">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="me-1 icon icon-tabler icon-tabler-gauge" width="20" height="20" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"></path><path d="M12 12m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"></path><path d="M13.41 10.59l2.59 -2.59"></path><path d="M7 12a5 5 0 0 1 5 -5"></path></svg>
+                                            <span th:text="${#numbers.formatInteger(car.mileage, 0, 'COMMA')}">10k</span>km
+                                        </span>
+                                    </div>
+                                    <div>
+                                        <span class="icon-wrapper d-inline-flex align-items-center p-1 px-2 me-1 bg-body-secondary rounded-1 text-body-secondary bg-opacity-75 w-100 fs-sm">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="me-1 icon icon-tabler icon-tabler-manual-gearbox" width="20" height="20" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 6m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0"></path><path d="M12 6m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0"></path><path d="M19 6m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0"></path><path d="M5 18m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0"></path><path d="M12 18m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0"></path><path d="M5 8l0 8"></path><path d="M12 8l0 8"></path><path d="M19 8v2a2 2 0 0 1 -2 2h-12"></path></svg>
+                                            <span th:text="${car.transmission}">Auto</span>
+                                        </span>
+                                    </div>
+                                    <div>
+                                        <span class="icon-wrapper d-inline-flex align-items-center p-1 px-2 me-1 bg-body-secondary rounded-1 text-body-secondary bg-opacity-75 w-100 fs-sm">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="me-1 icon icon-tabler icon-tabler-gas-station" width="20" height="20" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M14 11h1a2 2 0 0 1 2 2v3a1.5 1.5 0 0 0 3 0v-7l-3 -3"></path><path d="M4 20v-14a2 2 0 0 1 2 -2h6a2 2 0 0 1 2 2v14"></path><path d="M3 20l12 0"></path><path d="M18 7v1a1 1 0 0 0 1 1h1"></path><path d="M4 11l10 0"></path></svg>
+                                            <span th:text="${car.fuelType}">Petrol</span>
+                                        </span>
+                                    </div>
+                                    <div>
+                                        <span class="icon-wrapper d-inline-flex align-items-center p-1 px-2 me-1 bg-body-secondary rounded-1 text-body-secondary bg-opacity-75 w-100 fs-sm">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="me-1 icon icon-tabler icon-tabler-palette" width="20" height="20" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 21a9 9 0 0 1 0 -18c4.97 0 9 3.582 9 8c0 1.06 -.474 2.078 -1.318 2.828c-.844 .75 -1.989 1.172 -3.182 1.172h-2.5a2 2 0 0 0 -1 3.75a1.3 1.3 0 0 1 -1 2.25"></path><path d="M8.5 10.5m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"></path><path d="M12.5 7.5m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"></path><path d="M16.5 10.5m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"></path></svg>
+                                            <span th:text="${car.color}">Color</span>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <nav aria-label="Content navigation" th:if="${totalPages > 0}" class="mt-4">
+                    <ul class="pagination justify-content-center mb-0">
+
+                        <li class="page-item custom-color me-auto" th:classappend="${nowPage == 1} ? 'disabled'">
+                            <a class="page-link page-prev border-0 p-0 bg-transparent"
+                               th:href="${nowPage == 1} ? '#' : @{/vehicles(page=${nowPage - 2}, view=${viewType}, keyword=${keyword})}"
+                               aria-label="Previous">
+                                <span class="d-flex align-items-center">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icon-tabler-chevron-left">
+                                        <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                                        <path d="M15 6l-6 6l6 6" />
+                                    </svg>
+                                </span>
+                                <span class="arrow-edge"></span>
+                            </a>
+                        </li>
+
+                        <li class="page-item custom-color" th:each="page : ${#numbers.sequence(startPage, endPage)}">
+                            <a class="page-link"
+                               th:classappend="${page == nowPage} ? 'active'"
+                               th:href="@{/vehicles(page=${page - 1}, view=${viewType}, keyword=${keyword})}"
+                               th:text="${page}">1
+                            </a>
+                        </li>
+
+                        <li class="page-item custom-color ms-auto" th:classappend="${nowPage == totalPages} ? 'disabled'">
+                            <a class="page-link page-next border-0 p-0 bg-transparent"
+                               th:href="${nowPage == totalPages} ? '#' : @{/vehicles(page=${nowPage}, view=${viewType}, keyword=${keyword})}"
+                               aria-label="Next">
+                                <span class="d-flex align-items-center">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icon-tabler-chevron-right">
+                                        <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                                        <path d="M9 6l6 6l-6 6" />
+                                    </svg>
+                                </span>
+                                <span class="arrow-edge"></span>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </section>
+        </div>
+    </div>
+</main>
+
+<footer th:replace="~{fragments/footer :: main-footer}"></footer>
+
+<script th:src="@{/libs/jquery/dist/jquery.min.js}"></script>
+<script th:src="@{/libs/jquery-lazy/jquery.lazy.min.js}"></script>
+<script th:src="@{/libs/simplebar/dist/simplebar.min.js}"></script>
+<script th:src="@{/libs/bootstrap/dist/js/bootstrap.bundle.min.js}"></script>
+<script th:src="@{/libs/jarallax/dist/jarallax.min.js}"></script>
+<script th:src="@{/libs/jarallax/dist/jarallax-video.min.js}"></script>
+<script th:src="@{/libs/fly-to/dist/js/fly-to.min.js}"></script>
+<script th:src="@{/js/script.min.js}"></script>
+
+</body>
+</html>

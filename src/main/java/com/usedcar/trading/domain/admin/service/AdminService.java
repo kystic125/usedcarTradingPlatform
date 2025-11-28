@@ -29,6 +29,8 @@ public class AdminService {
                 .orElseThrow(() -> new IllegalArgumentException("매물을 찾을 수 없습니다."));
 
         vehicle.approve(admin);
+
+        vehicle.extendExpirationDate();
     }
 
     // 3. 매물 반려 처리

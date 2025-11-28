@@ -150,4 +150,14 @@ public class Vehicle extends BaseEntity {
     public void increaseViewCount() {
         this.viewCount++;
     }
+
+    private LocalDateTime expirationDate;
+
+    public void extendExpirationDate() {
+        this.expirationDate = LocalDateTime.now().plusDays(14);
+    }
+
+    public void forceDeleteByAdmin() {
+        this.vehicleStatus = VehicleStatus.DELETED;
+    }
 }
