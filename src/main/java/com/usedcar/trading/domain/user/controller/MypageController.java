@@ -126,6 +126,16 @@ public class MypageController {
         return "user-edit-delete";
     }
 
+    /**
+     * 회원 탈퇴 처리 [AUTH-007]
+     */
+    @PostMapping("/mypage/withdraw")
+    public String withdrawProcess(@AuthenticationPrincipal Object principal) {
+        User user = findUser(principal);
+        userService.withdrawUser(user.getUserId());
+        return "redirect:/logout";
+    }
+
     // 2. 정보 수정 처리
     @PostMapping("/mypage/update")
     public String updateProcess(@RequestParam String email,
