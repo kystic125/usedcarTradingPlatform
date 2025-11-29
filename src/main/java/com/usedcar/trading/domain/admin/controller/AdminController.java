@@ -20,9 +20,40 @@ public class AdminController {
     private final AdminService adminService;
     private final UserRepository userRepository;
 
+    /**
+     * 관리자 대시보드 [ADM-005]
+     */
     @GetMapping
-    public String adminDashboard() {
+    public String adminDashboard(Model model) {
+        model.addAttribute("stats", adminService.getDashboardStats());
         return "admin/dashboard";
+    }
+
+    /**
+     * 매물 통계 API [ADM-006]
+     */
+    @GetMapping("/stats/vehicles")
+    @ResponseBody
+    public java.util.Map<String, Long> getVehicleStats() {
+        return adminService.getVehicleStats();
+    }
+
+    /**
+     * 거래 통계 API [ADM-007]
+     */
+    @GetMapping("/stats/transactions")
+    @ResponseBody
+    public java.util.Map<String, Long> getTransactionStats() {
+        return adminService.getTransactionStats();
+    }
+
+    /**
+     * 신고 통계 API [ADM-008]
+     */
+    @GetMapping("/stats/reports")
+    @ResponseBody
+    public java.util.Map<String, Long> getReportStats() {
+        return adminService.getReportStats();
     }
 
     @GetMapping("/vehicles")
