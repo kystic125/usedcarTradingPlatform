@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Listing - SmartPick</title>
+
+    <link rel="apple-touch-icon" sizes="180x180" th:href="@{/images/favicon/apple-touch-icon.png}">
+    <link rel="icon" type="image/png" sizes="32x32" th:href="@{/images/favicon/favicon-32x32.png}">
+    <link rel="icon" type="image/png" sizes="16x16" th:href="@{/images/favicon/favicon-16x16.png}">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Antonio:wght@100..700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" th:href="@{/libs/owl.carousel/dist/assets/owl.carousel.min.css}">
+    <link rel="stylesheet" th:href="@{/libs/owl.carousel/dist/assets/owl.theme.default.min.css}">
+    <link rel="stylesheet" th:href="@{/libs/simplebar/dist/simplebar.min.css}">
+    <noscript>
+        <style>
+            .simplebar-content-wrapper { scrollbar-width: auto; -ms-overflow-style: auto; }
+            .simplebar-content-wrapper::-webkit-scrollbar, .simplebar-hide-scrollbar::-webkit-scrollbar { display: initial; width: initial; height: initial; }
+        </style>
+    </noscript>
+
+    <link rel="stylesheet" th:href="@{/libs/jarallax/dist/jarallax.min.css}">
+    <link rel="stylesheet" th:href="@{/css/style.min.css}">
+    <link id="templateColorScheme" rel="stylesheet" th:href="@{/css/color-schemes/tc_red.css}">
+    <link rel="stylesheet" th:href="@{/css/preloader.css}">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+
+    <script th:src="@{/js/preloader.js}"></script>
+
+    <style>
+        /* 드래그 앤 드롭 영역 스타일 */
+        .upload-dropzone {
+            border: 2px dashed #dee2e6;
+            border-radius: 0.375rem;
+            transition: all 0.3s ease;
+            background-color: #f8f9fa;
+            cursor: pointer;
+            position: relative;
+        }
+        .upload-dropzone:hover, .upload-dropzone.dragover {
+            border-color: #dc3545;
+            background-color: #fff5f5;
+        }
+
+        /* 미리보기 이미지 컨테이너 */
+        .preview-image-wrapper {
+            width: 120px;
+            height: 90px;
+            position: relative;
+            border-radius: 4px;
+            overflow: hidden;
+            border: 1px solid #dee2e6;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .preview-image-wrapper img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* 삭제 버튼 (X 아이콘) */
+        .btn-remove-image {
+            position: absolute;
+            top: 2px;
+            right: 2px;
+            background-color: rgba(220, 53, 69, 0.9);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 10;
+        }
+        .btn-remove-image:hover {
+            background-color: #dc3545;
+        }
+
+        /* 썸네일 뱃지 */
+        .thumbnail-badge {
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            font-size: 0.6rem;
+            padding: 2px 4px;
+            z-index: 5;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="preloader">
+    <div class="loader">
+        <div class="loader-inner ball-scale-multiple">
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
+    </div>
+</div>
+
+<header th:replace="~{fragments/header :: main-header}"></header>
+
+<div class="breadcrumb-style-1 bg-body-tertiary position-relative z-1 py-4">
+    <div class="container d-lg-flex position-relative z-1 justify-content-between align-items-center py-2 py-lg-3">
+        <div class="order-lg-1 pe-lg-4 text-center text-lg-start">
+            <h3 class="h3 mb-3 mb-lg-0">Add Listing</h3>
+        </div>
+        <div class="order-lg-2 mb-0">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb flex-lg-nowrap justify-content-center justify-content-lg-start m-0 fs-sm">
+                    <li class="breadcrumb-item">
+                        <a class="link-body-emphasis text-nowrap link-offset-2 link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-50-hover" href="/">
+                            <i class="bi bi-house-door me-1"></i>Home
+                        </a>
+                    </li>
+                    <li class="breadcrumb-item">
+                        <a class="link-body-emphasis text-nowrap link-offset-2 link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-50-hover" href="/company/sales">
+                            Listings
+                        </a>
+                    </li>
+                    <li class="breadcrumb-item text-nowrap active" aria-current="page">Add Listing</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+</div>
+
+<main>
+    <div class="container py-5 mb-md-4">
+        <div class="row">
+
+            <section class="col-12">
+                <div class="card border-0">
+                    <div class="card-body p-4">
+
+                        <div class="mb-4 pb-2 border-bottom">
+                            <h4 class="card-title fw-bold mb-1">Vehicle Details</h4>
+                            <p class="text-muted small mb-0">Please fill in the information below to list your vehicle.</p>
+                        </div>
+
+                        <div th:if="${param.error}" class="alert alert-danger d-flex align-items-center mb-4" role="alert">
+                            <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                            <div>
+                                Failed to register vehicle. Please check your input. <br>
+                                <small th:text="${param.error}"></small>
+                            </div>
+                        </div>
+
+                        <form action="/vehicles/register" method="post" enctype="multipart/form-data" id="listingForm">
+
+                            <h5 class="fw-bold fs-6 mb-3 text-uppercase custom-color">Basic Information</h5>
+                            <div class="row g-3 mb-4">
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold small">Brand <span class="text-danger">*</span></label>
+                                    <select name="brand" class="form-select custom-color" required>
+                                        <option value="" disabled selected>Select Brand</option>
+                                        <option value="Hyundai">Hyundai</option>
+                                        <option value="Kia">Kia</option>
+                                        <option value="Genesis">Genesis</option>
+                                        <option value="BMW">BMW</option>
+                                        <option value="Mercedes-Benz">Mercedes-Benz</option>
+                                        <option value="Audi">Audi</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold small">Model <span class="text-danger">*</span></label>
+                                    <input type="text" name="model" class="form-control custom-color" placeholder="e.g. Grandeur" required>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label fw-bold small">Year <span class="text-danger">*</span></label>
+                                    <input type="number" name="modelYear" class="form-control custom-color" placeholder="2023" min="1900" max="2026" required>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label fw-bold small">Mileage (km) <span class="text-danger">*</span></label>
+                                    <input type="number" name="mileage" class="form-control custom-color" placeholder="0" min="0" required>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label fw-bold small">Price (KRW) <span class="text-danger">*</span></label>
+                                    <div class="input-group">
+                                        <span class="input-group-text bg-light">₩</span>
+                                        <input type="number" name="price" class="form-control custom-color" placeholder="0" min="0" required>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <h5 class="fw-bold fs-6 mb-3 text-uppercase custom-color pt-3 border-top">Specifications</h5>
+                            <div class="row g-3 mb-4">
+                                <div class="col-md-4">
+                                    <label class="form-label fw-bold small">Fuel Type</label>
+                                    <select name="fuelType" class="form-select custom-color" required>
+                                        <option value="GASOLINE">Gasoline (휘발유)</option>
+                                        <option value="DIESEL">Diesel (경유)</option>
+                                        <option value="ELECTRIC">Electric (전기)</option>
+                                        <option value="HYBRID">Hybrid</option>
+                                        <option value="LPG">LPG</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label fw-bold small">Transmission</label>
+                                    <select name="transmission" class="form-select custom-color" required>
+                                        <option value="AUTO">Automatic</option>
+                                        <option value="MANUAL">Manual</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label fw-bold small">Color</label>
+                                    <input type="text" name="color" class="form-control custom-color" placeholder="e.g. Black" required>
+                                </div>
+                                <div class="col-12">
+                                    <label class="form-label fw-bold small">Accident History</label>
+                                    <div class="d-flex gap-4">
+                                        <div class="form-check">
+                                            <input class="form-check-input custom-color" type="radio" name="accidentHistory" id="accNo" value="false" checked>
+                                            <label class="form-check-label" for="accNo">No Accident (무사고)</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input custom-color" type="radio" name="accidentHistory" id="accYes" value="true">
+                                            <label class="form-check-label text-danger" for="accYes">Has Accident (사고 있음)</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <h5 class="fw-bold fs-6 mb-3 text-uppercase custom-color pt-3 border-top">Features & Options</h5>
+                            <div class="row row-cols-2 row-cols-md-4 g-3 mb-4">
+                                <div class="col" th:each="opt : ${ {'Sunroof', 'Navigation', 'Heated Seats', 'Ventilated Seats', 'HUD', 'Leather Seats', 'Rear Camera', 'Smart Key'} }">
+                                    <div class="form-check">
+                                        <input class="form-check-input custom-color" type="checkbox" name="options" th:value="${opt}" th:id="${'opt-' + opt}">
+                                        <label class="form-check-label small" th:for="${'opt-' + opt}" th:text="${opt}"></label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <h5 class="fw-bold fs-6 mb-3 text-uppercase custom-color pt-3 border-top">Photos</h5>
+                            <div class="mb-4">
+                                <label class="form-label fw-bold small">Vehicle Images <span class="text-danger">*</span></label>
+
+                                <div class="upload-dropzone p-5 text-center position-relative" id="dropZone">
+                                    <input type="file" name="imageFiles" id="imageInput" class="position-absolute top-0 start-0 w-100 h-100 opacity-0" multiple accept="image/*" required>
+                                    <div class="text-muted pointer-events-none">
+                                        <i class="bi bi-cloud-arrow-up display-4 mb-3 d-block text-secondary"></i>
+                                        <h6 class="fw-bold text-dark">Drop files here or click to upload</h6>
+                                        <p class="small mb-0">Supported formats: JPG, PNG, WEBP. First image will be the thumbnail.</p>
+                                    </div>
+                                </div>
+
+                                <div id="previewContainer" class="d-flex gap-2 mt-3 flex-wrap">
+                                </div>
+                            </div>
+
+                            <div class="mb-4">
+                                <label class="form-label fw-bold small">Description</label>
+                                <textarea name="description" class="form-control custom-color" rows="5" placeholder="Provide a detailed description of the vehicle..."></textarea>
+                            </div>
+
+                            <div class="d-grid d-md-flex justify-content-md-end gap-2 pt-3 border-top">
+                                <a href="/company/sales" class="btn btn-light border fw-bold px-4">Cancel</a>
+
+                                <button type="button" class="btn btn-info text-white fw-bold px-4" onclick="showPreview()">
+                                    <i class="bi bi-eye me-2"></i> Preview
+                                </button>
+
+                                <button type="submit" class="btn btn-primary custom-color fw-bold px-5">Submit Listing</button>
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+    </div>
+</main>
+
+<footer th:replace="~{fragments/footer :: main-footer}"></footer>
+
+<script th:src="@{/libs/jquery/dist/jquery.min.js}"></script>
+<script th:src="@{/libs/bootstrap/dist/js/bootstrap.bundle.min.js}"></script>
+<script th:src="@{/libs/simplebar/dist/simplebar.min.js}"></script>
+<script th:src="@{/libs/jarallax/dist/jarallax.min.js}"></script>
+<script th:src="@{/js/script.min.js}"></script>
+
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    const currentCompanyName = /*[[${user.company != null ? user.company.businessName : user.name}]]*/ 'My Company';
+    /*]]>*/
+    // ==========================================
+    // 1. 이미지 처리 (드래그 앤 드롭 & 미리보기)
+    // ==========================================
+    const imageInput = document.getElementById('imageInput');
+    const previewContainer = document.getElementById('previewContainer');
+    const dropZone = document.getElementById('dropZone');
+    const dataTransfer = new DataTransfer();
+
+    // 파일 선택 핸들러
+    imageInput.addEventListener('change', function(e) {
+        handleFiles(e.target.files);
+    });
+
+    // 드래그 앤 드롭 핸들러
+    ['dragenter', 'dragover'].forEach(eventName => {
+        dropZone.addEventListener(eventName, (e) => { e.preventDefault(); dropZone.classList.add('dragover'); }, false);
+    });
+    ['dragleave', 'drop'].forEach(eventName => {
+        dropZone.addEventListener(eventName, (e) => { e.preventDefault(); dropZone.classList.remove('dragover'); }, false);
+    });
+    dropZone.addEventListener('drop', (e) => {
+        handleFiles(e.dataTransfer.files);
+    });
+
+    function handleFiles(files) {
+        if(files && files.length > 0){
+            for(let i=0; i<files.length; i++){
+                // 중복 체크 로직 생략 (필요 시 추가)
+                dataTransfer.items.add(files[i]);
+            }
+            imageInput.files = dataTransfer.files;
+            renderPreviews();
+        }
+    }
+
+    function renderPreviews() {
+        previewContainer.innerHTML = '';
+        if (dataTransfer.files.length === 0) return;
+
+        Array.from(dataTransfer.files).forEach((file, index) => {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const wrapper = document.createElement('div');
+                wrapper.className = 'preview-image-wrapper';
+
+                const img = document.createElement('img');
+                img.src = e.target.result;
+
+                if (index === 0) {
+                    const badge = document.createElement('span');
+                    badge.className = 'badge bg-primary thumbnail-badge';
+                    badge.innerText = 'Main';
+                    wrapper.appendChild(badge);
+                }
+
+                const delBtn = document.createElement('button');
+                delBtn.className = 'btn-remove-image';
+                delBtn.innerHTML = '<i class="bi bi-x"></i>';
+                delBtn.onclick = function(event) {
+                    event.preventDefault();
+                    removeFile(index);
+                };
+
+                wrapper.appendChild(img);
+                wrapper.appendChild(delBtn);
+                previewContainer.appendChild(wrapper);
+            }
+            reader.readAsDataURL(file);
+        });
+    }
+
+    function removeFile(index) {
+        const newDt = new DataTransfer();
+        for(let i=0; i<dataTransfer.files.length; i++) {
+            if(i !== index) newDt.items.add(dataTransfer.files[i]);
+        }
+        dataTransfer.items.clear();
+        for(let i=0; i<newDt.files.length; i++) dataTransfer.items.add(newDt.files[i]);
+
+        imageInput.files = dataTransfer.files;
+        renderPreviews();
+    }
+
+    // ==========================================
+    // 2. 미리보기 (Preview) 기능 구현
+    // ==========================================
+    function showPreview() {
+        // 입력값 가져오기
+        const brand = document.querySelector('select[name="brand"]').value || 'Brand';
+        const model = document.querySelector('input[name="model"]').value || 'Model';
+        const price = document.querySelector('input[name="price"]').value;
+        const year = document.querySelector('input[name="modelYear"]').value || '-';
+        const mileage = document.querySelector('input[name="mileage"]').value;
+        const fuel = document.querySelector('select[name="fuelType"]').value || '-';
+        const trans = document.querySelector('select[name="transmission"]').value || '-';
+        const color = document.querySelector('input[name="color"]').value || '-';
+        const desc = document.querySelector('textarea[name="description"]').value || 'No description provided.';
+        const accidentVal = document.querySelector('input[name="accidentHistory"]:checked').value;
+        const accident = (accidentVal === 'true') ? 'Yes' : 'No';
+
+        // 1. 헤더 (Title & Price)
+        document.getElementById('prev-title').innerText = `${brand} ${model}`;
+        document.getElementById('prev-price').innerText = price ? Number(price).toLocaleString() + ' 원' : '0 원';
+
+        // 2. 오버뷰 (우측 카드)
+        document.getElementById('prev-year').innerText = year;
+        document.getElementById('prev-mileage').innerText = mileage ? Number(mileage).toLocaleString() + ' km' : '-';
+        document.getElementById('prev-fuel').innerText = fuel;
+        document.getElementById('prev-trans').innerText = trans;
+        document.getElementById('prev-color').innerText = color;
+        document.getElementById('prev-accident').innerText = accident;
+        document.getElementById('prev-seller').innerText = currentCompanyName;
+
+        // 3. 설명 & 옵션 (General & Option)
+        document.getElementById('prev-desc').innerText = desc;
+
+        // General Features (스펙 반복)
+        document.getElementById('feat-brand').innerText = brand;
+        document.getElementById('feat-model').innerText = model;
+        document.getElementById('feat-year').innerText = year;
+        document.getElementById('feat-fuel').innerText = fuel;
+        document.getElementById('feat-trans').innerText = trans;
+        document.getElementById('feat-color').innerText = color;
+        document.getElementById('feat-mileage').innerText = mileage ? Number(mileage).toLocaleString() + ' km' : '-';
+        document.getElementById('feat-accident').innerText = accident;
+
+        // Selected Options
+        const optionsList = document.getElementById('prev-options-list');
+        optionsList.innerHTML = '';
+        const checkedOptions = document.querySelectorAll('input[name="options"]:checked');
+
+        if (checkedOptions.length > 0) {
+            checkedOptions.forEach(opt => {
+                const li = document.createElement('li');
+                li.className = 'list-group-item col border-0 custom-color';
+                li.innerHTML = `<i class="bi bi-check-circle-fill text-success me-2"></i> ${opt.value}`;
+                optionsList.appendChild(li);
+            });
+        } else {
+            optionsList.innerHTML = '<li class="list-group-item col border-0 text-muted">No specific options selected.</li>';
+        }
+
+        // 4. 이미지 처리 (메인 + 썸네일)
+        const mainImg = document.getElementById('prev-main-img');
+        const thumbContainer = document.getElementById('prev-thumbnails');
+        thumbContainer.innerHTML = '';
+
+        if (dataTransfer.files.length > 0) {
+            // 첫 번째 파일 리더
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                mainImg.src = e.target.result;
+            }
+            reader.readAsDataURL(dataTransfer.files[0]);
+
+            // 썸네일 생성
+            Array.from(dataTransfer.files).forEach((file) => {
+                const r = new FileReader();
+                r.onload = function(e) {
+                    const img = document.createElement('img');
+                    img.src = e.target.result;
+                    img.className = 'img-fluid rounded-2 object-fit-cover border';
+                    img.style.width = '80px';
+                    img.style.height = '60px';
+                    img.style.cursor = 'pointer';
+                    // 클릭 시 메인 이미지 변경 기능
+                    img.onclick = function() { mainImg.src = e.target.result; };
+                    thumbContainer.appendChild(img);
+                }
+                r.readAsDataURL(file);
+            });
+        } else {
+            mainImg.src = '/images/default-car.jpg'; // 기본 이미지 경로
+        }
+
+        // 모달 표시
+        const myModal = new bootstrap.Modal(document.getElementById('previewModal'));
+        myModal.show();
+    }
+
+    // 유효성 검사 후 제출 함수
+    function submitFormWithValidation() {
+        const form = document.getElementById('listingForm');
+
+        // 1. HTML5 표준 유효성 검사 (required 등 체크)
+        if (form.checkValidity()) {
+            // 통과하면 제출
+            form.submit();
+        } else {
+            // 실패하면 모달 닫기
+            const modalEl = document.getElementById('previewModal');
+            const modal = bootstrap.Modal.getInstance(modalEl);
+            modal.hide();
+
+            // 2. 브라우저 기본 에러 메시지(풍선 도움말) 표시
+            setTimeout(() => {
+                form.reportValidity();
+            }, 300);
+        }
+    }
+</script>
+
+<div class="modal fade" id="previewModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header border-bottom-0 pb-0">
+                <h5 class="modal-title fw-bold">Preview Listing</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body bg-body p-4">
+
+                <div class="container car-details p-0">
+                    <div class="row mb-4">
+                        <div class="col-lg-8 pb-4 pb-lg-0">
+                            <div class="h-100 car-title bg-body-tertiary border rounded-2 p-3 position-relative">
+                                <h1 class="fw-bold car-name fs-special fs-2 p-0 m-0 text-body-emphasis" id="prev-title">Brand Model</h1>
+                                <div class="mt-3 fs-sm">
+                                    <div class="d-md-inline-flex d-flex justify-content-start">
+                                        <div class="car-date me-4">
+                                            <span class="car-vin-icon text-uppercase fw-bold text-muted">Date:</span>
+                                            <span class="text-body-secondary">Today</span>
+                                        </div>
+                                        <div class="car-status">
+                                            <span class="badge text-bg-warning text-uppercase rounded-1 fs-xs-alt fw-normal text-spacing-sm me-1">Pending Approval</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-4">
+                            <div class="h-100 bg-body-tertiary border rounded-2 p-3 d-flex justify-content-between align-items-center">
+                                <div class="price-text">
+                                    <span class="price-text d-block fs-2">Price</span>
+                                    <span class="price-neg d-block text-body-secondary">Negotiable</span>
+                                </div>
+                                <div class="car-price text-end">
+                                    <span class="price-val d-block fs-special fs-2 fw-bold text-body-emphasis text-primary custom-color" id="prev-price">0 원</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-lg-8">
+
+                            <div class="car-photos mb-4 pb-3 position-relative">
+                                <div class="position-relative mb-2">
+                                    <img id="prev-main-img" class="img-fluid object-fit-cover rounded-2 w-100" style="height: 450px;" src="" alt="Main Image">
+                                </div>
+                                <div id="prev-thumbnails" class="d-flex gap-2 overflow-auto py-2"></div>
+                            </div>
+
+                            <div class="car-description mb-4 pb-3">
+                                <h2 class="fs-special fw-bold">Description</h2>
+                                <p id="prev-desc" style="white-space: pre-line;" class="text-body-secondary">Vehicle description...</p>
+                            </div>
+
+                            <div class="car-features mb-4 pb-3">
+                                <h2 class="fs-special fw-bold">Features</h2>
+                                <div class="accordion" id="prevAccordion">
+
+                                    <div class="accordion-item">
+                                        <h2 class="accordion-header">
+                                            <button class="accordion-button fs-5 fw-bold custom-color" type="button" data-bs-toggle="collapse" data-bs-target="#prevExterior" aria-expanded="true">
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-car me-3" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                                    <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                                    <path d="M7 17m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0"></path>
+                                                    <path d="M17 17m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0"></path>
+                                                    <path d="M5 17h-2v-6l2 -5h9l4 5h1a2 2 0 0 1 2 2v4h-2m-4 0h-6m-6 -6h15m-6 0v-5"></path>
+                                                </svg> General Features
+                                            </button>
+                                        </h2>
+                                        <div id="prevExterior" class="accordion-collapse collapse show" data-bs-parent="#prevAccordion">
+                                            <div class="accordion-body">
+                                                <ul class="list-group list-group-horizontal list-group-flush row row-cols-1 row-cols-md-2 border-0">
+                                                    <li class="list-group-item col border-0 custom-color"><strong>Brand: </strong> <span id="feat-brand"></span></li>
+                                                    <li class="list-group-item col border-0 custom-color"><strong>Model: </strong> <span id="feat-model"></span></li>
+                                                    <li class="list-group-item col border-0 custom-color"><strong>Year: </strong> <span id="feat-year"></span></li>
+                                                    <li class="list-group-item col border-0 custom-color"><strong>Fuel: </strong> <span id="feat-fuel"></span></li>
+                                                    <li class="list-group-item col border-0 custom-color"><strong>Trans: </strong> <span id="feat-trans"></span></li>
+                                                    <li class="list-group-item col border-0 custom-color"><strong>Color: </strong> <span id="feat-color"></span></li>
+                                                    <li class="list-group-item col border-0 custom-color"><strong>Mileage: </strong> <span id="feat-mileage"></span></li>
+                                                    <li class="list-group-item col border-0 custom-color"><strong>Accident: </strong> <span id="feat-accident"></span></li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="accordion-item">
+                                        <h2 class="accordion-header">
+                                            <button class="accordion-button fs-5 fw-bold custom-color collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#prevInterior">
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-dashboard me-3" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                                    <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                                    <path d="M12 13m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0"></path>
+                                                    <path d="M13.45 11.55l2.05 -2.05"></path>
+                                                    <path d="M6.4 20a9 9 0 1 1 11.2 0z"></path>
+                                                </svg> Vehicle Options
+                                            </button>
+                                        </h2>
+                                        <div id="prevInterior" class="accordion-collapse collapse" data-bs-parent="#prevAccordion">
+                                            <div class="accordion-body">
+                                                <ul class="list-group list-group-horizontal list-group-flush row row-cols-1 row-cols-md-2 border-0" id="prev-options-list">
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-4">
+                            <div class="sticky-top" style="top: 20px;">
+                                <div class="card border">
+                                    <div class="card-body">
+                                        <h5 class="fw-bold fs-special fs-4 mb-1">Overview</h5>
+                                    </div>
+                                    <ul class="list-group list-group-flush m-3 border-0 my-0">
+                                        <li class="list-group-item d-flex justify-content-between list-group-item-light border mb-1 rounded-1">
+                                            <span>Year</span><span class="fw-bold" id="prev-year"></span>
+                                        </li>
+                                        <li class="list-group-item d-flex justify-content-between list-group-item-light border mb-1 rounded-1">
+                                            <span>Mileage</span><span class="fw-bold" id="prev-mileage"></span>
+                                        </li>
+                                        <li class="list-group-item d-flex justify-content-between list-group-item-light border mb-1 rounded-1">
+                                            <span>Fuel</span><span class="fw-bold" id="prev-fuel"></span>
+                                        </li>
+                                        <li class="list-group-item d-flex justify-content-between list-group-item-light border mb-1 rounded-1">
+                                            <span>Trans</span><span class="fw-bold" id="prev-trans"></span>
+                                        </li>
+                                        <li class="list-group-item d-flex justify-content-between list-group-item-light border mb-1 rounded-1">
+                                            <span>Color</span><span class="fw-bold" id="prev-color"></span>
+                                        </li>
+                                        <li class="list-group-item d-flex justify-content-between list-group-item-light border mb-1 rounded-1">
+                                            <span>Accident</span><span class="fw-bold" id="prev-accident"></span>
+                                        </li>
+                                        <li class="list-group-item d-flex justify-content-between list-group-item-light border mb-1 rounded-1">
+                                            <span>Seller</span><span class="fw-bold" id="prev-seller"></span>
+                                        </li>
+                                    </ul>
+                                    <div class="card-body">
+                                        <button class="btn btn-warning w-100 d-flex justify-content-start align-items-center rounded-1 disabled">
+                                            <span class="me-3">
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-check" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                                    <path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 12l5 5l10 -10" />
+                                                </svg>
+                                            </span>
+                                            <span class="">Purchase Request</span>
+                                        </button>
+                                        <p class="text-center text-muted small mt-2 mb-0">Action available after approval.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="modal-footer bg-light border-top-0">
+                <button type="button" class="btn btn-secondary px-4" data-bs-dismiss="modal">Edit More</button>
+                <button type="button" class="btn btn-primary custom-color px-4 fw-bold" onclick="submitFormWithValidation()">Confirm & Submit</button>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

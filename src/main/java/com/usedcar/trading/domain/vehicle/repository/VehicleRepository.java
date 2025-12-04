@@ -155,5 +155,7 @@ public interface VehicleRepository extends JpaRepository<Vehicle, Long> {
     // 승인되지 않은 매물 개수
     long countByVehicleStatusIn(List<VehicleStatus> statuses); // [PENDING, REJECTED]
 
+    List<Vehicle> findByVehicleStatusAndExpirationDateBetween(VehicleStatus status, LocalDateTime start, LocalDateTime end);
     List<Vehicle> findByVehicleStatusAndExpirationDateBefore(VehicleStatus status, LocalDateTime date);
+
 }

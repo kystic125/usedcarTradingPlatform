@@ -1,17 +1,20 @@
 package com.usedcar.trading.domain.vehicle.controller;
 
+import com.usedcar.trading.domain.user.entity.User;
+import com.usedcar.trading.domain.user.repository.UserRepository;
+import com.usedcar.trading.domain.vehicle.dto.VehicleRegisterRequest;
 import com.usedcar.trading.domain.vehicle.entity.Vehicle;
 import com.usedcar.trading.domain.vehicle.repository.VehicleRepository;
 import com.usedcar.trading.domain.vehicle.service.VehicleService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.CookieValue;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,9 +25,43 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class VehicleController {
 
-    // 임시
     private final VehicleRepository vehicleRepository;
     private final VehicleService vehicleService;
+    private final UserRepository userRepository;
+
+    // 매물 등록 페이지
+    @GetMapping("/register")
+    public String registerPage(Model model) {
+        return "vehicle/register";
+    }
+
+    // 매물 등록 처리
+    @PostMapping("/register")
+    public String registerVehicle(
+            @ModelAttribute VehicleRegisterRequest request,
+            @RequestParam("imageFiles") List<MultipartFile> imageFiles,
+            @AuthenticationPrincipal Object principal) {
+
+        User user = findUser(principal);
+
+        try {
+            vehicleService.register(user, request, imageFiles);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "redirect:/company/sales?error=" + e.getMessage();
+        }
+
+        return "redirect:/company/sales";
+    }
+
+    private User findUser(Object principal) {
+        if (principal instanceof UserDetails) {
+            String email = ((UserDetails) principal).getUsername();
+            return userRepository.findByEmail(email)
+                    .orElseThrow(() -> new IllegalArgumentException("회원 정보 없음"));
+        }
+        throw new IllegalArgumentException("로그인이 필요합니다.");
+    }
 
     // 매물 상세 조회
     @GetMapping("/{id}")
@@ -68,5 +105,49 @@ public class VehicleController {
         model.addAttribute("recentCars", recentCars);
 
         return "vehicle-detail";
+    }
+
+    @GetMapping("/{id}/edit")
+    public String editPage(@PathVariable Long id, Model model, @AuthenticationPrincipal Object principal) {
+        User user = findUser(principal);
+
+        Vehicle vehicle = vehicleRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("매물 없음"));
+
+        if (!vehicle.getRegisteredBy().getUser().getUserId().equals(user.getUserId())) {
+            return "redirect:/company/sales?error=unauthorized";
+        }
+
+        model.addAttribute("car", vehicle);
+        return "vehicle/edit";
+    }
+
+    @PostMapping("/{id}/edit")
+    public String updateVehicle(@PathVariable Long id,
+                                @ModelAttribute VehicleRegisterRequest request,
+                                @RequestParam(value = "imageFiles", required = false) List<MultipartFile> imageFiles, // [추가] 파일 받기
+                                @AuthenticationPrincipal Object principal) {
+        User user = findUser(principal);
+
+        try {
+            vehicleService.update(id, user, request, imageFiles);
+        } catch (Exception e) {
+            return "redirect:/vehicles/" + id + "/edit?error=" + e.getMessage();
+        }
+
+        return "redirect:/vehicles/" + id;
+    }
+
+    @PostMapping("/{id}/delete")
+    public String deleteVehicle(@PathVariable Long id, @AuthenticationPrincipal Object principal) {
+        User user = findUser(principal);
+
+        try {
+            vehicleService.delete(id, user);
+        } catch (Exception e) {
+            return "redirect:/company/sales?error=" + e.getMessage();
+        }
+
+        return "redirect:/company/sales";
     }
 }

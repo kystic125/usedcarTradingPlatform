@@ -229,8 +229,14 @@
 
                                             <div class="action mt-2" th:if="${#lists.isEmpty(car.transactions) or car.vehicleStatus.name() == 'SALE' or car.vehicleStatus.name() == 'PENDING'}">
                                                 <a th:href="@{/vehicles/{id}(id=${car.vehicleId})}" class="btn btn-sm action-preview position-relative btn-light border rounded-circle ms-2 fs-xs" role="button" data-bs-toggle="tooltip" data-bs-title="Preview"></a>
-                                                <a href="#" class="btn btn-sm action-edit position-relative btn-light border rounded-circle ms-2 fs-xs" role="button" data-bs-toggle="tooltip" data-bs-title="Edit"></a>
-                                                <a href="javascript:void(0)" class="btn btn-sm action-delete position-relative btn-light border rounded-circle ms-2 fs-xs" role="button" data-bs-toggle="tooltip" data-bs-title="Delete"></a>
+                                                <a th:href="@{/vehicles/{id}/edit(id=${car.vehicleId})}"
+                                                   class="btn btn-sm action-edit position-relative btn-light border rounded-circle ms-2 fs-xs"
+                                                   role="button" data-bs-toggle="tooltip" data-bs-title="Edit"></a>
+
+                                                <a href="javascript:void(0)"
+                                                   th:onclick="'deleteVehicle(' + ${car.vehicleId} + ')'"
+                                                   class="btn btn-sm action-delete position-relative btn-light border rounded-circle ms-2 fs-xs"
+                                                   role="button" data-bs-toggle="tooltip" data-bs-title="Delete"></a>
                                             </div>
                                         </td>
                                     </tr>
@@ -304,6 +310,16 @@
 <script>
     const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
     const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+
+    function deleteVehicle(id) {
+        if (confirm('정말 이 매물을 삭제하시겠습니까? 삭제 후에는 복구할 수 없습니다.')) {
+            var form = document.createElement('form');
+            form.method = 'post';
+            form.action = '/vehicles/' + id + '/delete';
+            document.body.appendChild(form);
+            form.submit();
+        }
+    }
 </script>
 
 </body>

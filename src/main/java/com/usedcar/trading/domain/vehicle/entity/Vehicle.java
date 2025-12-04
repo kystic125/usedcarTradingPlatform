@@ -160,4 +160,18 @@ public class Vehicle extends BaseEntity {
     public void forceDeleteByAdmin() {
         this.vehicleStatus = VehicleStatus.DELETED;
     }
+
+    public void setThumbnailUrl(String thumbnailUrl) {
+        this.thumbnailUrl = thumbnailUrl;
+    }
+
+    public void updateVehicleInfo(String model, int modelYear, int mileage, BigDecimal price,
+                                  String description, String options) {
+        this.model = model;
+        this.modelYear = modelYear;
+        this.mileage = mileage;
+        this.price = price;
+        this.description = description;
+        this.options = options;
+    }
 }

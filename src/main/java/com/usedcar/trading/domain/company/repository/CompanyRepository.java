@@ -2,6 +2,8 @@ package com.usedcar.trading.domain.company.repository;
 
 import com.usedcar.trading.domain.company.entity.Company;
 import com.usedcar.trading.domain.company.entity.CompanyStatus;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
@@ -23,4 +25,7 @@ public interface CompanyRepository extends JpaRepository<Company, Long> {
 
     // 영업 상태별 조회 (선택)
     List<Company> findByCompanyStatus(CompanyStatus status);
+
+    Page<Company> findByBusinessNameContainingAndCompanyStatus(String businessName, CompanyStatus status, Pageable pageable);
+    Page<Company> findByCompanyStatus(CompanyStatus status, Pageable pageable);
 }
