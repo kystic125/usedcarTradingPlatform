@@ -1,5 +1,8 @@
 package com.usedcar.trading.domain.vehicle.controller;
 
+import com.usedcar.trading.domain.favorite.service.FavoriteService;
+import com.usedcar.trading.domain.review.entity.Review;
+import com.usedcar.trading.domain.review.service.ReviewService;
 import com.usedcar.trading.domain.user.entity.User;
 import com.usedcar.trading.domain.user.repository.UserRepository;
 import com.usedcar.trading.domain.vehicle.dto.VehicleRegisterRequest;
@@ -9,8 +12,12 @@ import com.usedcar.trading.domain.vehicle.service.VehicleService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -28,6 +35,8 @@ public class VehicleController {
     private final VehicleRepository vehicleRepository;
     private final VehicleService vehicleService;
     private final UserRepository userRepository;
+    private final FavoriteService favoriteService;
+    private final ReviewService reviewService;
 
     // 매물 등록 페이지
     @GetMapping("/register")
@@ -57,17 +66,22 @@ public class VehicleController {
     private User findUser(Object principal) {
         if (principal instanceof UserDetails) {
             String email = ((UserDetails) principal).getUsername();
-            return userRepository.findByEmail(email)
-                    .orElseThrow(() -> new IllegalArgumentException("회원 정보 없음"));
+            return userRepository.findByEmail(email).orElse(null);
+        } else if (principal instanceof OAuth2User) {
+            OAuth2User oauthUser = (OAuth2User) principal;
+            String providerId = String.valueOf(oauthUser.getAttributes().get("id"));
+            return userRepository.findByProviderId(providerId).orElse(null);
         }
-        throw new IllegalArgumentException("로그인이 필요합니다.");
+        return null;
     }
 
     // 매물 상세 조회
     @GetMapping("/{id}")
     public String vehicleDetail(@PathVariable Long id,
                                 Model model,
+                                @RequestParam(defaultValue = "0") int reviewPage,
                                 @CookieValue(value = "recent_cars", required = false) String cookieValue,
+                                @AuthenticationPrincipal Object principal,
                                 HttpServletResponse response) {
 
         vehicleService.increaseViewCount(id);
@@ -76,6 +90,32 @@ public class VehicleController {
                 .orElseThrow(() -> new IllegalArgumentException("해당 매물이 존재하지 않습니다. id=" + id));
 
         model.addAttribute("car", vehicle);
+
+        if (vehicle.getCompany() != null) {
+            Long companyId = vehicle.getCompany().getCompanyId();
+
+            // 페이징: 5개씩, 최신순
+            Page<Review> reviewList = reviewService.getCompanyReviews(
+                    companyId,
+                    PageRequest.of(reviewPage, 5, Sort.by(Sort.Direction.DESC, "createdAt"))
+            );
+
+            model.addAttribute("sellerReviews", reviewList);
+            model.addAttribute("reviewPage", reviewPage);
+
+            // 평점 평균 및 개수
+            model.addAttribute("avgRating", reviewService.getCompanyAverageRating(companyId));
+            model.addAttribute("reviewCount", reviewService.getCompanyReviewCount(companyId));
+        }
+
+        boolean isFavorite = false;
+        if (principal != null) {
+            User user = findUser(principal);
+            if (user != null) {
+                isFavorite = favoriteService.isFavorite(user.getUserId(), id);
+            }
+        }
+        model.addAttribute("isFavorite", isFavorite);
 
         List<Long> recentIds = new ArrayList<>();
         if (cookieValue != null && !cookieValue.isEmpty()) {
@@ -114,7 +154,11 @@ public class VehicleController {
         Vehicle vehicle = vehicleRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("매물 없음"));
 
-        if (!vehicle.getRegisteredBy().getUser().getUserId().equals(user.getUserId())) {
+        boolean isRegistrant = vehicle.getRegisteredBy().getUser().getUserId().equals(user.getUserId());
+        boolean isBoss = (user.getRole() == com.usedcar.trading.domain.user.entity.Role.COMPANY_OWNER) &&
+                vehicle.getCompany().getOwner().getUserId().equals(user.getUserId());
+
+        if (!isRegistrant && !isBoss) {
             return "redirect:/company/sales?error=unauthorized";
         }
 

@@ -1,5 +1,7 @@
 package com.usedcar.trading.domain.transaction.service;
 
+import com.usedcar.trading.domain.notification.entity.NotificationType;
+import com.usedcar.trading.domain.notification.service.NotificationService;
 import com.usedcar.trading.domain.settlement.entity.Settlement;
 import com.usedcar.trading.domain.settlement.entity.SettlementStatus;
 import com.usedcar.trading.domain.settlement.repository.SettlementRepository;
@@ -25,6 +27,7 @@ public class TransactionService {
     private final TransactionRepository transactionRepository;
     private final VehicleRepository vehicleRepository;
     private final SettlementRepository settlementRepository;
+    private final NotificationService notificationService;
 
     // 거래 요청 (구매자)
     public Long requestTransaction(Long vehicleId, User buyer) {
@@ -56,7 +59,28 @@ public class TransactionService {
                 .requestedAt(LocalDateTime.now())
                 .build();
 
-        return transactionRepository.save(transaction).getTransactionId();
+        Long txnId = transactionRepository.save(transaction).getTransactionId();
+
+        // 판매자(담당 딜러)에게 알림 발송
+        User dealer = vehicle.getRegisteredBy().getUser();
+        notificationService.createNotification(
+                dealer,
+                NotificationType.TRANSACTION_REQUEST,
+                String.format("'%s' 차량에 대한 구매 요청이 들어왔습니다.", vehicle.getModel()),
+                "/company/sales"
+        );
+
+        // 사장님에게도 알림 발송
+        User boss = vehicle.getCompany().getOwner();
+        if (!dealer.getUserId().equals(boss.getUserId())) {
+            notificationService.createNotification(
+                    boss,
+                    NotificationType.TRANSACTION_REQUEST,
+                    String.format("'%s' (담당: %s) 차량에 구매 요청이 있습니다.", vehicle.getModel(), dealer.getName()),
+                    "/company/sales"
+            );
+        }
+        return txnId;
     }
 
     // 거래 승인 (판매자)

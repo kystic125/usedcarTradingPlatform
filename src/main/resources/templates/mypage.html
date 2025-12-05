@@ -94,9 +94,16 @@
                         </li>
 
                         <li class="nav-item my-1" th:if="${user.role.name() == 'CUSTOMER'}">
-                            <a class="btn btn-sm d-flex align-items-center nav-link px-3 px-lg-4 mx-1 bg-body-tertiary text-body-secondary fs-6" href="#">
+                            <a class="btn btn-sm d-flex align-items-center nav-link px-3 px-lg-4 mx-1 bg-body-tertiary text-body-secondary fs-6" th:href="@{/favorites}">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-heart-check me-2"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M19.5 12.572l-3 2.928m-5.5 3.5a8916.99 8916.99 0 0 0 -6.5 -6.428a5 5 0 1 1 7.5 -6.566a5 5 0 1 1 7.5 6.572" /><path d="M15 19l2 2l4 -4" /></svg>
                                 Favorites
+                            </a>
+                        </li>
+
+                        <li class="nav-item my-1" th:if="${user.role.name() == 'CUSTOMER'}">
+                            <a class="btn btn-sm d-flex align-items-center nav-link px-3 px-lg-4 mx-1 bg-body-tertiary text-body-secondary fs-6" href="/reviews/my">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 17.75l-6.172 3.245l1.179 -6.873l-5 -4.867l6.9 -1l3.086 -6.253l3.086 6.253l6.9 1l-5 4.867l1.179 6.873z" /></svg>
+                                Reviews
                             </a>
                         </li>
 
@@ -190,7 +197,7 @@
                                         <div class="card border bg-light-subtle">
                                             <div class="card-body text-center">
                                                 <div class="mb-3 text-warning custom-color"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 17.75l-6.172 3.245l1.179 -6.873l-5 -4.867l6.9 -1l3.086 -6.253l3.086 6.253l6.9 1l-5 4.867l1.179 6.873z" /></svg></div>
-                                                <h3 class="fs-6 fw-bold mt-0 mb-2 custom-color">0.0</h3>
+                                                <h3 class="fs-6 fw-bold mt-0 mb-2 custom-color" th:text="${#numbers.formatDecimal(avgRating, 1, 1)}">0.0</h3>
                                                 <p class="text-body-secondary mb-0">Average Rating</p>
                                             </div>
                                         </div>
@@ -204,18 +211,20 @@
                                         <div class="card border bg-light-subtle">
                                             <div class="card-body text-center">
                                                 <div class="mb-3 text-danger custom-color"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19.5 12.572l-3 2.928m-5.5 3.5a8916.99 8916.99 0 0 0 -6.5 -6.428a5 5 0 1 1 7.5 -6.566a5 5 0 1 1 7.5 6.572" /></svg></div>
-                                                <h3 class="fs-6 fw-bold mt-0 mb-2 custom-color">0</h3>
+                                                <h3 class="fs-6 fw-bold mt-0 mb-2 custom-color" th:text="${favoriteCount}">0</h3>
                                                 <p class="text-body-secondary mb-0">Favorites</p>
                                             </div>
+                                            <a href="/favorites" class="stretched-link"></a>
                                         </div>
                                     </div>
                                     <div class="col-sm-6 col-lg-6">
                                         <div class="card border bg-light-subtle">
                                             <div class="card-body text-center">
                                                 <div class="mb-3 text-info custom-color"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 17.75l-6.172 3.245l1.179 -6.873l-5 -4.867l6.9 -1l3.086 -6.253l3.086 6.253l6.9 1l-5 4.867l1.179 6.873z" /></svg></div>
-                                                <h3 class="fs-6 fw-bold mt-0 mb-2 custom-color">0</h3>
+                                                <h3 class="fs-6 fw-bold mt-0 mb-2 custom-color" th:text="${reviewCount}">0</h3>
                                                 <p class="text-body-secondary mb-0">Reviews Written</p>
                                             </div>
+                                            <a href="/reviews/my" class="stretched-link"></a>
                                         </div>
                                     </div>
                                 </div>

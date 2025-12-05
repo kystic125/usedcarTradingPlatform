@@ -11,6 +11,8 @@ import com.usedcar.trading.domain.user.entity.Role;
 import com.usedcar.trading.domain.user.entity.User;
 import com.usedcar.trading.domain.user.entity.UserStatus;
 import com.usedcar.trading.domain.user.repository.UserRepository;
+import com.usedcar.trading.domain.vehicle.entity.Vehicle;
+import com.usedcar.trading.domain.vehicle.repository.VehicleRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -28,6 +30,7 @@ public class EmployeeService {
     private final EmployeeRepository employeeRepository;
     private final CompanyRepository companyRepository;
     private final PasswordEncoder passwordEncoder;
+    private final VehicleRepository vehicleRepository;
 
     // 1. 직원 등록
     @Transactional
@@ -84,6 +87,14 @@ public class EmployeeService {
 
         if (!employee.getCompany().getCompanyId().equals(myCompany.getCompanyId())) {
             throw new IllegalArgumentException("당신의 직원이 아닙니다.");
+        }
+
+        Employee ownerEmployee = employeeRepository.findByUserUserId(ownerId)
+                .orElseThrow(() -> new IllegalStateException("사장님의 직원 정보를 찾을 수 없습니다."));
+
+        List<Vehicle> employeeVehicles = vehicleRepository.findByRegisteredBy(employee);
+        for (Vehicle vehicle : employeeVehicles) {
+            vehicle.setRegisteredBy(ownerEmployee);
         }
 
         User user = employee.getUser();

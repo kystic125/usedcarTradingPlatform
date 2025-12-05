@@ -1,6 +1,8 @@
 package com.usedcar.trading.domain.admin.service;
 
 import com.usedcar.trading.domain.company.repository.CompanyRepository;
+import com.usedcar.trading.domain.notification.entity.NotificationType;
+import com.usedcar.trading.domain.notification.service.NotificationService;
 import com.usedcar.trading.domain.report.entity.ReportStatus;
 import com.usedcar.trading.domain.report.repository.ReportRepository;
 import com.usedcar.trading.domain.settlement.entity.SettlementStatus;
@@ -30,6 +32,7 @@ public class AdminService {
     private final TransactionRepository transactionRepository;
     private final SettlementRepository settlementRepository;
     private final ReportRepository reportRepository;
+    private final NotificationService notificationService;
 
     // 1. 승인 대기중인 매물 목록 가져오기
     @Transactional(readOnly = true)
@@ -46,6 +49,13 @@ public class AdminService {
         vehicle.approve(admin);
 
         vehicle.extendExpirationDate();
+
+        notificationService.createNotification(
+                vehicle.getRegisteredBy().getUser(),
+                NotificationType.VEHICLE_APPROVED,
+                String.format("'%s' 매물 등록이 승인되었습니다.", vehicle.getModel()),
+                "/vehicles/" + vehicle.getVehicleId()
+        );
     }
 
     // 3. 매물 반려 처리
@@ -59,6 +69,13 @@ public class AdminService {
         }
 
         vehicle.reject(reason, admin);
+
+        notificationService.createNotification(
+                vehicle.getRegisteredBy().getUser(),
+                NotificationType.VEHICLE_REJECTED,
+                String.format("'%s' 매물이 반려되었습니다. 사유: %s", vehicle.getModel(), reason),
+                "/company/sales"
+        );
     }
 
     /**

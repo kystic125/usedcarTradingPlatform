@@ -81,122 +81,114 @@
                         <h2 class="offcanvas-title">Filter</h2>
                         <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#filter-widget"></button>
                     </div>
-                    <div class="offcanvas-body row filter-fields">
 
-                        <div class="col-12 mb-4">
-                            <h4 class="h5 mb-3">Search</h4>
-                            <form action="/vehicles" method="get">
-                                <input type="hidden" name="view" th:value="${viewType}">
+                    <div class="offcanvas-body">
+                        <form action="/vehicles" method="get" class="w-100">
+                            <input type="hidden" name="view" th:value="${viewType}">
+
+                            <div class="col-12 mb-4">
+                                <h4 class="h5 mb-3">Search</h4>
                                 <div class="input-group">
-                                    <input type="text" class="form-control custom-color" name="keyword" placeholder="예: 그랜저, 현대..." th:value="${keyword}">
+                                    <input type="text" class="form-control custom-color" name="keyword"
+                                           placeholder="Brand, Model..." th:value="${keyword}">
                                     <button class="btn btn-primary custom-color border-0" type="submit">Go</button>
                                 </div>
-                            </form>
-                        </div>
-
-                        <div class="col-12">
-                            <div class="accordion accordion-flush w-100" id="accordionPanelsStayOpenExample">
-
-                                <div class="accordion-item">
-                                    <h4 class="accordion-header h2">
-                                        <button class="accordion-button px-0 fw-bold custom-color" type="button" data-bs-toggle="collapse" data-bs-target="#filter-price">
-                                            Price Range
-                                        </button>
-                                    </h4>
-                                    <div id="filter-price" class="accordion-collapse collapse show">
-                                        <div class="accordion-body px-0 pt-0 d-flex justify-content-between gap-2">
-                                            <input type="number" class="form-control form-control-sm" placeholder="Min Price">
-                                            <input type="number" class="form-control form-control-sm" placeholder="Max Price">
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="accordion-item">
-                                    <h4 class="accordion-header h2">
-                                        <button class="accordion-button px-0 fw-bold custom-color collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#filter-year">
-                                            Year
-                                        </button>
-                                    </h4>
-                                    <div id="filter-year" class="accordion-collapse collapse">
-                                        <div class="accordion-body px-0 pt-0 d-flex justify-content-between gap-2">
-                                            <input type="number" class="form-control form-control-sm" placeholder="From (2010)">
-                                            <input type="number" class="form-control form-control-sm" placeholder="To (2025)">
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="accordion-item">
-                                    <h4 class="accordion-header h2">
-                                        <button class="accordion-button px-0 fw-bold custom-color collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#filter-mileage">
-                                            Mileage (km)
-                                        </button>
-                                    </h4>
-                                    <div id="filter-mileage" class="accordion-collapse collapse">
-                                        <div class="accordion-body px-0 pt-0">
-                                            <input type="number" class="form-control form-control-sm" placeholder="Max Mileage (e.g 50000)">
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="accordion-item">
-                                    <h4 class="accordion-header h2">
-                                        <button class="accordion-button px-0 fw-bold custom-color collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#filter-fuel">
-                                            Fuel Type
-                                        </button>
-                                    </h4>
-                                    <div id="filter-fuel" class="accordion-collapse collapse">
-                                        <div class="accordion-body px-0 pt-0">
-                                            <div class="form-check">
-                                                <input class="form-check-input custom-color" type="checkbox" id="fuel-gasoline">
-                                                <label class="form-check-label" for="fuel-gasoline">Gasoline (휘발유)</label>
-                                            </div>
-                                            <div class="form-check">
-                                                <input class="form-check-input custom-color" type="checkbox" id="fuel-diesel">
-                                                <label class="form-check-label" for="fuel-diesel">Diesel (경유)</label>
-                                            </div>
-                                            <div class="form-check">
-                                                <input class="form-check-input custom-color" type="checkbox" id="fuel-electric">
-                                                <label class="form-check-label" for="fuel-electric">Electric (전기)</label>
-                                            </div>
-                                            <div class="form-check">
-                                                <input class="form-check-input custom-color" type="checkbox" id="fuel-hybrid">
-                                                <label class="form-check-label" for="fuel-hybrid">Hybrid (하이브리드)</label>
-                                            </div>
-                                            <div class="form-check">
-                                                <input class="form-check-input custom-color" type="checkbox" id="fuel-lpg">
-                                                <label class="form-check-label" for="fuel-lpg">LPG</label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="accordion-item">
-                                    <h4 class="accordion-header h2">
-                                        <button class="accordion-button px-0 fw-bold custom-color collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#filter-transmission">
-                                            Transmission
-                                        </button>
-                                    </h4>
-                                    <div id="filter-transmission" class="accordion-collapse collapse">
-                                        <div class="accordion-body px-0 pt-0">
-                                            <div class="form-check">
-                                                <input class="form-check-input custom-color" type="checkbox" id="trans-auto">
-                                                <label class="form-check-label" for="trans-auto">Automatic (자동)</label>
-                                            </div>
-                                            <div class="form-check">
-                                                <input class="form-check-input custom-color" type="checkbox" id="trans-manual">
-                                                <label class="form-check-label" for="trans-manual">Manual (수동)</label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
                             </div>
 
-                            <button class="btn btn-primary w-100 mt-4 fw-bold custom-color" disabled>
-                                Apply Filters (준비중)
-                            </button>
-                        </div>
+                            <div class="col-12">
+                                <div class="accordion accordion-flush w-100" id="accordionPanelsStayOpenExample">
 
+                                    <div class="accordion-item">
+                                        <h4 class="accordion-header h2">
+                                            <button class="accordion-button px-0 fw-bold custom-color" type="button" data-bs-toggle="collapse" data-bs-target="#filter-price">
+                                                Price Range
+                                            </button>
+                                        </h4>
+                                        <div id="filter-price" class="accordion-collapse collapse show">
+                                            <div class="accordion-body px-0 pt-0 d-flex justify-content-between gap-2">
+                                                <input type="number" class="form-control form-control-sm" name="minPrice"
+                                                       placeholder="Min Price" th:value="${minPrice}">
+                                                <input type="number" class="form-control form-control-sm" name="maxPrice"
+                                                       placeholder="Max Price" th:value="${maxPrice}">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="accordion-item">
+                                        <h4 class="accordion-header h2">
+                                            <button class="accordion-button px-0 fw-bold custom-color collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#filter-year">
+                                                Year
+                                            </button>
+                                        </h4>
+                                        <div id="filter-year" class="accordion-collapse collapse">
+                                            <div class="accordion-body px-0 pt-0 d-flex justify-content-between gap-2">
+                                                <input type="number" class="form-control form-control-sm" name="minYear"
+                                                       placeholder="From (2010)" th:value="${minYear}">
+                                                <input type="number" class="form-control form-control-sm" name="maxYear"
+                                                       placeholder="To (2025)" th:value="${maxYear}">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="accordion-item">
+                                        <h4 class="accordion-header h2">
+                                            <button class="accordion-button px-0 fw-bold custom-color collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#filter-mileage">
+                                                Mileage (km)
+                                            </button>
+                                        </h4>
+                                        <div id="filter-mileage" class="accordion-collapse collapse">
+                                            <div class="accordion-body px-0 pt-0">
+                                                <input type="number" class="form-control form-control-sm" name="maxMileage"
+                                                       placeholder="Max Mileage (e.g 50000)" th:value="${maxMileage}">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="accordion-item">
+                                        <h4 class="accordion-header h2">
+                                            <button class="accordion-button px-0 fw-bold custom-color collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#filter-fuel">
+                                                Fuel Type
+                                            </button>
+                                        </h4>
+                                        <div id="filter-fuel" class="accordion-collapse collapse">
+                                            <div class="accordion-body px-0 pt-0">
+                                                <div class="form-check" th:each="fuel : ${T(com.usedcar.trading.domain.vehicle.entity.FuelType).values()}">
+                                                    <input class="form-check-input custom-color" type="checkbox" name="fuelTypes"
+                                                           th:value="${fuel}" th:id="${'fuel-' + fuel}"
+                                                           th:checked="${fuelTypes != null and #lists.contains(fuelTypes, fuel)}">
+                                                    <label class="form-check-label" th:for="${'fuel-' + fuel}" th:text="${fuel}"></label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="accordion-item">
+                                        <h4 class="accordion-header h2">
+                                            <button class="accordion-button px-0 fw-bold custom-color collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#filter-transmission">
+                                                Transmission
+                                            </button>
+                                        </h4>
+                                        <div id="filter-transmission" class="accordion-collapse collapse">
+                                            <div class="accordion-body px-0 pt-0">
+                                                <div class="form-check" th:each="trans : ${T(com.usedcar.trading.domain.vehicle.entity.Transmission).values()}">
+                                                    <input class="form-check-input custom-color" type="checkbox" name="transmissions"
+                                                           th:value="${trans}" th:id="${'trans-' + trans}"
+                                                           th:checked="${transmissions != null and #lists.contains(transmissions, trans)}">
+                                                    <label class="form-check-label" th:for="${'trans-' + trans}" th:text="${trans}"></label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                                <button class="btn btn-primary w-100 mt-4 fw-bold custom-color" type="submit">
+                                    Apply Filters
+                                </button>
+
+                                <a href="/vehicles" class="btn btn-link w-100 mt-1 text-decoration-none text-muted small">Reset Filters</a>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </aside>
@@ -226,6 +218,14 @@
 
                     <div class="col-12 mb-4" th:each="car : ${vehicles}">
                         <div class="card car-item border bg-body-tertiary border">
+                            <div class="position-absolute end-0 top-0 pt-3 pe-3 z-2"
+                                 th:if="${user == null or user.role.name() == 'CUSTOMER'}">
+                                <button type="button" class="btn btn-favorites p-0"
+                                        th:classappend="${userFavoriteIds != null and #lists.contains(userFavoriteIds, car.vehicleId)} ? 'favorites-active'"
+                                        th:onclick="'toggleFavorite(' + ${car.vehicleId} + ', this)'"
+                                        data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Add to favorites">
+                                </button>
+                            </div>
                             <div class="position-absolute start-0 top-0 pt-3 ps-3 z-2 d-flex align-items-start">
                                 <span class="badge text-bg-success text-uppercase rounded-1 fs-xs-alt fw-normal text-spacing-sm me-1">Sale</span>
                             </div>
@@ -247,39 +247,33 @@
                                         <div class="w-100 border-top"></div>
                                         <div class="card-text mt-1 row row-cols-3 g-3 gx-0">
                                             <div>
-                                                <span class="icon-wrapper d-inline-flex align-items-center p-1 px-2 me-1 bg-body-secondary rounded-1 text-body-secondary bg-opacity-75 w-100">
+                                                <span class="icon-wrapper d-inline-flex align-items-center p-1 px-2 me-1 bg-body-secondary rounded-1 text-body-secondary bg-opacity-75 w-100 fs-sm">
                                                     <svg xmlns="http://www.w3.org/2000/svg" class="me-1 icon icon-tabler icon-tabler-calendar-bolt" width="20" height="20" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M13.5 21h-7.5a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v5"></path><path d="M16 3v4"></path><path d="M8 3v4"></path><path d="M4 11h16"></path><path d="M19 16l-2 3h4l-2 3"></path></svg>
-                                                    <span th:text="${car.modelYear}"></span>
+                                                    <span th:text="${car.modelYear}">2022</span>
                                                 </span>
                                             </div>
                                             <div>
-                                                <span class="icon-wrapper d-inline-flex align-items-center p-1 px-2 me-1 bg-body-secondary rounded-1 text-body-secondary bg-opacity-75 w-100">
+                                                <span class="icon-wrapper d-inline-flex align-items-center p-1 px-2 me-1 bg-body-secondary rounded-1 text-body-secondary bg-opacity-75 w-100 fs-sm">
                                                     <svg xmlns="http://www.w3.org/2000/svg" class="me-1 icon icon-tabler icon-tabler-gauge" width="20" height="20" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"></path><path d="M12 12m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"></path><path d="M13.41 10.59l2.59 -2.59"></path><path d="M7 12a5 5 0 0 1 5 -5"></path></svg>
-                                                    <span th:text="${#numbers.formatInteger(car.mileage, 0, 'COMMA')}"></span>km
+                                                    <span th:text="${#numbers.formatInteger(car.mileage, 0, 'COMMA')}">10k</span>km
                                                 </span>
                                             </div>
                                             <div>
-                                                <span class="icon-wrapper d-inline-flex align-items-center p-1 px-2 me-1 bg-body-secondary rounded-1 text-body-secondary bg-opacity-75 w-100">
+                                                <span class="icon-wrapper d-inline-flex align-items-center p-1 px-2 me-1 bg-body-secondary rounded-1 text-body-secondary bg-opacity-75 w-100 fs-sm">
                                                     <svg xmlns="http://www.w3.org/2000/svg" class="me-1 icon icon-tabler icon-tabler-manual-gearbox" width="20" height="20" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 6m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0"></path><path d="M12 6m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0"></path><path d="M19 6m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0"></path><path d="M5 18m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0"></path><path d="M12 18m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0"></path><path d="M5 8l0 8"></path><path d="M12 8l0 8"></path><path d="M19 8v2a2 2 0 0 1 -2 2h-12"></path></svg>
-                                                    <span th:text="${car.transmission}"></span>
+                                                    <span th:text="${car.transmission}">Auto</span>
                                                 </span>
                                             </div>
                                             <div>
-                                                <span class="icon-wrapper d-inline-flex align-items-center p-1 px-2 me-1 bg-body-secondary rounded-1 text-body-secondary bg-opacity-75 w-100">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" class="me-1 icon icon-tabler icon-tabler-engine" width="20" height="20" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 10v6"></path><path d="M12 5v3"></path><path d="M10 5h4"></path><path d="M5 13h-2"></path><path d="M6 10h2l2 -2h3.382a1 1 0 0 1 .894 .553l1.448 2.894a1 1 0 0 0 .894 .553h1.382v-2h2a1 1 0 0 1 1 1v6a1 1 0 0 1 -1 1h-2v-2h-3v2a1 1 0 0 1 -1 1h-3.465a1 1 0 0 1 -.832 -.445l-1.703 -2.555h-2v-6z"></path></svg>
-                                                    Engine
-                                                </span>
-                                            </div>
-                                            <div>
-                                                <span class="icon-wrapper d-inline-flex align-items-center p-1 px-2 me-1 bg-body-secondary rounded-1 text-body-secondary bg-opacity-75 w-100">
+                                                <span class="icon-wrapper d-inline-flex align-items-center p-1 px-2 me-1 bg-body-secondary rounded-1 text-body-secondary bg-opacity-75 w-100 fs-sm">
                                                     <svg xmlns="http://www.w3.org/2000/svg" class="me-1 icon icon-tabler icon-tabler-gas-station" width="20" height="20" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M14 11h1a2 2 0 0 1 2 2v3a1.5 1.5 0 0 0 3 0v-7l-3 -3"></path><path d="M4 20v-14a2 2 0 0 1 2 -2h6a2 2 0 0 1 2 2v14"></path><path d="M3 20l12 0"></path><path d="M18 7v1a1 1 0 0 0 1 1h1"></path><path d="M4 11l10 0"></path></svg>
-                                                    <span th:text="${car.fuelType}"></span>
+                                                    <span th:text="${car.fuelType}">Petrol</span>
                                                 </span>
                                             </div>
                                             <div>
-                                                <span class="icon-wrapper d-inline-flex align-items-center p-1 px-2 me-1 bg-body-secondary rounded-1 text-body-secondary bg-opacity-75 w-100">
+                                                <span class="icon-wrapper d-inline-flex align-items-center p-1 px-2 me-1 bg-body-secondary rounded-1 text-body-secondary bg-opacity-75 w-100 fs-sm">
                                                     <svg xmlns="http://www.w3.org/2000/svg" class="me-1 icon icon-tabler icon-tabler-palette" width="20" height="20" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 21a9 9 0 0 1 0 -18c4.97 0 9 3.582 9 8c0 1.06 -.474 2.078 -1.318 2.828c-.844 .75 -1.989 1.172 -3.182 1.172h-2.5a2 2 0 0 0 -1 3.75a1.3 1.3 0 0 1 -1 2.25"></path><path d="M8.5 10.5m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"></path><path d="M12.5 7.5m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"></path><path d="M16.5 10.5m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"></path></svg>
-                                                    <span th:text="${car.color}"></span>
+                                                    <span th:text="${car.color}">Color</span>
                                                 </span>
                                             </div>
                                         </div>
@@ -345,6 +339,7 @@
 <script th:src="@{/libs/jarallax/dist/jarallax-video.min.js}"></script>
 <script th:src="@{/libs/fly-to/dist/js/fly-to.min.js}"></script>
 <script th:src="@{/js/script.min.js}"></script>
+<script th:src="@{/js/wishlist.js}"></script>
 
 </body>
 </html>

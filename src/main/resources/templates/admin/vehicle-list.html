@@ -2,84 +2,89 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>매물 승인 관리 - 관리자</title>
+    <title>매물 관리 - 관리자</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
 </head>
 <body class="bg-light">
 
-<div class="container mt-5">
+<nav class="navbar navbar-dark bg-dark mb-4">
+    <div class="container">
+        <a class="navbar-brand fw-bold" href="/admin">SmartPick ADMIN</a>
+        <div>
+            <a href="/admin/vehicles" class="btn btn-light btn-sm fw-bold me-2">매물 관리</a>
+            <a href="/admin/settlements" class="btn btn-outline-light btn-sm me-2">정산 관리</a>
+            <a href="/admin/reports" class="btn btn-outline-light btn-sm">신고 관리</a>
+        </div>
+    </div>
+</nav>
+
+<div class="container">
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2 class="fw-bold text-danger">🚦 매물 승인 대기 목록</h2>
-        <a href="/admin" class="btn btn-secondary">대시보드로 이동</a>
+        <h2 class="fw-bold"><i class="bi bi-car-front-fill me-2 text-danger"></i> 매물 승인 관리</h2>
+        <div class="text-end">
+            <span class="badge bg-danger text-white fs-6">
+                승인 대기: <span th:text="${#lists.size(cars)}">0</span>건
+            </span>
+        </div>
     </div>
 
     <div class="card shadow-sm">
         <div class="card-body p-0">
-            <table class="table table-hover mb-0 align-middle">
-                <thead class="table-dark">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
                 <tr>
-                    <th>ID</th>
+                    <th class="ps-4">ID</th>
                     <th>브랜드/모델</th>
                     <th>연식</th>
                     <th>가격</th>
-                    <th>판매자</th>
+                    <th>판매자 (소속)</th>
                     <th>등록일</th>
-                    <th class="text-center">관리</th>
+                    <th class="text-center pe-4">관리</th>
                 </tr>
                 </thead>
                 <tbody>
                 <tr th:if="${#lists.isEmpty(cars)}">
                     <td colspan="7" class="text-center py-5 text-muted">
-                        <h5>현재 승인 대기 중인 매물이 없습니다. 🎉</h5>
+                        <i class="bi bi-check-circle display-4 text-success d-block mb-3"></i>
+                        <h5>현재 승인 대기 중인 매물이 없습니다.</h5>
+                        <p class="small text-secondary">새로운 매물이 등록되면 이곳에 표시됩니다.</p>
                     </td>
                 </tr>
 
                 <tr th:each="car : ${cars}">
-                    <td th:text="${car.vehicleId}">1</td>
+                    <td class="ps-4 fw-bold text-secondary" th:text="${car.vehicleId}">1</td>
                     <td>
-                        <span class="fw-bold" th:text="${car.brand} + ' ' + ${car.model}">현대 그랜저</span>
+                        <a th:href="@{/vehicles/{id}(id=${car.vehicleId})}" target="_blank" class="text-decoration-none fw-bold text-dark">
+                            <span th:text="${car.brand} + ' ' + ${car.model}">현대 그랜저</span>
+                            <i class="bi bi-box-arrow-up-right ms-1 text-secondary small"></i>
+                        </a>
                         <br>
-                        <small class="text-muted" th:text="${car.fuelType}">GASOLINE</small>
+                        <span class="badge bg-secondary bg-opacity-10 text-secondary border" th:text="${car.fuelType}">GASOLINE</span>
                     </td>
                     <td th:text="${car.modelYear} + '년식'">2023년식</td>
-                    <td th:text="${#numbers.formatInteger(car.price, 0, 'COMMA')} + '원'">35,000,000원</td>
+                    <td class="fw-bold text-primary" th:text="${#numbers.formatInteger(car.price, 0, 'COMMA')} + '원'">35,000,000원</td>
                     <td>
                         <span th:text="${car.registeredBy.user.name}">김딜러</span>
                         <br>
                         <small class="text-muted" th:text="${car.company.businessName}">스마트모터스</small>
                     </td>
                     <td th:text="${#temporals.format(car.createdAt, 'yyyy-MM-dd HH:mm')}">2025-11-24</td>
-                    <td class="text-center">
-                        <form th:action="@{/admin/vehicles/{id}/approve(id=${car.vehicleId})}" method="post"
-                              onsubmit="return confirm('이 매물을 판매 승인하시겠습니까?');">
-                            <button type="submit" class="btn btn-success btn-sm fw-bold">✅ 승인</button>
-                        </form>
 
-                        <button type="button" class="btn btn-danger btn-sm fw-bold"
-                                th:onclick="|rejectVehicle(${car.vehicleId})|">
-                            반려
-                        </button>
+                    <td class="text-center pe-4">
+                        <div class="d-flex justify-content-center gap-2">
+                            <form th:action="@{/admin/vehicles/{id}/approve(id=${car.vehicleId})}" method="post"
+                                  onsubmit="return confirm('이 매물을 판매 승인하시겠습니까?');">
+                                <button type="submit" class="btn btn-success btn-sm fw-bold px-3">
+                                    <i class="bi bi-check-lg"></i> 승인
+                                </button>
+                            </form>
 
-                        <script>
-                            function rejectVehicle(id) {
-                                const reason = prompt("반려 사유를 입력해주세요:");
-                                if (reason) {
-                                    // 동적으로 폼 생성하여 제출
-                                    const form = document.createElement('form');
-                                    form.method = 'POST';
-                                    form.action = '/admin/vehicles/' + id + '/reject';
-
-                                    const input = document.createElement('input');
-                                    input.type = 'hidden';
-                                    input.name = 'reason';
-                                    input.value = reason;
-
-                                    form.appendChild(input);
-                                    document.body.appendChild(form);
-                                    form.submit();
-                                }
-                            }
-                        </script>
+                            <button type="button" class="btn btn-danger btn-sm fw-bold px-3"
+                                    th:onclick="|rejectVehicle(${car.vehicleId})|">
+                                <i class="bi bi-x-lg"></i> 반려
+                            </button>
+                        </div>
                     </td>
                 </tr>
                 </tbody>
@@ -87,6 +92,26 @@
         </div>
     </div>
 </div>
+
+<script>
+    function rejectVehicle(id) {
+        const reason = prompt("반려 사유를 입력해주세요 (필수):");
+        if (reason) {
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = '/admin/vehicles/' + id + '/reject';
+
+            const input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = 'reason';
+            input.value = reason;
+
+            form.appendChild(input);
+            document.body.appendChild(form);
+            form.submit();
+        }
+    }
+</script>
 
 </body>
 </html>

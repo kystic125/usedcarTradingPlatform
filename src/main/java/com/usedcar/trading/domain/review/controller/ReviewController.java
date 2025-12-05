@@ -2,8 +2,13 @@ package com.usedcar.trading.domain.review.controller;
 
 import com.usedcar.trading.domain.review.entity.Review;
 import com.usedcar.trading.domain.review.service.ReviewService;
+import com.usedcar.trading.domain.user.entity.User;
+import com.usedcar.trading.domain.user.repository.UserRepository;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -17,14 +22,17 @@ import java.util.List;
 public class ReviewController {
 
     private final ReviewService reviewService;
+    private final UserRepository userRepository;
 
     /**
      * 리뷰 작성 폼
      */
     @GetMapping("/write/{transactionId}")
-    public String reviewForm(@PathVariable Long transactionId, Model model, HttpSession session) {
-        Long userId = (Long) session.getAttribute("userId");
-        if (userId == null) {
+    public String reviewForm(@PathVariable Long transactionId,
+                             Model model,
+                             @AuthenticationPrincipal Object principal) {
+        User user = findUser(principal);
+        if (user == null) {
             return "redirect:/login";
         }
 
@@ -39,21 +47,21 @@ public class ReviewController {
     public String createReview(@RequestParam Long transactionId,
                                @RequestParam int rating,
                                @RequestParam(required = false) String content,
-                               HttpSession session,
+                               @AuthenticationPrincipal Object principal,
                                RedirectAttributes redirectAttributes) {
-        Long userId = (Long) session.getAttribute("userId");
-        if (userId == null) {
+        User user = findUser(principal);
+        if (user == null) {
             return "redirect:/login";
         }
 
         try {
-            reviewService.createReview(transactionId, userId, rating, content);
+            reviewService.createReview(transactionId, user.getUserId(), rating, content);
             redirectAttributes.addFlashAttribute("message", "리뷰가 등록되었습니다.");
         } catch (IllegalStateException | IllegalArgumentException e) {
             redirectAttributes.addFlashAttribute("error", e.getMessage());
         }
 
-        return "redirect:/transactions/" + transactionId;
+        return "redirect:/mypage/purchases";
     }
 
     /**
@@ -87,15 +95,27 @@ public class ReviewController {
      * 내가 작성한 리뷰 목록
      */
     @GetMapping("/my")
-    public String myReviews(HttpSession session, Model model) {
-        Long userId = (Long) session.getAttribute("userId");
-        if (userId == null) {
+    public String myReviews(Model model, @AuthenticationPrincipal Object principal) {
+        User user = findUser(principal);
+        if (user == null) {
             return "redirect:/login";
         }
 
-        List<Review> reviews = reviewService.getUserReviews(userId);
+        List<Review> reviews = reviewService.getUserReviews(user.getUserId());
         model.addAttribute("reviews", reviews);
 
         return "review/my-reviews";
+    }
+
+    private User findUser(Object principal) {
+        if (principal instanceof UserDetails) {
+            String email = ((UserDetails) principal).getUsername();
+            return userRepository.findByEmail(email).orElse(null);
+        } else if (principal instanceof OAuth2User) {
+            OAuth2User oauthUser = (OAuth2User) principal;
+            String providerId = String.valueOf(oauthUser.getAttributes().get("id"));
+            return userRepository.findByProviderId(providerId).orElse(null);
+        }
+        return null;
     }
 }

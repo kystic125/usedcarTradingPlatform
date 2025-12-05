@@ -196,7 +196,13 @@
                                                 <span class="text-body-secondary" th:if="${car.vehicleStatus.name() == 'SOLD'}">Sold</span>
 
                                                 <span class="badge bg-danger me-2 status-rejected" th:if="${car.vehicleStatus.name() == 'REJECTED'}"></span>
-                                                <span class="text-body-secondary" th:if="${car.vehicleStatus.name() == 'REJECTED'}">Rejected</span>
+                                                <span class="text-body-secondary" th:if="${car.vehicleStatus.name() == 'REJECTED'}"
+                                                      style="cursor: help; text-decoration: underline dotted;"
+                                                      data-bs-toggle="tooltip"
+                                                      data-bs-placement="top"
+                                                      th:data-bs-title="'반려 사유: ' + ${car.rejectedReason}">
+                                                    Rejected <i class="bi bi-question-circle-fill ms-1"></i>
+                                                </span>
                                             </div>
                                         </td>
                                         <td class="ps-3">

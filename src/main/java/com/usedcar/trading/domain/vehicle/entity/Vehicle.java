@@ -174,4 +174,8 @@ public class Vehicle extends BaseEntity {
         this.description = description;
         this.options = options;
     }
+
+    public void setRegisteredBy(Employee employee) {
+        this.registeredBy = employee;
+    }
 }

@@ -8,6 +8,8 @@ import com.usedcar.trading.domain.report.entity.ReportType;
 import com.usedcar.trading.domain.report.repository.ReportRepository;
 import com.usedcar.trading.domain.user.entity.User;
 import com.usedcar.trading.domain.user.repository.UserRepository;
+import com.usedcar.trading.domain.vehicle.entity.Vehicle;
+import com.usedcar.trading.domain.vehicle.repository.VehicleRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -23,6 +25,7 @@ public class ReportService {
 
     private final ReportRepository reportRepository;
     private final UserRepository userRepository;
+    private final VehicleRepository vehicleRepository;
     private final NotificationService notificationService;
 
     /**
@@ -81,6 +84,17 @@ public class ReportService {
 
         report.resolve(admin, memo);
 
+        if (report.getReportType() == ReportType.VEHICLE) {
+            Vehicle vehicle = vehicleRepository.findById(report.getTargetId()).orElse(null);
+
+            if (vehicle != null) {
+                String sanctionReason = "신고 누적/확인으로 인한 판매 중지: " + memo;
+                vehicle.reject(sanctionReason, admin);
+
+                log.info("신고 승인으로 인한 매물 판매 중지(REJECTED): vehicleId={}", vehicle.getVehicleId());
+            }
+        }
+
         // 신고자에게 처리 완료 알림
         notificationService.createNotification(
                 report.getReporter(),
@@ -88,6 +102,18 @@ public class ReportService {
                 "접수하신 신고가 처리되었습니다.",
                 "/reports/" + reportId
         );
+
+        if (report.getReportType() == ReportType.VEHICLE) {
+            Vehicle vehicle = vehicleRepository.findById(report.getTargetId()).orElse(null);
+            if (vehicle != null) {
+                notificationService.createNotification(
+                        vehicle.getRegisteredBy().getUser(),
+                        NotificationType.VEHICLE_REJECTED,
+                        "신고 접수로 인해 매물이 판매 중지되었습니다. 사유를 확인하고 수정해주세요.",
+                        "/company/sales"
+                );
+            }
+        }
 
         log.info("신고 처리 완료: reportId={}, adminId={}", reportId, adminId);
     }

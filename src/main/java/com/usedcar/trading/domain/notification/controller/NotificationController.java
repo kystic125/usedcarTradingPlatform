@@ -8,6 +8,9 @@ import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -23,16 +26,12 @@ public class NotificationController {
     private final UserRepository userRepository;
 
     @GetMapping
-    public String notificationList(HttpSession session, Model model,
+    public String notificationList(Model model,
                                    @RequestParam(defaultValue = "0") int page,
-                                   @RequestParam(defaultValue = "20") int size) {
-        Long userId = (Long) session.getAttribute("userId");
-        if (userId == null) {
-            return "redirect:/login";
-        }
-
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
+                                   @RequestParam(defaultValue = "20") int size,
+                                   @AuthenticationPrincipal Object principal) {
+        User user = findUser(principal);
+        if (user == null) return "redirect:/login";
 
         Page<Notification> notifications = notificationService.getNotifications(user, PageRequest.of(page, size));
         long unreadCount = notificationService.getUnreadCount(user);
@@ -45,14 +44,9 @@ public class NotificationController {
 
     @PostMapping("/{id}/read")
     @ResponseBody
-    public String markAsRead(@PathVariable Long id, HttpSession session) {
-        Long userId = (Long) session.getAttribute("userId");
-        if (userId == null) {
-            return "error";
-        }
-
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
+    public String markAsRead(@PathVariable Long id, @AuthenticationPrincipal Object principal) {
+        User user = findUser(principal);
+        if (user == null) return "error";
 
         notificationService.markAsRead(id, user);
         return "success";
@@ -60,14 +54,9 @@ public class NotificationController {
 
     @PostMapping("/read-all")
     @ResponseBody
-    public String markAllAsRead(HttpSession session) {
-        Long userId = (Long) session.getAttribute("userId");
-        if (userId == null) {
-            return "error";
-        }
-
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
+    public String markAllAsRead(@AuthenticationPrincipal Object principal) {
+        User user = findUser(principal);
+        if (user == null) return "error";
 
         notificationService.markAllAsRead(user);
         return "success";
@@ -75,17 +64,22 @@ public class NotificationController {
 
     @GetMapping("/unread-count")
     @ResponseBody
-    public long getUnreadCount(HttpSession session) {
-        Long userId = (Long) session.getAttribute("userId");
-        if (userId == null) {
-            return 0;
-        }
-
-        User user = userRepository.findById(userId).orElse(null);
-        if (user == null) {
-            return 0;
-        }
+    public long getUnreadCount(@AuthenticationPrincipal Object principal) {
+        User user = findUser(principal);
+        if (user == null) return 0;
 
         return notificationService.getUnreadCount(user);
+    }
+
+    private User findUser(Object principal) {
+        if (principal instanceof UserDetails) {
+            String email = ((UserDetails) principal).getUsername();
+            return userRepository.findByEmail(email).orElse(null);
+        } else if (principal instanceof OAuth2User) {
+            OAuth2User oauthUser = (OAuth2User) principal;
+            String providerId = String.valueOf(oauthUser.getAttributes().get("id"));
+            return userRepository.findByProviderId(providerId).orElse(null);
+        }
+        return null;
     }
 }

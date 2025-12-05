@@ -2,6 +2,8 @@ package com.usedcar.trading.domain.user.controller;
 
 import com.usedcar.trading.domain.company.entity.Company;
 import com.usedcar.trading.domain.company.repository.CompanyRepository;
+import com.usedcar.trading.domain.favorite.service.FavoriteService;
+import com.usedcar.trading.domain.review.service.ReviewService;
 import com.usedcar.trading.domain.transaction.entity.Transaction;
 import com.usedcar.trading.domain.transaction.repository.TransactionRepository;
 import com.usedcar.trading.domain.user.entity.Provider;
@@ -38,6 +40,8 @@ public class MypageController {
     private final VehicleRepository vehicleRepository;
     private final CompanyRepository companyRepository;
     private final TransactionRepository transactionRepository;
+    private final FavoriteService favoriteService;
+    private final ReviewService reviewService;
 
     @GetMapping("/mypage")
     public String myPage(Model model, @AuthenticationPrincipal Object principal) {
@@ -79,20 +83,36 @@ public class MypageController {
         model.addAttribute("user", user);
 
         long activeListingsCount = 0;
+        long favoriteCount = 0;
+        long reviewCount = 0;
+        Double avgRating = 0.0;
 
-        if (user.getRole() == Role.COMPANY_OWNER) {
-            activeListingsCount = companyRepository.findByOwner_UserId(user.getUserId())
-                    .map(c -> vehicleRepository.countByCompanyAndVehicleStatus(c, VehicleStatus.SALE))
-                    .orElse(0L);
-        }
-        else if (user.getRole() == Role.COMPANY_EMPLOYEE && user.getEmployee() != null) {
-            Company company = user.getEmployee().getCompany();
+        if (user.getRole() == Role.COMPANY_OWNER || user.getRole() == Role.COMPANY_EMPLOYEE) {
+            Company company = null;
+
+            if (user.getRole() == Role.COMPANY_OWNER) {
+                company = companyRepository.findByOwner_UserId(user.getUserId()).orElse(null);
+            } else if (user.getEmployee() != null) {
+                company = user.getEmployee().getCompany();
+            }
+
             if (company != null) {
                 activeListingsCount = vehicleRepository.countByCompanyAndVehicleStatus(company, VehicleStatus.SALE);
+
+                avgRating = reviewService.getCompanyAverageRating(company.getCompanyId());
+                if (avgRating == null) avgRating = 0.0;
             }
         }
 
+        if (user.getRole() == Role.CUSTOMER) {
+            favoriteCount = favoriteService.getMyFavoriteCount(user.getUserId());
+            reviewCount = reviewService.getUserReviewCount(user.getUserId());
+        }
+
         model.addAttribute("activeListingsCount", activeListingsCount);
+        model.addAttribute("favoriteCount", favoriteCount);
+        model.addAttribute("reviewCount", reviewCount);
+        model.addAttribute("avgRating", avgRating);
 
         return "mypage";
     }

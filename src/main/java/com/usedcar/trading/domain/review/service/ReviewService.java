@@ -13,6 +13,8 @@ import com.usedcar.trading.domain.user.entity.User;
 import com.usedcar.trading.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -71,18 +73,22 @@ public class ReviewService {
 
         Review savedReview = reviewRepository.save(review);
 
-        // 업체 대표에게 알림 발송
         Company company = transaction.getCompany();
-        notificationService.createNotification(
-                company.getOwner(),
-                NotificationType.REVIEW_RECEIVED,
-                String.format("새로운 리뷰가 등록되었습니다. (평점: %d점)", rating),
-                "/reviews/" + savedReview.getReviewId()
-        );
+        User dealer = transaction.getVehicle().getRegisteredBy().getUser();
+        User boss = company.getOwner();
 
-        log.info("리뷰 작성 완료: reviewId={}, transactionId={}, rating={}",
-                savedReview.getReviewId(), transactionId, rating);
+        String message = String.format("새로운 리뷰가 등록되었습니다. (평점: %d점)", rating);
+        String link = "/reviews/" + savedReview.getReviewId();
 
+        // 1. 딜러에게 알림
+        notificationService.createNotification(dealer, NotificationType.REVIEW_RECEIVED, message, link);
+
+        // 2. 사장님에게 알림
+        if (!dealer.getUserId().equals(boss.getUserId())) {
+            notificationService.createNotification(boss, NotificationType.REVIEW_RECEIVED, message, link);
+        }
+
+        log.info("리뷰 작성 완료...");
         return savedReview;
     }
 
@@ -129,5 +135,14 @@ public class ReviewService {
     public Review getReviewByTransaction(Long transactionId) {
         return reviewRepository.findByTransactionTransactionId(transactionId)
                 .orElse(null);
+    }
+
+    // 판매자 리뷰 수 조회
+    public long getUserReviewCount(Long userId) {
+        return reviewRepository.countByUserUserId(userId);
+    }
+
+    public Page<Review> getCompanyReviews(Long companyId, Pageable pageable) {
+        return reviewRepository.findByCompanyCompanyId(companyId, pageable);
     }
 }

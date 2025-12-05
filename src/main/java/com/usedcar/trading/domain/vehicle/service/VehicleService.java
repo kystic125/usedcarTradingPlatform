@@ -148,7 +148,11 @@ public class VehicleService {
         Vehicle vehicle = vehicleRepository.findById(vehicleId)
                 .orElseThrow(() -> new IllegalArgumentException("매물 없음"));
 
-        if (!vehicle.getRegisteredBy().getUser().getUserId().equals(user.getUserId())) {
+        boolean isRegistrant = vehicle.getRegisteredBy().getUser().getUserId().equals(user.getUserId());
+        boolean isBoss = (user.getRole() == com.usedcar.trading.domain.user.entity.Role.COMPANY_OWNER) &&
+                vehicle.getCompany().getOwner().getUserId().equals(user.getUserId());
+
+        if (!isRegistrant && !isBoss) {
             throw new IllegalStateException("수정 권한이 없습니다.");
         }
 
@@ -161,6 +165,11 @@ public class VehicleService {
                 request.getDescription(),
                 optionsJson
         );
+
+        if (vehicle.getVehicleStatus() == VehicleStatus.REJECTED) {
+            vehicle.changeStatus(VehicleStatus.PENDING);
+            //vehicle.setRejectedReason(null);
+        }
 
         if (imageFiles != null && !imageFiles.isEmpty() && !imageFiles.get(0).isEmpty()) {
             List<VehicleImage> oldImages = vehicleImageRepository.findByVehicleVehicleIdOrderByDisplayOrderAsc(vehicleId);
@@ -182,7 +191,11 @@ public class VehicleService {
                 .orElseThrow(() -> new IllegalArgumentException("매물 없음"));
 
         // 1. 권한 체크
-        if (!vehicle.getRegisteredBy().getUser().getUserId().equals(user.getUserId())) {
+        boolean isRegistrant = vehicle.getRegisteredBy().getUser().getUserId().equals(user.getUserId());
+        boolean isBoss = (user.getRole() == com.usedcar.trading.domain.user.entity.Role.COMPANY_OWNER) &&
+                vehicle.getCompany().getOwner().getUserId().equals(user.getUserId());
+
+        if (!isRegistrant && !isBoss) {
             throw new IllegalStateException("삭제 권한이 없습니다.");
         }
 

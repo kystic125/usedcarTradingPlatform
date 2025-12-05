@@ -2,6 +2,7 @@ package com.usedcar.trading.domain.favorite.service;
 
 import com.usedcar.trading.domain.favorite.entity.Favorite;
 import com.usedcar.trading.domain.favorite.repository.FavoriteRepository;
+import com.usedcar.trading.domain.user.entity.Role;
 import com.usedcar.trading.domain.user.entity.User;
 import com.usedcar.trading.domain.user.repository.UserRepository;
 import com.usedcar.trading.domain.vehicle.entity.Vehicle;
@@ -32,6 +33,10 @@ public class FavoriteService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
 
+        if (user.getRole() != Role.CUSTOMER) {
+            throw new IllegalStateException("고객(구매자)만 이용 가능한 기능입니다.");
+        }
+
         Vehicle vehicle = vehicleRepository.findById(vehicleId)
                 .orElseThrow(() -> new IllegalArgumentException("매물을 찾을 수 없습니다."));
 
@@ -61,6 +66,13 @@ public class FavoriteService {
      */
     @Transactional
     public void removeFavorite(Long userId, Long vehicleId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
+
+        if (user.getRole() != Role.CUSTOMER) {
+            throw new IllegalStateException("권한이 없습니다.");
+        }
+
         Favorite favorite = favoriteRepository.findByUserUserIdAndVehicleVehicleId(userId, vehicleId)
                 .orElseThrow(() -> new IllegalArgumentException("찜한 매물을 찾을 수 없습니다."));
 

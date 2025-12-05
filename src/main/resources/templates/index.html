@@ -32,8 +32,10 @@
     <link rel="stylesheet" th:href="@{/css/style.min.css}">
     <link id="templateColorScheme" rel="stylesheet" th:href="@{/css/color-schemes/tc_red.css}">
     <link rel="stylesheet" th:href="@{/css/preloader.css}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
 
     <script th:src="@{/js/preloader.js}"></script>
+    <script th:src="@{/js/wishlist.js}"></script>
 </head>
 
 <body>
@@ -52,8 +54,203 @@
 
 <main>
 
+    <section class="position-relative custom-color">
+        <div class="jarallax" data-jarallax data-speed="0.2">
+            <img class="jarallax-img lazy" th:src="@{/images/cars/hero-01.jpg}" alt="">
+            <span class="position-absolute top-0 start-0 w-100 h-100 custom-color" style="background-image: linear-gradient(0deg, rgba(0, 0, 0, 0.6) 0px, rgba(255, 255, 255, 0.1) 100%);"></span>
 
+            <div class="container position-relative col-xxl-8 py-5">
+                <div class="row g-0 align-items-start">
+                    <div class="col-lg-5 bg-blur bg-dark bg-opacity-50 border border-light border-opacity-25 rounded-3 p-4 my-3 my-md-5 text-white">
+                        <h2 class="fw-bold mb-4">Find Your Car</h2>
 
+                        <form action="/vehicles" method="get" class="row g-3">
+                            <div class="col-12">
+                                <label class="form-label text-uppercase fs-sm fw-bold">Keyword</label>
+                                <input type="text" name="keyword" class="form-control bg-white bg-opacity-75 border-0" placeholder="Brand or Model...">
+                            </div>
+
+                            <div class="col-6">
+                                <label class="form-label text-uppercase fs-sm fw-bold">Min Price</label>
+                                <input type="number" name="minPrice" class="form-control bg-white bg-opacity-75 border-0" placeholder="Min">
+                            </div>
+                            <div class="col-6">
+                                <label class="form-label text-uppercase fs-sm fw-bold">Max Price</label>
+                                <input type="number" name="maxPrice" class="form-control bg-white bg-opacity-75 border-0" placeholder="Max">
+                            </div>
+
+                            <div class="col-6">
+                                <label class="form-label text-uppercase fs-sm fw-bold">Min Year</label>
+                                <input type="number" name="minYear" class="form-control bg-white bg-opacity-75 border-0" placeholder="2010">
+                            </div>
+                            <div class="col-6">
+                                <label class="form-label text-uppercase fs-sm fw-bold">Max Year</label>
+                                <input type="number" name="maxYear" class="form-control bg-white bg-opacity-75 border-0" placeholder="2025">
+                            </div>
+
+                            <div class="col-12 mt-4 d-grid">
+                                <button type="submit" class="btn btn-primary custom-color text-uppercase fw-bold py-2">
+                                    <i class="bi bi-search me-2"></i> Search Cars
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="container-fluid p-0 bg-body-tertiary" th:if="${!recentVehicles.isEmpty()}">
+        <div class="container py-5">
+            <div class="row">
+                <div class="col-12">
+                    <h3 class="fs-5 text-uppercase pb-3 mb-4 custom-color border-bottom">New Arrivals</h3>
+
+                    <div class="owl-carousel owl-theme">
+                        <div class="item" th:each="car : ${recentVehicles}">
+
+                            <div class="card car-item border bg-body-tertiary h-100">
+                                <div class="position-absolute end-0 top-0 pt-3 pe-3 z-2"
+                                     th:if="${user != null and user.role.name() == 'CUSTOMER'}">
+                                    <button type="button" class="btn btn-favorites p-0"
+                                            th:classappend="${userFavoriteIds != null and #lists.contains(userFavoriteIds, car.vehicleId)} ? 'favorites-active'"
+                                            th:onclick="'toggleFavorite(' + ${car.vehicleId} + ', this)'"
+                                            data-bs-toggle="tooltip" title="Add to favorites">
+                                    </button>
+                                </div>
+
+                                <div class="position-absolute start-0 top-0 pt-3 ps-3 z-2 d-flex align-items-start">
+                                    <span class="badge text-bg-success text-uppercase rounded-1 fs-xs-alt fw-normal">New</span>
+                                </div>
+
+                                <div class="card-image">
+                                    <a th:href="@{/vehicles/{id}(id=${car.vehicleId})}">
+                                        <img th:src="${car.thumbnailUrl} ?: '/images/default-car.jpg'"
+                                             class="card-img-top object-fit-cover" style="height: 200px;" alt="Car">
+                                    </a>
+                                </div>
+
+                                <div class="card-body">
+                                    <h3 class="card-title h5">
+                                        <a th:href="@{/vehicles/{id}(id=${car.vehicleId})}" class="text-decoration-none text-dark fw-bold"
+                                           th:text="${car.brand} + ' ' + ${car.model}">Model</a>
+                                    </h3>
+                                    <p class="card-text text-primary fw-bold custom-color mb-2" th:text="${#numbers.formatInteger(car.price, 0, 'COMMA')} + ' 원'">Price</p>
+
+                                    <div class="card-text border-top pt-2 row row-cols-3 g-2 small text-muted">
+                                        <div><i class="bi bi-calendar-event me-1"></i> <span th:text="${car.modelYear}">2023</span></div>
+                                        <div><i class="bi bi-speedometer2 me-1"></i> <span th:text="${#numbers.formatInteger(car.mileage, 0, 'COMMA')}"></span></div>
+                                        <div><i class="bi bi-gear-wide-connected me-1"></i> <span th:text="${car.transmission}">Auto</span></div>
+                                        <div><i class="bi bi-fuel-pump me-1"></i> <span th:text="${car.fuelType}">Petrol</span></div>
+                                        <div><i class="bi bi-palette me-1"></i> <span th:text="${car.color}">White</span></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container-fluid p-0" th:if="${!popularVehicles.isEmpty()}">
+        <div class="container py-5">
+            <div class="row">
+                <div class="col-12">
+                    <h3 class="fs-5 text-uppercase pb-3 mb-4 custom-color border-bottom">Most Popular</h3>
+
+                    <div class="owl-carousel owl-theme">
+                        <div class="item" th:each="car : ${popularVehicles}">
+                            <div class="card car-item border bg-body-tertiary h-100">
+                                <div class="position-absolute end-0 top-0 pt-3 pe-3 z-2"
+                                     th:if="${user != null and user.role.name() == 'CUSTOMER'}">
+                                    <button type="button" class="btn btn-favorites p-0"
+                                            th:classappend="${userFavoriteIds != null and #lists.contains(userFavoriteIds, car.vehicleId)} ? 'favorites-active'"
+                                            th:onclick="'toggleFavorite(' + ${car.vehicleId} + ', this)'">
+                                    </button>
+                                </div>
+                                <div class="position-absolute start-0 top-0 pt-3 ps-3 z-2">
+                                    <span class="badge text-bg-danger text-uppercase rounded-1 fs-xs-alt fw-normal">Hot</span>
+                                </div>
+                                <div class="card-image">
+                                    <a th:href="@{/vehicles/{id}(id=${car.vehicleId})}">
+                                        <img th:src="${car.thumbnailUrl} ?: '/images/default-car.jpg'" class="card-img-top object-fit-cover" style="height: 200px;" alt="Car">
+                                    </a>
+                                </div>
+                                <div class="card-body">
+                                    <h3 class="card-title h5">
+                                        <a th:href="@{/vehicles/{id}(id=${car.vehicleId})}" class="text-decoration-none text-dark fw-bold" th:text="${car.brand} + ' ' + ${car.model}">Model</a>
+                                    </h3>
+                                    <p class="card-text text-primary fw-bold custom-color mb-2" th:text="${#numbers.formatInteger(car.price, 0, 'COMMA')} + ' 원'">Price</p>
+                                    <div class="card-text border-top pt-2 row row-cols-3 g-2 small text-muted">
+                                        <div><i class="bi bi-calendar-event me-1"></i> <span th:text="${car.modelYear}"></span></div>
+                                        <div><i class="bi bi-speedometer2 me-1"></i> <span th:text="${#numbers.formatInteger(car.mileage, 0, 'COMMA')}"></span></div>
+                                        <div><i class="bi bi-gear-wide-connected me-1"></i> <span th:text="${car.transmission}"></span></div>
+                                        <div><i class="bi bi-fuel-pump me-1"></i> <span th:text="${car.fuelType}"></span></div>
+                                        <div><i class="bi bi-palette me-1"></i> <span th:text="${car.color}"></span></div>
+                                        <div><i class="bi bi-eye me-1"></i> <span th:text="${car.viewCount}"></span></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container-fluid p-0 bg-body-tertiary" th:if="${recentViewedCars != null and !recentViewedCars.isEmpty()}">
+        <div class="container py-5">
+            <div class="row">
+                <div class="col-12">
+                    <h3 class="fs-5 text-uppercase pb-3 mb-4 custom-color border-bottom">Recently Viewed</h3>
+                    <div class="owl-carousel owl-theme">
+                        <div class="item" th:each="car : ${recentViewedCars}">
+                            <div class="card car-item border h-100">
+                                <div class="card-image">
+                                    <a th:href="@{/vehicles/{id}(id=${car.vehicleId})}">
+                                        <img th:src="${car.thumbnailUrl} ?: '/images/default-car.jpg'" class="card-img-top object-fit-cover" style="height: 200px;" alt="Car">
+                                    </a>
+                                </div>
+                                <div class="card-body">
+                                    <h3 class="card-title h5">
+                                        <a th:href="@{/vehicles/{id}(id=${car.vehicleId})}" class="text-decoration-none text-dark fw-bold" th:text="${car.brand} + ' ' + ${car.model}">Model</a>
+                                    </h3>
+                                    <p class="card-text text-primary fw-bold custom-color mb-0" th:text="${#numbers.formatInteger(car.price, 0, 'COMMA')} + ' 원'">Price</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <section class="py-5">
+        <div class="container">
+            <h3 class="fs-5 text-uppercase pb-3 mb-4 custom-color border-bottom">Our Partners</h3>
+            <div class="our-partners-carousel owl-carousel owl-theme" data-loop="true" data-nav="false" data-dots="false" data-autoplay="true" data-margin="50" data-responsive='{"0":{"items":2},"600":{"items":4},"1000":{"items":6}}'>
+                <div class="item text-center">
+                    <img class="img-fluid" th:src="@{/icons/partners/autogreen.svg}" style="max-height: 40px;" alt="Partner">
+                </div>
+                <div class="item text-center">
+                    <img class="img-fluid" th:src="@{/icons/partners/firestone.svg}" style="max-height: 40px;" alt="Partner">
+                </div>
+                <div class="item text-center">
+                    <img class="img-fluid" th:src="@{/icons/partners/michelin.svg}" style="max-height: 40px;" alt="Partner">
+                </div>
+                <div class="item text-center">
+                    <img class="img-fluid" th:src="@{/icons/partners/bridgestone.svg}" style="max-height: 40px;" alt="Partner">
+                </div>
+                <div class="item text-center">
+                    <img class="img-fluid" th:src="@{/icons/partners/avon.svg}" style="max-height: 40px;" alt="Partner">
+                </div>
+                <div class="item text-center">
+                    <img class="img-fluid" th:src="@{/icons/partners/uniroyal.svg}" style="max-height: 40px;" alt="Partner">
+                </div>
+            </div>
+        </div>
+    </section>
 
 </main>
 
@@ -66,6 +263,28 @@
 <script th:src="@{/libs/jarallax/dist/jarallax.min.js}"></script>
 <script th:src="@{/libs/fly-to/dist/js/fly-to.min.js}"></script>
 <script th:src="@{/js/script.min.js}"></script>
+<script th:src="@{/libs/owl.carousel/dist/owl.carousel.min.js}"></script>
+
+<script>
+    $(document).ready(function(){
+        // 1. 차량 슬라이더 (New, Popular, Recent)
+        $(".owl-carousel").not(".our-partners-carousel").each(function() {
+            $(this).owlCarousel({
+                loop: false,
+                margin: 24,
+                nav: true,
+                dots: false,
+                autoplay: false,
+                responsive: {
+                    0: { items: 1 },
+                    600: { items: 2 },
+                    1000: { items: 3 },
+                    1200: { items: 4 }
+                }
+            });
+        });
+    });
+</script>
 
 </body>
 </html>

@@ -111,21 +111,24 @@ public interface VehicleRepository extends JpaRepository<Vehicle, Long> {
      */
     // 복합 검색: 브랜드 + 가격대 + 연식 + 주행거리 등
     @Query("SELECT v FROM Vehicle v WHERE " +
-            "v.vehicleStatus = :status AND " +
-            "(:brand IS NULL OR v.brand = :brand) AND " +
+            "v.vehicleStatus = 'SALE' AND " +
+            "(:keyword IS NULL OR LOWER(v.brand) LIKE LOWER(CONCAT('%', :keyword, '%')) OR LOWER(v.model) LIKE LOWER(CONCAT('%', :keyword, '%'))) AND " +
             "(:minPrice IS NULL OR v.price >= :minPrice) AND " +
             "(:maxPrice IS NULL OR v.price <= :maxPrice) AND " +
             "(:minYear IS NULL OR v.modelYear >= :minYear) AND " +
             "(:maxYear IS NULL OR v.modelYear <= :maxYear) AND " +
-            "(:maxMileage IS NULL OR v.mileage <= :maxMileage)")
+            "(:maxMileage IS NULL OR v.mileage <= :maxMileage) AND " +
+            "(:fuelTypes IS NULL OR v.fuelType IN :fuelTypes) AND " +
+            "(:transmissions IS NULL OR v.transmission IN :transmissions)")
     List<Vehicle> searchVehicles(
-            @Param("status") VehicleStatus status,
-            @Param("brand") String brand,
+            @Param("keyword") String keyword,
             @Param("minPrice") BigDecimal minPrice,
             @Param("maxPrice") BigDecimal maxPrice,
             @Param("minYear") Integer minYear,
             @Param("maxYear") Integer maxYear,
-            @Param("maxMileage") Integer maxMileage
+            @Param("maxMileage") Integer maxMileage,
+            @Param("fuelTypes") List<FuelType> fuelTypes,
+            @Param("transmissions") List<Transmission> transmissions
     );
 
     // 복합 검색 + 정렬 (가격순)
