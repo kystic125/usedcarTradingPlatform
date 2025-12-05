@@ -11,6 +11,8 @@ import com.usedcar.trading.domain.user.entity.Role;
 import com.usedcar.trading.domain.user.entity.User;
 import com.usedcar.trading.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -53,5 +55,30 @@ public class CompanyService {
                 .isActive(true)
                 .build();
         employeeRepository.save(ownerAsEmployee);
+    }
+
+    /**
+     * 판매자(업체) 목록 페이징 조회 [SELLER-004]
+     */
+    @Transactional(readOnly = true)
+    public Page<Company> getActiveCompanies(Pageable pageable) {
+        return companyRepository.findByCompanyStatus(CompanyStatus.ACTIVE, pageable);
+    }
+
+    /**
+     * 판매자 검색 + 페이징
+     */
+    @Transactional(readOnly = true)
+    public Page<Company> searchCompanies(String keyword, Pageable pageable) {
+        return companyRepository.findByBusinessNameContainingAndCompanyStatus(keyword, CompanyStatus.ACTIVE, pageable);
+    }
+
+    /**
+     * 업체 상세 조회
+     */
+    @Transactional(readOnly = true)
+    public Company getCompany(Long companyId) {
+        return companyRepository.findById(companyId)
+                .orElseThrow(() -> new IllegalArgumentException("업체를 찾을 수 없습니다."));
     }
 }

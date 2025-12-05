@@ -44,4 +44,32 @@ public class Report extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "handled_by")
     private User handler;
+
+    /**
+     * 신고 처리 (관리자)
+     */
+    public void resolve(User admin, String memo) {
+        this.reportStatus = ReportStatus.RESOLVED;
+        this.handler = admin;
+        this.adminMemo = memo;
+        this.resolvedAt = LocalDateTime.now();
+    }
+
+    /**
+     * 신고 반려 (관리자)
+     */
+    public void reject(User admin, String memo) {
+        this.reportStatus = ReportStatus.REJECTED;
+        this.handler = admin;
+        this.adminMemo = memo;
+        this.resolvedAt = LocalDateTime.now();
+    }
+
+    /**
+     * 검토중 상태로 변경
+     */
+    public void startReview(User admin) {
+        this.reportStatus = ReportStatus.REVIEWING;
+        this.handler = admin;
+    }
 }

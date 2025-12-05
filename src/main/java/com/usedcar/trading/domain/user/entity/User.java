@@ -116,4 +116,15 @@ public class User extends BaseEntity {
     public void ban() {
         this.userStatus = UserStatus.BANNED;
     }
+
+    /**
+     * 회원 탈퇴 [AUTH-007]
+     */
+    public void withdraw() {
+        this.userStatus = UserStatus.WITHDRAWN;
+        this.email = "withdrawn_" + this.userId + "@deleted.com";
+        this.name = "탈퇴회원";
+        this.phone = "000-0000-0000";
+        this.providerId = null;
+    }
 }

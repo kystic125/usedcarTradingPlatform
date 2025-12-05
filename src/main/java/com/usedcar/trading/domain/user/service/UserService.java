@@ -25,4 +25,23 @@ public class UserService {
         // 정보 업데이트
         user.updateInfo(newEmail, newPhone);
     }
+
+    /**
+     * 회원 탈퇴 [AUTH-007]
+     */
+    @Transactional
+    public void withdrawUser(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
+
+        user.withdraw();
+    }
+
+    /**
+     * 회원 정보 조회
+     */
+    public User getUser(Long userId) {
+        return userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
+    }
 }
