@@ -2,6 +2,7 @@ package com.usedcar.trading.domain.vehicle.scheduler;
 
 import com.usedcar.trading.domain.notification.entity.NotificationType;
 import com.usedcar.trading.domain.notification.service.NotificationService;
+import com.usedcar.trading.domain.user.entity.User;
 import com.usedcar.trading.domain.vehicle.entity.Vehicle;
 import com.usedcar.trading.domain.vehicle.entity.VehicleStatus;
 import com.usedcar.trading.domain.vehicle.repository.VehicleRepository;
@@ -40,15 +41,28 @@ public class VehicleScheduler {
 
         for (Vehicle vehicle : expiredVehicles) {
             vehicle.changeStatus(VehicleStatus.EXPIRED);
+
             log.info("매물 만료 처리: ID={}, 모델={}", vehicle.getVehicleId(), vehicle.getModel());
+
+            User dealer = vehicle.getRegisteredBy().getUser();
+            User boss = vehicle.getCompany().getOwner();
 
             // [VEH-014] 알림 발송
             notificationService.createNotification(
-                    vehicle.getRegisteredBy().getUser(),
+                    dealer,
                     NotificationType.VEHICLE_EXPIRED,
-                    String.format("[%s %s] 매물이 만료되었습니다. 사진 갱신이 필요합니다.", vehicle.getBrand(), vehicle.getModel()),
-                    "/vehicles/" + vehicle.getVehicleId()
+                    String.format("매물 '%s'이(가) 만료되어 노출이 중단되었습니다. 사진 갱신이 필요합니다.", vehicle.getModel()),
+                    "/company/sales"
             );
+
+            if (!dealer.getUserId().equals(boss.getUserId())) {
+                notificationService.createNotification(
+                        boss,
+                        NotificationType.VEHICLE_EXPIRED,
+                        String.format("담당 직원 %s의 매물 '%s'이(가) 만료되었습니다.", dealer.getName(), vehicle.getModel()),
+                        "/company/sales"
+                );
+            }
         }
 
         log.info("만료 처리 완료: {}건", expiredVehicles.size());
@@ -78,7 +92,7 @@ public class VehicleScheduler {
                     vehicle.getRegisteredBy().getUser(),
                     NotificationType.VEHICLE_EXPIRING,
                     String.format("[%s %s] 매물이 3일 이내에 만료됩니다. 사진을 갱신해주세요.", vehicle.getBrand(), vehicle.getModel()),
-                    "/vehicles/" + vehicle.getVehicleId()
+                    "/company/sales"
             );
         }
 

@@ -27,6 +27,8 @@ public class SecurityConfig {
                 .httpBasic(AbstractHttpConfigurer::disable)
 
                 .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/h2-console/**").permitAll()
+
                         // 1. 정적 리소스 및 공용 페이지 (누구나 접근)
                         .requestMatchers("/css/**", "/images/**", "/icons/**", "/js/**", "/libs/**", "/data/**", "/uploads/**", "/favicon.ico").permitAll()
                         .requestMatchers("/", "/search/**", "/vehicles", "/vehicles/{id}", "/auth/**", "/oauth2/**", "/signup", "/login", "/api/**").permitAll()

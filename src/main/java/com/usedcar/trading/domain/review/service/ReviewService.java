@@ -78,7 +78,7 @@ public class ReviewService {
         User boss = company.getOwner();
 
         String message = String.format("새로운 리뷰가 등록되었습니다. (평점: %d점)", rating);
-        String link = "/reviews/" + savedReview.getReviewId();
+        String link = "/mypage";
 
         // 1. 딜러에게 알림
         notificationService.createNotification(dealer, NotificationType.REVIEW_RECEIVED, message, link);
@@ -144,5 +144,9 @@ public class ReviewService {
 
     public Page<Review> getCompanyReviews(Long companyId, Pageable pageable) {
         return reviewRepository.findByCompanyCompanyId(companyId, pageable);
+    }
+
+    public Page<Review> getUserReviews(Long userId, Pageable pageable) {
+        return reviewRepository.findByUserUserId(userId, pageable);
     }
 }

@@ -13,6 +13,7 @@ import com.usedcar.trading.domain.vehicle.entity.Vehicle;
 import com.usedcar.trading.domain.vehicle.entity.VehicleStatus;
 import com.usedcar.trading.domain.vehicle.repository.VehicleRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,6 +23,7 @@ import java.time.LocalDateTime;
 @Service
 @RequiredArgsConstructor
 @Transactional
+@Slf4j
 public class TransactionService {
 
     private final TransactionRepository transactionRepository;
@@ -103,6 +105,13 @@ public class TransactionService {
 
         // 2. 매물 상태 예약중으로 변경
         transaction.getVehicle().changeStatus(VehicleStatus.RESERVED);
+
+        notificationService.createNotification(
+                transaction.getBuyer(),
+                NotificationType.TRANSACTION_APPROVED,
+                String.format("'%s' 구매 요청이 승인되었습니다. 판매자와 연락하여 거래를 진행하세요.", transaction.getVehicle().getModel()),
+                "/mypage/purchases"
+        );
     }
 
     // 거래 거부 (판매자)
@@ -117,6 +126,13 @@ public class TransactionService {
         }
 
         transaction.updateStatus(TransactionStatus.REJECTED);
+
+        notificationService.createNotification(
+                transaction.getBuyer(),
+                NotificationType.TRANSACTION_REJECTED,
+                String.format("'%s' 구매 요청이 거절되었습니다.", transaction.getVehicle().getModel()),
+                "/mypage/purchases"
+        );
     }
 
     // 거래 취소 (구매자/판매자 모두 가능)
@@ -140,6 +156,16 @@ public class TransactionService {
         if (transaction.getVehicle().getVehicleStatus() == VehicleStatus.RESERVED) {
             transaction.getVehicle().changeStatus(VehicleStatus.SALE);
         }
+
+        User targetUser = isBuyer ? transaction.getVehicle().getRegisteredBy().getUser() : transaction.getBuyer();
+        String whoCancelled = isBuyer ? "구매자" : "판매자";
+
+        notificationService.createNotification(
+                targetUser,
+                NotificationType.TRANSACTION_CANCELLED,
+                String.format("'%s' 거래가 %s에 의해 취소되었습니다.", transaction.getVehicle().getModel(), whoCancelled),
+                isBuyer ? "/company/sales" : "/mypage/purchases"
+        );
     }
 
     // 거래 완료 (판매자 -> 차량 인도 완료)
@@ -163,6 +189,15 @@ public class TransactionService {
 
         // 5. 정산 데이터 자동 생성
         createSettlement(transaction);
+
+        notificationService.createNotification(
+                transaction.getBuyer(),
+                NotificationType.TRANSACTION_COMPLETED,
+                "거래가 완료되었습니다. 만족하셨다면 리뷰를 작성해주세요!",
+                "/mypage/purchases"
+        );
+
+        log.info("거래 완료 처리됨: txnId={}", transactionId);
     }
 
     // 정산 생성 로직

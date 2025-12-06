@@ -46,4 +46,6 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
     long countByUserUserId(Long userId);
 
     Page<Review> findByCompanyCompanyId(Long companyId, Pageable pageable);
+
+    Page<Review> findByUserUserId(Long userId, Pageable pageable);
 }

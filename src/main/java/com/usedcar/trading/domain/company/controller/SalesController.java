@@ -72,6 +72,10 @@ public class SalesController {
             filteredList = allVehicles.stream().filter(v -> v.getVehicleStatus() == VehicleStatus.SOLD).collect(Collectors.toList());
         } else if ("PENDING".equals(filter)) {
             filteredList = allVehicles.stream().filter(v -> v.getVehicleStatus() == VehicleStatus.PENDING).collect(Collectors.toList());
+        } else if ("REJECTED".equals(filter)) {
+            filteredList = allVehicles.stream().filter(v -> v.getVehicleStatus() == VehicleStatus.REJECTED).collect(Collectors.toList());
+        } else if ("EXPIRED".equals(filter)) {
+            filteredList = allVehicles.stream().filter(v -> v.getVehicleStatus() == VehicleStatus.EXPIRED).collect(Collectors.toList());
         } else {
             filteredList = allVehicles;
         }

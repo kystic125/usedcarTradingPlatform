@@ -33,6 +33,25 @@
     <link rel="stylesheet" th:href="@{/css/preloader.css}">
 
     <script th:src="@{/js/preloader.js}"></script>
+
+    <style>
+        /* 안 읽은 알림 강조 (배경색 살짝 붉게) */
+        .table-row-unread {
+            background-color: rgba(var(--bs-primary-rgb), 0.03) !important;
+        }
+        .table-row-unread td {
+            font-weight: 600;
+            color: var(--bs-heading-color);
+        }
+        /* 마우스 호버 효과 */
+        .notification-row {
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .notification-row:hover {
+            background-color: rgba(0, 0, 0, 0.02) !important;
+        }
+    </style>
 </head>
 
 <body>
@@ -62,38 +81,129 @@
         <div class="row justify-content-center">
             <div class="col-12">
 
-                <div class="card border shadow-sm">
-                    <div class="card-header bg-white p-3 d-flex justify-content-between align-items-center">
-                        <h5 class="mb-0">Recent Alerts</h5>
-                        <button class="btn btn-sm btn-outline-secondary" onclick="markAllRead()">Mark all as read</button>
+                <div class="card border mb-4 overflow-hidden">
+
+                    <div class="card-header p-3 border-bottom d-flex flex-column flex-sm-row justify-content-center justify-content-sm-between align-items-center bg-body">
+                        <h5 class="card-title mb-3 m-sm-0">
+                            Recent Alerts
+                            <span class="badge bg-danger bg-opacity-10 text-danger ms-2"
+                                  th:text="${unreadCount} + ' Unread'">0 Unread</span>
+                        </h5>
+
+                        <button onclick="markAllRead()" class="btn btn-outline-secondary btn-sm fs-sm fw-bold d-flex align-items-center text-uppercase">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-checks me-1"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M7 12l5 5l10 -10" /><path d="M2 12l5 5m5 -5l5 -5" /></svg>
+                            Mark all as read
+                        </button>
                     </div>
 
-                    <div class="list-group list-group-flush">
+                    <div class="account-listings table-responsive border-0">
+                        <table class="table align-middle p-4 mb-0 table-shrink">
+                            <thead class="bg-body-tertiary text-uppercase fs-sm border-top border-bottom">
+                            <tr>
+                                <th scope="col" class="border-0 bg-transparent text-body-secondary ps-3">Details</th>
+                                <th scope="col" class="border-0 bg-transparent text-body-secondary ps-3">Type</th>
+                                <th scope="col" class="border-0 bg-transparent text-body-secondary ps-3">Date</th>
+                                <th scope="col" class="border-0 bg-transparent text-body-secondary ps-3">Status</th>
+                                <th scope="col" class="border-0 bg-transparent text-body-secondary ps-3 text-end pe-4">Action</th>
+                            </tr>
+                            </thead>
+                            <tbody class="border-top-0">
 
-                        <div class="text-center py-5" th:if="${notifications.isEmpty()}">
-                            <i class="bi bi-bell-slash display-4 text-muted"></i>
-                            <p class="mt-3 text-muted">No notifications yet.</p>
-                        </div>
+                            <tr th:if="${notifications.isEmpty()}">
+                                <td colspan="5" class="text-center py-5 text-muted">
+                                    <i class="bi bi-bell-slash display-4 d-block mb-3"></i>
+                                    There are no notifications yet.
+                                </td>
+                            </tr>
 
-                        <div th:each="noti : ${notifications}"
-                             class="list-group-item list-group-item-action p-4 notification-item"
-                             th:classappend="${!noti.isRead} ? 'unread'"
-                             th:data-id="${noti.notificationId}"
-                             th:data-link="${noti.link}"
-                             onclick="handleNotificationClick(this)">
+                            <tr th:each="noti : ${notifications}"
+                                class="notification-row"
+                                th:classappend="${!noti.isRead} ? 'table-row-unread'"
+                                th:data-id="${noti.notificationId}"
+                                th:data-link="${noti.link}"
+                                onclick="handleNotificationClick(this)">
 
-                            <div class="d-flex w-100 justify-content-between mb-1">
-                                <h6 class="mb-1 fw-bold custom-color" th:text="${noti.title}">Title</h6>
-                                <small class="text-muted" th:text="${#temporals.format(noti.createdAt, 'yyyy-MM-dd HH:mm')}">Time</small>
-                            </div>
-                            <p class="mb-1 text-secondary" th:text="${noti.message}">Message content...</p>
-                            <small class="text-primary" th:if="${!noti.isRead}">New</small>
-                        </div>
+                                <td class="ps-3">
+                                    <div class="d-flex align-items-center">
+                                        <div class="listing-image rounded-circle overflow-hidden border border-light-subtle me-3 d-flex align-items-center justify-content-center bg-light" style="width: 40px; height: 40px; min-width: 40px;">
+                                            <i class="bi bi-bell text-primary" th:if="${noti.notificationType.name() == 'SYSTEM'}"></i>
+                                            <i class="bi bi-cash-coin text-success" th:if="${#strings.contains(noti.notificationType.name(), 'TRANSACTION') or #strings.contains(noti.notificationType.name(), 'SETTLEMENT')}"></i>
+                                            <i class="bi bi-car-front-fill text-warning" th:if="${#strings.contains(noti.notificationType.name(), 'VEHICLE')}"></i>
+                                            <i class="bi bi-exclamation-triangle-fill text-danger" th:if="${#strings.contains(noti.notificationType.name(), 'REPORT')}"></i>
+                                            <i class="bi bi-star-fill text-info" th:if="${#strings.contains(noti.notificationType.name(), 'REVIEW')}"></i>
+                                        </div>
+                                        <div>
+                                            <h6 class="m-0 fs-6 fw-bold custom-color" th:text="${noti.title}">Title</h6>
+                                            <span class="text-body-secondary small text-truncate d-block" style="max-width: 300px;" th:text="${noti.message}">Message...</span>
+                                        </div>
+                                    </div>
+                                </td>
 
+                                <td class="text-body-secondary small">
+                                    <span class="badge bg-secondary bg-opacity-10 text-secondary border" th:text="${noti.notificationType.title}">Type</span>
+                                </td>
+
+                                <td class="text-body-secondary small" th:text="${#temporals.format(noti.createdAt, 'yyyy-MM-dd HH:mm')}">
+                                    2023-01-01
+                                </td>
+
+                                <td>
+                                    <div class="d-flex align-items-center listing-status">
+                                        <span class="badge bg-danger me-2 status-rejected" th:if="${!noti.isRead}"></span>
+                                        <span class="text-danger small fw-bold" th:if="${!noti.isRead}">New</span>
+
+                                        <span class="badge bg-secondary me-2 status-sold" th:if="${noti.isRead}"></span>
+                                        <span class="text-muted small" th:if="${noti.isRead}">Read</span>
+                                    </div>
+                                </td>
+
+                                <td class="text-end pe-4">
+                                    <button class="btn btn-sm btn-light border rounded-circle text-primary action-preview"
+                                            data-bs-toggle="tooltip" title="View Details">
+                                        <i class="bi bi-arrow-right"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
                     </div>
+                </div>
 
-                    <div class="card-footer bg-white border-top-0 pt-3 pb-3" th:if="${notifications.totalPages > 1}">
-                    </div>
+                <div class="card-footer bg-white border-top-0 pt-3 pb-3" th:if="${totalPages > 0}">
+                    <nav aria-label="Page navigation">
+                        <ul class="pagination justify-content-center mb-0">
+
+                            <li class="page-item custom-color me-auto" th:classappend="${nowPage == 1} ? 'disabled'">
+                                <a class="page-link page-prev border-0 p-0 bg-transparent"
+                                   th:href="${nowPage == 1} ? '#' : @{/notifications(page=${nowPage - 2})}"
+                                   aria-label="Previous">
+                                    <span class="d-flex align-items-center">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icon-tabler-chevron-left"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M15 6l-6 6l6 6" /></svg>
+                                    </span>
+                                    <span class="arrow-edge"></span>
+                                </a>
+                            </li>
+
+                            <li class="page-item custom-color" th:each="page : ${#numbers.sequence(startPage, endPage)}">
+                                <a class="page-link"
+                                   th:classappend="${page == nowPage} ? 'active'"
+                                   th:href="@{/notifications(page=${page - 1})}"
+                                   th:text="${page}">1</a>
+                            </li>
+
+                            <li class="page-item custom-color ms-auto" th:classappend="${nowPage == totalPages} ? 'disabled'">
+                                <a class="page-link page-next border-0 p-0 bg-transparent"
+                                   th:href="${nowPage == totalPages} ? '#' : @{/notifications(page=${nowPage})}"
+                                   aria-label="Next">
+                                    <span class="d-flex align-items-center">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icon-tabler-chevron-right"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l6 6l-6 6" /></svg>
+                                    </span>
+                                    <span class="arrow-edge"></span>
+                                </a>
+                            </li>
+
+                        </ul>
+                    </nav>
                 </div>
 
             </div>

@@ -50,12 +50,24 @@ public class AdminService {
 
         vehicle.extendExpirationDate();
 
+        User dealer = vehicle.getRegisteredBy().getUser();
+        User boss = vehicle.getCompany().getOwner();
+
         notificationService.createNotification(
-                vehicle.getRegisteredBy().getUser(),
+                dealer,
                 NotificationType.VEHICLE_APPROVED,
                 String.format("'%s' 매물 등록이 승인되었습니다.", vehicle.getModel()),
                 "/vehicles/" + vehicle.getVehicleId()
         );
+
+        if (!dealer.getUserId().equals(boss.getUserId())) {
+            notificationService.createNotification(
+                    boss,
+                    NotificationType.VEHICLE_APPROVED,
+                    String.format("담당 직원 %s의 매물 '%s'이(가) 승인되었습니다.", dealer.getName(), vehicle.getModel()),
+                    "/vehicles/" + vehicle.getVehicleId()
+            );
+        }
     }
 
     // 3. 매물 반려 처리
@@ -70,12 +82,24 @@ public class AdminService {
 
         vehicle.reject(reason, admin);
 
+        User dealer = vehicle.getRegisteredBy().getUser();
+        User boss = vehicle.getCompany().getOwner();
+
         notificationService.createNotification(
-                vehicle.getRegisteredBy().getUser(),
+                dealer,
                 NotificationType.VEHICLE_REJECTED,
                 String.format("'%s' 매물이 반려되었습니다. 사유: %s", vehicle.getModel(), reason),
                 "/company/sales"
         );
+
+        if (!dealer.getUserId().equals(boss.getUserId())) {
+            notificationService.createNotification(
+                    boss,
+                    NotificationType.VEHICLE_REJECTED,
+                    String.format("담당 직원 %s의 매물 '%s'이(가) 반려되었습니다.", dealer.getName(), vehicle.getModel()),
+                    "/company/sales"
+            );
+        }
     }
 
     /**

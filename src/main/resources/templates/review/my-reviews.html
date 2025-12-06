@@ -111,11 +111,11 @@
 
                 <div class="card border-0 shadow-sm">
                     <div class="card-header bg-white border-bottom p-3">
-                        <h5 class="mb-0">Reviews Given <span class="badge bg-primary bg-opacity-10 text-primary ms-2" th:text="${reviews.size()}">0</span></h5>
+                        <h5 class="mb-0">Reviews Given <span class="badge bg-primary bg-opacity-10 text-primary ms-2" th:text="${reviews.totalElements}">0</span></h5>
                     </div>
                     <div class="card-body p-0">
 
-                        <div class="text-center py-5" th:if="${#lists.isEmpty(reviews)}">
+                        <div class="text-center py-5" th:if="${reviews.isEmpty()}">
                             <div class="mb-3 text-muted">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" fill="currentColor" class="bi bi-chat-left-text" viewBox="0 0 16 16">
                                     <path d="M14 1a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H4.414A2 2 0 0 0 3 11.586l-2 2V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12.793a.5.5 0 0 0 .854.353l2.853-2.853A1 1 0 0 1 4.414 12H14a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z"/>
@@ -150,6 +150,41 @@
                         </div>
 
                     </div>
+                </div>
+
+                <div class="card-footer bg-body border-top-0 pt-0 pb-4 mt-3" th:if="${totalPages > 0}">
+                    <nav aria-label="Content navigation">
+                        <ul class="pagination justify-content-center mb-0">
+                            <li class="page-item custom-color me-auto" th:classappend="${nowPage == 1} ? 'disabled'">
+                                <a class="page-link page-prev border-0 p-0 bg-transparent"
+                                   th:href="${nowPage == 1} ? '#' : @{/reviews/my(page=${nowPage - 2})}"
+                                   aria-label="Previous">
+                                        <span class="d-flex align-items-center">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icon-tabler-chevron-left"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M15 6l-6 6l6 6" /></svg>
+                                        </span>
+                                    <span class="arrow-edge"></span>
+                                </a>
+                            </li>
+
+                            <li class="page-item custom-color" th:each="page : ${#numbers.sequence(startPage, endPage)}">
+                                <a class="page-link"
+                                   th:classappend="${page == nowPage} ? 'active'"
+                                   th:href="@{/reviews/my(page=${page - 1})}"
+                                   th:text="${page}">1</a>
+                            </li>
+
+                            <li class="page-item custom-color ms-auto" th:classappend="${nowPage == totalPages} ? 'disabled'">
+                                <a class="page-link page-next border-0 p-0 bg-transparent"
+                                   th:href="${nowPage == totalPages} ? '#' : @{/reviews/my(page=${nowPage})}"
+                                   aria-label="Next">
+                                        <span class="d-flex align-items-center">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icon-tabler-chevron-right"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l6 6l-6 6" /></svg>
+                                        </span>
+                                    <span class="arrow-edge"></span>
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
                 </div>
             </section>
         </div>

@@ -6,6 +6,10 @@ import com.usedcar.trading.domain.user.entity.User;
 import com.usedcar.trading.domain.user.repository.UserRepository;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.oauth2.core.user.OAuth2User;
@@ -95,14 +99,28 @@ public class ReviewController {
      * 내가 작성한 리뷰 목록
      */
     @GetMapping("/my")
-    public String myReviews(Model model, @AuthenticationPrincipal Object principal) {
+    public String myReviews(Model model,
+                            @AuthenticationPrincipal Object principal,
+                            @PageableDefault(size = 5, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
         User user = findUser(principal);
         if (user == null) {
             return "redirect:/login";
         }
 
-        List<Review> reviews = reviewService.getUserReviews(user.getUserId());
-        model.addAttribute("reviews", reviews);
+        Page<Review> reviewPage = reviewService.getUserReviews(user.getUserId(), pageable);
+
+        model.addAttribute("reviews", reviewPage);
+
+        int totalPages = reviewPage.getTotalPages();
+        int nowPage = reviewPage.getNumber() + 1;
+        int startPage = Math.max(nowPage - 2, 1);
+        int endPage = Math.min(nowPage + 2, totalPages);
+        if (endPage == 0) endPage = 1;
+
+        model.addAttribute("nowPage", nowPage);
+        model.addAttribute("startPage", startPage);
+        model.addAttribute("endPage", endPage);
+        model.addAttribute("totalPages", totalPages);
 
         return "review/my-reviews";
     }

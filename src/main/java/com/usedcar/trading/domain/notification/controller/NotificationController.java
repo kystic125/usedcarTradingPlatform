@@ -28,7 +28,7 @@ public class NotificationController {
     @GetMapping
     public String notificationList(Model model,
                                    @RequestParam(defaultValue = "0") int page,
-                                   @RequestParam(defaultValue = "20") int size,
+                                   @RequestParam(defaultValue = "10") int size,
                                    @AuthenticationPrincipal Object principal) {
         User user = findUser(principal);
         if (user == null) return "redirect:/login";
@@ -38,6 +38,17 @@ public class NotificationController {
 
         model.addAttribute("notifications", notifications);
         model.addAttribute("unreadCount", unreadCount);
+
+        int totalPages = notifications.getTotalPages();
+        int nowPage = notifications.getNumber() + 1; // 0부터 시작하므로 +1
+        int startPage = Math.max(nowPage - 2, 1);
+        int endPage = Math.min(nowPage + 2, totalPages);
+        if (endPage == 0) endPage = 1;
+
+        model.addAttribute("nowPage", nowPage);
+        model.addAttribute("startPage", startPage);
+        model.addAttribute("endPage", endPage);
+        model.addAttribute("totalPages", totalPages);
 
         return "notification/list";
     }

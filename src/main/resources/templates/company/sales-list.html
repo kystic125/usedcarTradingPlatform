@@ -140,6 +140,12 @@
 
                                     <a href="/company/sales?filter=PENDING" class="btn btn-sm rounded-pill px-3"
                                        th:classappend="${currentFilter == 'PENDING' ? 'btn-warning' : 'btn-outline-warning'}">Pending</a>
+
+                                    <a href="/company/sales?filter=EXPIRED" class="btn btn-sm rounded-pill px-3"
+                                       th:classappend="${currentFilter == 'EXPIRED' ? 'btn-dark' : 'btn-outline-dark'}">Expired</a>
+
+                                    <a href="/company/sales?filter=REJECTED" class="btn btn-sm rounded-pill px-3"
+                                       th:classappend="${currentFilter == 'REJECTED' ? 'btn-danger' : 'btn-outline-danger'}">Rejected</a>
                                 </div>
                             </div>
 
@@ -203,6 +209,12 @@
                                                       th:data-bs-title="'반려 사유: ' + ${car.rejectedReason}">
                                                     Rejected <i class="bi bi-question-circle-fill ms-1"></i>
                                                 </span>
+
+                                                <span class="badge bg-dark me-2" th:if="${car.vehicleStatus.name() == 'EXPIRED'}"></span>
+                                                <span class="text-body-secondary" th:if="${car.vehicleStatus.name() == 'EXPIRED'}">Expired</span>
+
+                                                <span class="badge bg-light text-secondary me-2" th:if="${car.vehicleStatus.name() == 'DELETED'}"></span>
+                                                <span class="text-body-secondary" th:if="${car.vehicleStatus.name() == 'DELETED'}">Deleted</span>
                                             </div>
                                         </td>
                                         <td class="ps-3">

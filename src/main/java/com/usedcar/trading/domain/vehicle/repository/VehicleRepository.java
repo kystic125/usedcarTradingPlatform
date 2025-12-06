@@ -45,6 +45,7 @@ public interface VehicleRepository extends JpaRepository<Vehicle, Long> {
 
     // 업체 + 상태 조합
     List<Vehicle> findByCompanyAndVehicleStatus(Company company, VehicleStatus status);
+    List<Vehicle> findByCompanyAndVehicleStatusIn(Company company, List<VehicleStatus> statuses);
 
     /**
      * 범위 조회

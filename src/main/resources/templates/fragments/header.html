@@ -20,11 +20,12 @@
                             <path d="M9 17v1a3 3 0 0 0 6 0v-1" />
                         </svg>
 
-                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger z-2"
+                        <span class="position-absolute badge rounded-pill bg-danger z-2"
+                              style="top: -4px; right: -4px;"
                               th:if="${unreadNotificationCount != null and unreadNotificationCount > 0}"
                               th:text="${unreadNotificationCount > 99 ? '99+' : unreadNotificationCount}">
-                        1
-                    </span>
+                            1
+                        </span>
                     </a>
                 </div>
             </div>
