@@ -1,10 +1,9 @@
 package com.usedcar.trading.domain.favorite.controller;
 
-import com.usedcar.trading.domain.favorite.entity.Favorite;
+import com.usedcar.trading.domain.favorite.dto.FavoriteResponse;
 import com.usedcar.trading.domain.favorite.service.FavoriteService;
 import com.usedcar.trading.domain.user.entity.User;
 import com.usedcar.trading.domain.user.repository.UserRepository;
-import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -24,9 +23,7 @@ public class FavoriteController {
     private final FavoriteService favoriteService;
     private final UserRepository userRepository;
 
-    /**
-     * 내 찜 목록 [WISH-003]
-     */
+    // 내 찜 목록
     @GetMapping
     public String myFavorites(Model model, @AuthenticationPrincipal Object principal) {
         User user = findUser(principal);
@@ -35,19 +32,19 @@ public class FavoriteController {
             return "redirect:/login";
         }
 
-        List<Favorite> favorites = favoriteService.getMyFavorites(user.getUserId());
-        int favoriteCount = favoriteService.getMyFavoriteCount(user.getUserId());
-
+        List<FavoriteResponse> favorites = favoriteService.getMyFavorites(user.getUserId()).stream()
+                .map(FavoriteResponse::toResponse)
+                .toList();
         model.addAttribute("favorites", favorites);
+
+        int favoriteCount = favoriteService.getMyFavoriteCount(user.getUserId());
         model.addAttribute("favoriteCount", favoriteCount);
         model.addAttribute("user", user);
 
         return "favorite/list";
     }
-
-    /**
-     * 찜 추가 [WISH-001]
-     */
+    
+    // 찜 추가
     @PostMapping("/add/{vehicleId}")
     public String addFavorite(@PathVariable Long vehicleId,
                               @AuthenticationPrincipal Object principal,
@@ -55,18 +52,13 @@ public class FavoriteController {
         User user = findUser(principal);
         if (user == null) return "redirect:/login";
 
-        try {
-            favoriteService.addFavorite(user.getUserId(), vehicleId);
-            redirectAttributes.addFlashAttribute("message", "찜 목록에 추가되었습니다.");
-        } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("error", e.getMessage());
-        }
+        favoriteService.addFavorite(user.getUserId(), vehicleId);
+        redirectAttributes.addFlashAttribute("message", "찜 목록에 추가되었습니다.");
+
         return "redirect:/vehicles/" + vehicleId;
     }
-
-    /**
-     * 찜 삭제 [WISH-002]
-     */
+    
+    // 찜 삭제
     @PostMapping("/remove/{vehicleId}")
     public String removeFavorite(@PathVariable Long vehicleId,
                                  @AuthenticationPrincipal Object principal,
@@ -75,12 +67,8 @@ public class FavoriteController {
         User user = findUser(principal);
         if (user == null) return "redirect:/login";
 
-        try {
-            favoriteService.removeFavorite(user.getUserId(), vehicleId);
-            redirectAttributes.addFlashAttribute("message", "찜 목록에서 삭제되었습니다.");
-        } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("error", e.getMessage());
-        }
+        favoriteService.removeFavorite(user.getUserId(), vehicleId);
+        redirectAttributes.addFlashAttribute("message", "찜 목록에서 삭제되었습니다.");
 
         if ("list".equals(returnUrl)) {
             return "redirect:/favorites";
@@ -88,9 +76,7 @@ public class FavoriteController {
         return "redirect:/vehicles/" + vehicleId;
     }
 
-    /**
-     * 찜 토글 (AJAX용)
-     */
+    // 찜 토글
     @PostMapping("/toggle/{vehicleId}")
     @ResponseBody
     public String toggleFavorite(@PathVariable Long vehicleId, @AuthenticationPrincipal Object principal) {
@@ -99,22 +85,16 @@ public class FavoriteController {
             return "login required";
         }
 
-        try {
-            if (favoriteService.isFavorite(user.getUserId(), vehicleId)) {
-                favoriteService.removeFavorite(user.getUserId(), vehicleId);
-                return "removed";
-            } else {
-                favoriteService.addFavorite(user.getUserId(), vehicleId);
-                return "added";
-            }
-        } catch (Exception e) {
-            return "error: " + e.getMessage();
+        if (favoriteService.isFavorite(user.getUserId(), vehicleId)) {
+            favoriteService.removeFavorite(user.getUserId(), vehicleId);
+            return "removed";
+        } else {
+            favoriteService.addFavorite(user.getUserId(), vehicleId);
+            return "added";
         }
     }
 
-    /**
-     * 찜 여부 확인 (AJAX용)
-     */
+    // 찜 여부 확인
     @GetMapping("/check/{vehicleId}")
     @ResponseBody
     public boolean checkFavorite(@PathVariable Long vehicleId, @AuthenticationPrincipal Object principal) {
