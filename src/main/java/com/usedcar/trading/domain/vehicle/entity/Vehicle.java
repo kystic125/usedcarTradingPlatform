@@ -72,6 +72,12 @@ public class Vehicle extends BaseEntity {
     @Column(columnDefinition = "TEXT")
     private String rejectedReason;
 
+    private LocalDateTime expirationDate;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "approved_by") //, nullable = false)
+    private User approvedBy;
+
     /**
      * Vehicle : VehicleImage => 1 : n
      */
@@ -79,62 +85,28 @@ public class Vehicle extends BaseEntity {
     @Builder.Default
     private List<VehicleImage> images = new ArrayList<>();
 
-    // 연관 관계 편의 메서드
-    public void addImage(VehicleImage image) {
-        this.images.add(image);
-        image.setVehicle(this);
-    }
-
-    public void removeImage(VehicleImage image) {
-        this.images.remove(image);
-        image.setVehicle(null);
-    }
-
-
     @OneToMany(mappedBy = "vehicle", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
     private List<Favorite> favorites = new ArrayList<>();
-
-    // 연관관계 편의 메서드
-    public void addFavorite(Favorite favorite) {
-        this.favorites.add(favorite);
-        favorite.setVehicle(this);
-    }
-
-    public void removeFavorite(Favorite favorite) {
-        this.favorites.remove(favorite);
-        favorite.setVehicle(null);
-    }
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "company_id", nullable = false)
     private Company company;
 
-    public void setCompany(Company company) {
-        this.company = company;
-    }
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "registered_by", nullable = false)
     private Employee registeredBy;
 
-    public void setEmployee(Employee employee) {
-        this.registeredBy = employee;
-    }
+    @OneToMany(mappedBy = "vehicle")
+    @Builder.Default
+    private List<Transaction> transactions = new ArrayList<>();
 
+    // 핵심 비즈니스 로직
     public void approve(User admin) {
         this.vehicleStatus = VehicleStatus.SALE;
         this.approvedAt = LocalDateTime.now();
         this.approvedBy = admin;
     }
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "approved_by") //, nullable = false)
-    private User approvedBy;
-
-    @OneToMany(mappedBy = "vehicle")
-    @Builder.Default
-    private List<Transaction> transactions = new ArrayList<>();
 
     public void reject(String reason, User admin) {
         this.vehicleStatus = VehicleStatus.REJECTED;
@@ -147,11 +119,10 @@ public class Vehicle extends BaseEntity {
         this.vehicleStatus = status;
     }
 
+    // 상태 변경
     public void increaseViewCount() {
         this.viewCount++;
     }
-
-    private LocalDateTime expirationDate;
 
     public void extendExpirationDate() {
         this.expirationDate = LocalDateTime.now().plusDays(14);
@@ -161,10 +132,7 @@ public class Vehicle extends BaseEntity {
         this.vehicleStatus = VehicleStatus.DELETED;
     }
 
-    public void setThumbnailUrl(String thumbnailUrl) {
-        this.thumbnailUrl = thumbnailUrl;
-    }
-
+    // 정보 수정
     public void updateVehicleInfo(String model, int modelYear, int mileage, BigDecimal price,
                                   String description, String options) {
         this.model = model;
@@ -175,7 +143,36 @@ public class Vehicle extends BaseEntity {
         this.options = options;
     }
 
-    public void setRegisteredBy(Employee employee) {
+    public void updateThumbnail(String thumbnailUrl) {
+        this.thumbnailUrl = thumbnailUrl;
+    }
+
+    // 연관관계 편의 메서드
+    public void addImage(VehicleImage image) {
+        this.images.add(image);
+        image.setVehicle(this);
+    }
+
+    public void removeImage(VehicleImage image) {
+        this.images.remove(image);
+        image.setVehicle(null);
+    }
+
+    public void addFavorite(Favorite favorite) {
+        this.favorites.add(favorite);
+        favorite.setVehicle(this);
+    }
+
+    public void removeFavorite(Favorite favorite) {
+        this.favorites.remove(favorite);
+        favorite.setVehicle(null);
+    }
+
+    public void assignToCompany(Company company) {
+        this.company = company;
+    }
+
+    public void changeRegistrant(Employee employee) {
         this.registeredBy = employee;
     }
 }
