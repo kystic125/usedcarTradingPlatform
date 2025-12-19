@@ -85,10 +85,6 @@ public class Vehicle extends BaseEntity {
     @Builder.Default
     private List<VehicleImage> images = new ArrayList<>();
 
-    @OneToMany(mappedBy = "vehicle", cascade = CascadeType.ALL, orphanRemoval = true)
-    @Builder.Default
-    private List<Favorite> favorites = new ArrayList<>();
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "company_id", nullable = false)
     private Company company;
@@ -156,16 +152,6 @@ public class Vehicle extends BaseEntity {
     public void removeImage(VehicleImage image) {
         this.images.remove(image);
         image.setVehicle(null);
-    }
-
-    public void addFavorite(Favorite favorite) {
-        this.favorites.add(favorite);
-        favorite.setVehicle(this);
-    }
-
-    public void removeFavorite(Favorite favorite) {
-        this.favorites.remove(favorite);
-        favorite.setVehicle(null);
     }
 
     public void assignToCompany(Company company) {

@@ -69,20 +69,6 @@ public class User extends BaseEntity {
         this.phone = phone;
     }
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    @Builder.Default
-    private List<Favorite> favoriteList = new ArrayList<>();
-
-    public void addFavorite(Favorite favorite) {
-        this.favoriteList.add(favorite);
-        favorite.setUser(this);
-    }
-
-    public void removeFavorite(Favorite favorite) {
-        this.favoriteList.remove(favorite);
-        favorite.setUser(null);
-    }
-
     @OneToMany(mappedBy = "reporter")
     @Builder.Default
     private List<Report> reportedReports = new ArrayList<>();
