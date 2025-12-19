@@ -94,7 +94,7 @@ public class EmployeeService {
 
         List<Vehicle> employeeVehicles = vehicleRepository.findByRegisteredBy(employee);
         for (Vehicle vehicle : employeeVehicles) {
-            vehicle.setRegisteredBy(ownerEmployee);
+            vehicle.changeRegistrant(ownerEmployee);
         }
 
         User user = employee.getUser();

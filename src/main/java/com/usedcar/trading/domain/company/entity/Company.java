@@ -84,12 +84,12 @@ public class Company extends BaseEntity {
     // 연관관계 편의 메서드
     public void addVehicle(Vehicle vehicle) {
         this.vehicles.add(vehicle);
-        vehicle.setCompany(this);
+        vehicle.assignToCompany(this);
     }
 
     public void removeVehicle(Vehicle vehicle) {
         this.vehicles.remove(vehicle);
-        vehicle.setCompany(null);
+        vehicle.assignToCompany(null);
     }
 
     @OneToMany(mappedBy = "company")

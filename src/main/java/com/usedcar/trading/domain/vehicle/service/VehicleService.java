@@ -127,7 +127,7 @@ public class VehicleService {
 
             // 첫 번째 사진을 대표 이미지(Thumbnail)로 설정
             if (i == 0) {
-                vehicle.setThumbnailUrl(webAccessUrl);
+                vehicle.updateThumbnail(webAccessUrl);
             }
         }
     }
