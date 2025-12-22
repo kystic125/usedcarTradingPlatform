@@ -2,12 +2,12 @@ package com.usedcar.trading.domain.vehicle.controller;
 
 import com.usedcar.trading.domain.favorite.service.FavoriteService;
 import com.usedcar.trading.domain.user.entity.User;
-import com.usedcar.trading.domain.user.repository.UserRepository;
 import com.usedcar.trading.domain.vehicle.entity.FuelType;
 import com.usedcar.trading.domain.vehicle.entity.Transmission;
 import com.usedcar.trading.domain.vehicle.entity.Vehicle;
 import com.usedcar.trading.domain.vehicle.entity.VehicleStatus;
 import com.usedcar.trading.domain.vehicle.repository.VehicleRepository;
+import com.usedcar.trading.global.auth.security.PrincipalDetails;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -15,7 +15,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -34,7 +33,6 @@ public class VehicleListController {
 
     private final VehicleRepository vehicleRepository;
     private final FavoriteService favoriteService;
-    private final UserRepository userRepository;
 
     // 매물 목록 조회 (그리드/리스트)
     @GetMapping
@@ -48,7 +46,7 @@ public class VehicleListController {
                               @RequestParam(required = false) Integer maxMileage,
                               @RequestParam(required = false) List<FuelType> fuelTypes,
                               @RequestParam(required = false) List<Transmission> transmissions,
-                              @AuthenticationPrincipal Object principal,
+                              @AuthenticationPrincipal PrincipalDetails principal,
                               @PageableDefault(size = 9, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
 
         List<Vehicle> filteredList;
@@ -95,13 +93,11 @@ public class VehicleListController {
 
         List<Long> userFavoriteIds = new ArrayList<>();
         if (principal != null) {
-            User user = findUser(principal);
-            if (user != null) {
-                userFavoriteIds = favoriteService.getMyFavorites(user.getUserId())
-                        .stream()
-                        .map(f -> f.getVehicle().getVehicleId())
-                        .collect(Collectors.toList());
-            }
+            User user = principal.getUser();
+            userFavoriteIds = favoriteService.getMyFavorites(user.getUserId())
+                    .stream()
+                    .map(f -> f.getVehicle().getVehicleId())
+                    .collect(Collectors.toList());
         }
         model.addAttribute("userFavoriteIds", userFavoriteIds);
 
@@ -109,13 +105,5 @@ public class VehicleListController {
             return "vehicle-list";
         }
         return "vehicle-grid";
-    }
-
-    private User findUser(Object principal) {
-        if (principal instanceof UserDetails) {
-            String email = ((UserDetails) principal).getUsername();
-            return userRepository.findByEmail(email).orElse(null);
-        }
-        return null;
     }
 }
