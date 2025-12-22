@@ -3,12 +3,11 @@ package com.usedcar.trading.domain.transaction.controller;
 import com.usedcar.trading.domain.transaction.service.TransactionService;
 import com.usedcar.trading.domain.user.entity.Role;
 import com.usedcar.trading.domain.user.entity.User;
-import com.usedcar.trading.domain.user.repository.UserRepository;
+import com.usedcar.trading.global.auth.security.PrincipalDetails;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -24,14 +23,13 @@ import java.io.PrintWriter;
 public class TransactionController {
 
     private final TransactionService transactionService;
-    private final UserRepository userRepository;
 
     // 구매 요청
     @PostMapping("/request")
     public String requestTransaction(@RequestParam Long vehicleId,
-                                     @AuthenticationPrincipal Object principal,
+                                     @AuthenticationPrincipal PrincipalDetails principal,
                                      HttpServletResponse response) throws IOException {
-        User buyer = findUser(principal);
+        User buyer = principal.getUser();
 
         try {
             transactionService.requestTransaction(vehicleId, buyer);
@@ -45,9 +43,9 @@ public class TransactionController {
     // 거래 승인
     @PostMapping("/{id}/approve")
     public String approveTransaction(@PathVariable Long id,
-                                     @AuthenticationPrincipal Object principal,
+                                     @AuthenticationPrincipal PrincipalDetails principal,
                                      HttpServletResponse response) throws IOException {
-        User seller = findUser(principal);
+        User seller = principal.getUser();
         try {
             transactionService.approveTransaction(id, seller);
         } catch (IllegalStateException e) {
@@ -59,9 +57,9 @@ public class TransactionController {
     // 거래 거부
     @PostMapping("/{id}/reject")
     public String rejectTransaction(@PathVariable Long id,
-                                    @AuthenticationPrincipal Object principal,
+                                    @AuthenticationPrincipal PrincipalDetails principal,
                                     HttpServletResponse response) throws IOException {
-        User seller = findUser(principal);
+        User seller = principal.getUser();
         try {
             transactionService.rejectTransaction(id, seller);
         } catch (IllegalStateException e) {
@@ -73,9 +71,9 @@ public class TransactionController {
     // 거래 완료
     @PostMapping("/{id}/complete")
     public String completeTransaction(@PathVariable Long id,
-                                      @AuthenticationPrincipal Object principal,
+                                      @AuthenticationPrincipal PrincipalDetails principal,
                                       HttpServletResponse response) throws IOException {
-        User seller = findUser(principal);
+        User seller = principal.getUser();
         try {
             transactionService.completeTransaction(id, seller);
         } catch (IllegalStateException e) {
@@ -87,10 +85,10 @@ public class TransactionController {
     // 거래 취소
     @PostMapping("/{id}/cancel")
     public String cancelTransaction(@PathVariable Long id,
-                                    @AuthenticationPrincipal Object principal,
+                                    @AuthenticationPrincipal PrincipalDetails principal,
                                     HttpServletRequest request,
                                     HttpServletResponse response) throws IOException {
-        User user = findUser(principal);
+        User user = principal.getUser();
         try {
             transactionService.cancelTransaction(id, user);
         } catch (IllegalStateException e) {
@@ -114,14 +112,5 @@ public class TransactionController {
         out.println("<script>alert('" + message + "'); history.go(-1);</script>");
         out.flush();
         return null;
-    }
-
-    // 유저 추출 헬퍼
-    private User findUser(Object principal) {
-        if (principal instanceof UserDetails) {
-            String email = ((UserDetails) principal).getUsername();
-            return userRepository.findByEmail(email).orElseThrow();
-        }
-        throw new IllegalArgumentException("로그인이 필요합니다.");
     }
 }
