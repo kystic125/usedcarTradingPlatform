@@ -4,11 +4,11 @@ import com.usedcar.trading.domain.favorite.service.FavoriteService;
 import com.usedcar.trading.domain.review.entity.Review;
 import com.usedcar.trading.domain.review.service.ReviewService;
 import com.usedcar.trading.domain.user.entity.User;
-import com.usedcar.trading.domain.user.repository.UserRepository;
 import com.usedcar.trading.domain.vehicle.dto.VehicleRegisterRequest;
 import com.usedcar.trading.domain.vehicle.entity.Vehicle;
 import com.usedcar.trading.domain.vehicle.repository.VehicleRepository;
 import com.usedcar.trading.domain.vehicle.service.VehicleService;
+import com.usedcar.trading.global.auth.security.PrincipalDetails;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -16,8 +16,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -34,7 +32,6 @@ public class VehicleController {
 
     private final VehicleRepository vehicleRepository;
     private final VehicleService vehicleService;
-    private final UserRepository userRepository;
     private final FavoriteService favoriteService;
     private final ReviewService reviewService;
 
@@ -49,9 +46,9 @@ public class VehicleController {
     public String registerVehicle(
             @ModelAttribute VehicleRegisterRequest request,
             @RequestParam("imageFiles") List<MultipartFile> imageFiles,
-            @AuthenticationPrincipal Object principal) {
+            @AuthenticationPrincipal PrincipalDetails principal) {
 
-        User user = findUser(principal);
+        User user = principal.getUser();
 
         try {
             vehicleService.register(user, request, imageFiles);
@@ -63,25 +60,13 @@ public class VehicleController {
         return "redirect:/company/sales";
     }
 
-    private User findUser(Object principal) {
-        if (principal instanceof UserDetails) {
-            String email = ((UserDetails) principal).getUsername();
-            return userRepository.findByEmail(email).orElse(null);
-        } else if (principal instanceof OAuth2User) {
-            OAuth2User oauthUser = (OAuth2User) principal;
-            String providerId = String.valueOf(oauthUser.getAttributes().get("id"));
-            return userRepository.findByProviderId(providerId).orElse(null);
-        }
-        return null;
-    }
-
     // 매물 상세 조회
     @GetMapping("/{id}")
     public String vehicleDetail(@PathVariable Long id,
                                 Model model,
                                 @RequestParam(defaultValue = "0") int reviewPage,
                                 @CookieValue(value = "recent_cars", required = false) String cookieValue,
-                                @AuthenticationPrincipal Object principal,
+                                @AuthenticationPrincipal PrincipalDetails principal,
                                 HttpServletResponse response) {
 
         vehicleService.increaseViewCount(id);
@@ -110,10 +95,8 @@ public class VehicleController {
 
         boolean isFavorite = false;
         if (principal != null) {
-            User user = findUser(principal);
-            if (user != null) {
+            User user = principal.getUser();
                 isFavorite = favoriteService.isFavorite(user.getUserId(), id);
-            }
         }
         model.addAttribute("isFavorite", isFavorite);
 
@@ -148,8 +131,8 @@ public class VehicleController {
     }
 
     @GetMapping("/{id}/edit")
-    public String editPage(@PathVariable Long id, Model model, @AuthenticationPrincipal Object principal) {
-        User user = findUser(principal);
+    public String editPage(@PathVariable Long id, Model model, @AuthenticationPrincipal PrincipalDetails principal) {
+        User user = principal.getUser();
 
         Vehicle vehicle = vehicleRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("매물 없음"));
@@ -170,8 +153,8 @@ public class VehicleController {
     public String updateVehicle(@PathVariable Long id,
                                 @ModelAttribute VehicleRegisterRequest request,
                                 @RequestParam(value = "imageFiles", required = false) List<MultipartFile> imageFiles, // [추가] 파일 받기
-                                @AuthenticationPrincipal Object principal) {
-        User user = findUser(principal);
+                                @AuthenticationPrincipal PrincipalDetails principal) {
+        User user = principal.getUser();
 
         try {
             vehicleService.update(id, user, request, imageFiles);
@@ -183,8 +166,8 @@ public class VehicleController {
     }
 
     @PostMapping("/{id}/delete")
-    public String deleteVehicle(@PathVariable Long id, @AuthenticationPrincipal Object principal) {
-        User user = findUser(principal);
+    public String deleteVehicle(@PathVariable Long id, @AuthenticationPrincipal PrincipalDetails principal) {
+        User user = principal.getUser();
 
         try {
             vehicleService.delete(id, user);
