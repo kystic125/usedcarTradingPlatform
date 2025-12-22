@@ -1,39 +1,44 @@
 package com.usedcar.trading.global.auth.security;
 
 import com.usedcar.trading.domain.user.entity.User;
-import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 
-import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Map;
 
-@Getter
 public class PrincipalDetails implements UserDetails, OAuth2User {
 
-    private User user;
-    private Map<String, Object> attributes;
+    private final User user;
+    private final Map<String, Object> attributes;
 
-    // 1. 일반 로그인용 생성자
+    // 일반 로그인
     public PrincipalDetails(User user) {
         this.user = user;
+        this.attributes = null;
     }
 
-    // 2. 카카오 로그인용 생성자
+    // OAuth2 로그인
     public PrincipalDetails(User user, Map<String, Object> attributes) {
         this.user = user;
         this.attributes = attributes;
     }
 
+    public static PrincipalDetails from(User user) {
+        return new PrincipalDetails(user);
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        Collection<GrantedAuthority> authorities = new ArrayList<>();
-        authorities.add(new SimpleGrantedAuthority("ROLE_" + user.getRole().name()));
-        return authorities;
+        return Collections.singletonList(
+                new SimpleGrantedAuthority("ROLE_" + user.getRole().name())
+        );
     }
+
+    public User getUser() { return user; }
 
     @Override
     public String getPassword() {
@@ -61,6 +66,9 @@ public class PrincipalDetails implements UserDetails, OAuth2User {
     public boolean isAccountNonLocked() { return true; }
     @Override
     public boolean isCredentialsNonExpired() { return true; }
+
     @Override
-    public boolean isEnabled() { return true; }
+    public boolean isEnabled() {
+        return "ACTIVE".equals(user.getUserStatus().name());
+    }
 }
