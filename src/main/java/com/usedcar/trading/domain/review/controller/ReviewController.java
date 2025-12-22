@@ -3,16 +3,13 @@ package com.usedcar.trading.domain.review.controller;
 import com.usedcar.trading.domain.review.entity.Review;
 import com.usedcar.trading.domain.review.service.ReviewService;
 import com.usedcar.trading.domain.user.entity.User;
-import com.usedcar.trading.domain.user.repository.UserRepository;
-import jakarta.servlet.http.HttpSession;
+import com.usedcar.trading.global.auth.security.PrincipalDetails;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -26,17 +23,15 @@ import java.util.List;
 public class ReviewController {
 
     private final ReviewService reviewService;
-    private final UserRepository userRepository;
 
-    /**
-     * 리뷰 작성 폼
-     */
+
+    // 리뷰 작성 폼
     @GetMapping("/write/{transactionId}")
     public String reviewForm(@PathVariable Long transactionId,
                              Model model,
-                             @AuthenticationPrincipal Object principal) {
-        User user = findUser(principal);
-        if (user == null) {
+                             @AuthenticationPrincipal PrincipalDetails principal) {
+
+        if (principal == null) {
             return "redirect:/login";
         }
 
@@ -44,19 +39,20 @@ public class ReviewController {
         return "review/write";
     }
 
-    /**
-     * 리뷰 작성 처리 [REV-001]
-     */
+
+    // 리뷰 작성
     @PostMapping("/write")
     public String createReview(@RequestParam Long transactionId,
                                @RequestParam int rating,
                                @RequestParam(required = false) String content,
-                               @AuthenticationPrincipal Object principal,
+                               @AuthenticationPrincipal PrincipalDetails principal,
                                RedirectAttributes redirectAttributes) {
-        User user = findUser(principal);
-        if (user == null) {
+
+        if (principal == null) {
             return "redirect:/login";
         }
+
+        User user = principal.getUser();
 
         try {
             reviewService.createReview(transactionId, user.getUserId(), rating, content);
@@ -68,19 +64,15 @@ public class ReviewController {
         return "redirect:/mypage/purchases";
     }
 
-    /**
-     * 리뷰 상세 조회 [REV-002]
-     */
+    // 리뷰 조회
     @GetMapping("/{id}")
     public String reviewDetail(@PathVariable Long id, Model model) {
         Review review = reviewService.getReview(id);
         model.addAttribute("review", review);
         return "review/detail";
     }
-
-    /**
-     * 업체 리뷰 목록
-     */
+    
+    // 업체 리뷰 목록
     @GetMapping("/company/{companyId}")
     public String companyReviews(@PathVariable Long companyId, Model model) {
         List<Review> reviews = reviewService.getCompanyReviews(companyId);
@@ -95,17 +87,17 @@ public class ReviewController {
         return "review/company-reviews";
     }
 
-    /**
-     * 내가 작성한 리뷰 목록
-     */
+    // 내가 작성한 리뷰 목록
     @GetMapping("/my")
     public String myReviews(Model model,
-                            @AuthenticationPrincipal Object principal,
+                            @AuthenticationPrincipal PrincipalDetails principal,
                             @PageableDefault(size = 5, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
-        User user = findUser(principal);
-        if (user == null) {
+
+        if (principal == null) {
             return "redirect:/login";
         }
+
+        User user = principal.getUser();
 
         Page<Review> reviewPage = reviewService.getUserReviews(user.getUserId(), pageable);
 
@@ -123,17 +115,5 @@ public class ReviewController {
         model.addAttribute("totalPages", totalPages);
 
         return "review/my-reviews";
-    }
-
-    private User findUser(Object principal) {
-        if (principal instanceof UserDetails) {
-            String email = ((UserDetails) principal).getUsername();
-            return userRepository.findByEmail(email).orElse(null);
-        } else if (principal instanceof OAuth2User) {
-            OAuth2User oauthUser = (OAuth2User) principal;
-            String providerId = String.valueOf(oauthUser.getAttributes().get("id"));
-            return userRepository.findByProviderId(providerId).orElse(null);
-        }
-        return null;
     }
 }
