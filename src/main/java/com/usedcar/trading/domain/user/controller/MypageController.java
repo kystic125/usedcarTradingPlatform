@@ -6,21 +6,18 @@ import com.usedcar.trading.domain.favorite.service.FavoriteService;
 import com.usedcar.trading.domain.review.service.ReviewService;
 import com.usedcar.trading.domain.transaction.entity.Transaction;
 import com.usedcar.trading.domain.transaction.repository.TransactionRepository;
-import com.usedcar.trading.domain.user.entity.Provider;
 import com.usedcar.trading.domain.user.entity.Role;
 import com.usedcar.trading.domain.user.entity.User;
-import com.usedcar.trading.domain.user.repository.UserRepository;
 import com.usedcar.trading.domain.user.service.UserService;
 import com.usedcar.trading.domain.vehicle.entity.VehicleStatus;
 import com.usedcar.trading.domain.vehicle.repository.VehicleRepository;
+import com.usedcar.trading.global.auth.security.PrincipalDetails;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,14 +25,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 
 @Controller
 @RequiredArgsConstructor
 public class MypageController {
 
-    private final UserRepository userRepository;
     private final UserService userService;
     private final VehicleRepository vehicleRepository;
     private final CompanyRepository companyRepository;
@@ -44,41 +38,9 @@ public class MypageController {
     private final ReviewService reviewService;
 
     @GetMapping("/mypage")
-    public String myPage(Model model, @AuthenticationPrincipal Object principal) {
-        User user = null;
+    public String myPage(Model model, @AuthenticationPrincipal PrincipalDetails principal) {
 
-        // 로그인한 사용자 이메일 찾기
-        if (principal instanceof UserDetails) {
-            // 일반 로그인 (UserDetails)
-            String email = ((UserDetails) principal).getUsername();
-            user = userRepository.findByEmail(email)
-                    .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
-        } else if (principal instanceof OAuth2User) {
-            // 카카오 로그인 (OAuth2User)
-            OAuth2User oauthUser = (OAuth2User) principal;
-            String providerId = String.valueOf(oauthUser.getAttributes().get("id"));
-
-            Optional<User> byProviderId = userRepository.findByProviderId(providerId);
-
-            if (byProviderId.isPresent()) {
-                user = byProviderId.get();
-            } else {
-                Long dbId = (Long) oauthUser.getAttributes().get("db_id");
-
-                if (dbId != null) {
-                    user = userRepository.findById(dbId)
-                            .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다. (DB ID: " + dbId + ")"));
-                } else {
-                    // 만약 db_id도 없다면? (거의 없겠지만) -> 최후의 수단으로 이메일 시도
-                    java.util.Map<String, Object> kakaoAccount = (java.util.Map<String, Object>) oauthUser.getAttributes().get("kakao_account");
-                    String email = (String) kakaoAccount.get("email");
-                    if (email == null) email = providerId + "@kakao.com";
-
-                    user = userRepository.findByEmail(email)
-                            .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다. (계정 유실)"));
-                }
-            }
-        }
+        User user = principal.getUser();
 
         model.addAttribute("user", user);
 
@@ -119,39 +81,37 @@ public class MypageController {
 
     // 1. 정보 수정 페이지 보여주기
     @GetMapping("/mypage/settings/edit")
-    public String editPage(Model model, @AuthenticationPrincipal Object principal) {
-        User user = findUser(principal);
+    public String editPage(Model model, @AuthenticationPrincipal PrincipalDetails principal) {
+        User user = principal.getUser();
         model.addAttribute("user", user);
         return "user-edit-profile";
     }
 
     @GetMapping("/mypage/settings/social")
-    public String settingsSocial(Model model, @AuthenticationPrincipal Object principal) {
-        User user = findUser(principal);
+    public String settingsSocial(Model model, @AuthenticationPrincipal PrincipalDetails principal) {
+        User user = principal.getUser();
         model.addAttribute("user", user);
         return "user-edit-social";
     }
 
     @GetMapping("/mypage/settings/dealer")
-    public String settingsDealer(Model model, @AuthenticationPrincipal Object principal) {
-        User user = findUser(principal);
+    public String settingsDealer(Model model, @AuthenticationPrincipal PrincipalDetails principal) {
+        User user = principal.getUser();
         model.addAttribute("user", user);
         return "user-edit-dealer";
     }
 
     @GetMapping("/mypage/settings/delete")
-    public String settingsDelete(Model model, @AuthenticationPrincipal Object principal) {
-        User user = findUser(principal);
+    public String settingsDelete(Model model, @AuthenticationPrincipal PrincipalDetails principal) {
+        User user = principal.getUser();
         model.addAttribute("user", user);
         return "user-edit-delete";
     }
 
-    /**
-     * 회원 탈퇴 처리 [AUTH-007]
-     */
+    // 회원 탈퇴 처리
     @PostMapping("/mypage/withdraw")
-    public String withdrawProcess(@AuthenticationPrincipal Object principal) {
-        User user = findUser(principal);
+    public String withdrawProcess(@AuthenticationPrincipal PrincipalDetails principal) {
+        User user = principal.getUser();
         userService.withdrawUser(user.getUserId());
         return "redirect:/logout";
     }
@@ -160,9 +120,9 @@ public class MypageController {
     @PostMapping("/mypage/update")
     public String updateProcess(@RequestParam String email,
                                 @RequestParam String phone,
-                                @AuthenticationPrincipal Object principal) {
+                                @AuthenticationPrincipal PrincipalDetails principal) {
 
-        User user = findUser(principal);
+        User user = principal.getUser();
 
         boolean isEmailChanged = !user.getEmail().equals(email);
 
@@ -183,9 +143,9 @@ public class MypageController {
     // 구매 내역 조회
     @GetMapping("/mypage/purchases")
     public String myPurchases(Model model,
-                              @AuthenticationPrincipal Object principal,
+                              @AuthenticationPrincipal PrincipalDetails principal,
                               @PageableDefault(size = 10) Pageable pageable) {
-        User user = findUser(principal);
+        User user = principal.getUser();
 
         List<Transaction> allTransactions = transactionRepository.findByBuyerOrderByCreatedAtDesc(user);
 
@@ -209,19 +169,5 @@ public class MypageController {
         model.addAttribute("totalPages", totalPages);
 
         return "mypage/purchase-list";
-    }
-
-    private User findUser(Object principal) {
-        if (principal instanceof UserDetails) {
-            String email = ((UserDetails) principal).getUsername();
-            return userRepository.findByEmail(email).orElseThrow();
-        } else if (principal instanceof OAuth2User) {
-            OAuth2User oauthUser = (OAuth2User) principal;
-            Long dbId = (Long) oauthUser.getAttributes().get("db_id");
-            if (dbId != null) return userRepository.findById(dbId).orElseThrow();
-            String providerId = String.valueOf(oauthUser.getAttributes().get("id"));
-            return userRepository.findByProviderId(providerId).orElseThrow();
-        }
-        throw new IllegalArgumentException("로그인 정보 없음");
     }
 }
