@@ -3,11 +3,9 @@ package com.usedcar.trading.domain.favorite.controller;
 import com.usedcar.trading.domain.favorite.dto.FavoriteResponse;
 import com.usedcar.trading.domain.favorite.service.FavoriteService;
 import com.usedcar.trading.domain.user.entity.User;
-import com.usedcar.trading.domain.user.repository.UserRepository;
+import com.usedcar.trading.global.auth.security.PrincipalDetails;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -21,16 +19,16 @@ import java.util.List;
 public class FavoriteController {
 
     private final FavoriteService favoriteService;
-    private final UserRepository userRepository;
 
     // 내 찜 목록
     @GetMapping
-    public String myFavorites(Model model, @AuthenticationPrincipal Object principal) {
-        User user = findUser(principal);
+    public String myFavorites(Model model, @AuthenticationPrincipal PrincipalDetails principal) {
 
-        if (user == null) {
+        if (principal == null) {
             return "redirect:/login";
         }
+
+        User user = principal.getUser();
 
         List<FavoriteResponse> favorites = favoriteService.getMyFavorites(user.getUserId()).stream()
                 .map(FavoriteResponse::toResponse)
@@ -47,10 +45,14 @@ public class FavoriteController {
     // 찜 추가
     @PostMapping("/add/{vehicleId}")
     public String addFavorite(@PathVariable Long vehicleId,
-                              @AuthenticationPrincipal Object principal,
+                              @AuthenticationPrincipal PrincipalDetails principal,
                               RedirectAttributes redirectAttributes) {
-        User user = findUser(principal);
-        if (user == null) return "redirect:/login";
+
+        if (principal == null) {
+            return "redirect:/login";
+        }
+
+        User user = principal.getUser();
 
         favoriteService.addFavorite(user.getUserId(), vehicleId);
         redirectAttributes.addFlashAttribute("message", "찜 목록에 추가되었습니다.");
@@ -61,11 +63,13 @@ public class FavoriteController {
     // 찜 삭제
     @PostMapping("/remove/{vehicleId}")
     public String removeFavorite(@PathVariable Long vehicleId,
-                                 @AuthenticationPrincipal Object principal,
+                                 @AuthenticationPrincipal PrincipalDetails principal,
                                  RedirectAttributes redirectAttributes,
                                  @RequestParam(required = false) String returnUrl) {
-        User user = findUser(principal);
-        if (user == null) return "redirect:/login";
+
+        if (principal == null) return "redirect:/login";
+
+        User user = principal.getUser();
 
         favoriteService.removeFavorite(user.getUserId(), vehicleId);
         redirectAttributes.addFlashAttribute("message", "찜 목록에서 삭제되었습니다.");
@@ -79,11 +83,13 @@ public class FavoriteController {
     // 찜 토글
     @PostMapping("/toggle/{vehicleId}")
     @ResponseBody
-    public String toggleFavorite(@PathVariable Long vehicleId, @AuthenticationPrincipal Object principal) {
-        User user = findUser(principal);
-        if (user == null) {
+    public String toggleFavorite(@PathVariable Long vehicleId, @AuthenticationPrincipal PrincipalDetails principal) {
+
+        if (principal == null) {
             return "login required";
         }
+
+        User user = principal.getUser();
 
         if (favoriteService.isFavorite(user.getUserId(), vehicleId)) {
             favoriteService.removeFavorite(user.getUserId(), vehicleId);
@@ -97,26 +103,9 @@ public class FavoriteController {
     // 찜 여부 확인
     @GetMapping("/check/{vehicleId}")
     @ResponseBody
-    public boolean checkFavorite(@PathVariable Long vehicleId, @AuthenticationPrincipal Object principal) {
-        User user = findUser(principal);
-
-        if (user == null) {
-            return false;
-        }
+    public boolean checkFavorite(@PathVariable Long vehicleId, @AuthenticationPrincipal PrincipalDetails principal) {
+        User user = principal.getUser();
 
         return favoriteService.isFavorite(user.getUserId(), vehicleId);
-    }
-
-    private User findUser(Object principal) {
-        if (principal instanceof UserDetails) {
-            String email = ((UserDetails) principal).getUsername();
-            return userRepository.findByEmail(email).orElse(null);
-        } else if (principal instanceof OAuth2User) {
-            // 소셜 로그인 처리 (필요 시 구체화)
-            OAuth2User oauthUser = (OAuth2User) principal;
-            String providerId = String.valueOf(oauthUser.getAttributes().get("id")); // 카카오 ID 예시
-            return userRepository.findByProviderId(providerId).orElse(null);
-        }
-        return null;
     }
 }
