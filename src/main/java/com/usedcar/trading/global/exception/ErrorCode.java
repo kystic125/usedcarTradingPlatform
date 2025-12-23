@@ -18,6 +18,7 @@ public enum ErrorCode {
     EXPIRED_TOKEN(HttpStatus.UNAUTHORIZED, "AUTH_003", "만료된 토큰입니다"),
     FORBIDDEN(HttpStatus.FORBIDDEN, "AUTH_004", "접근 권한이 없습니다"),
     INACTIVE_USER(HttpStatus.FORBIDDEN, "AUTH_005", "비활성화된 계정입니다"),
+    UNAUTHORIZED_SELLER_ROLE(HttpStatus.FORBIDDEN, "AUTH_006", "판매자 권한이 없습니다"),
 
     // User
     USER_NOT_FOUND(HttpStatus.NOT_FOUND, "USER_001", "존재하지 않는 사용자입니다"),
@@ -29,6 +30,7 @@ public enum ErrorCode {
 
     // Employee
     EMPLOYEE_NOT_FOUND(HttpStatus.NOT_FOUND, "EMPLOYEE_001", "존재하지 않는 직원입니다"),
+    EMPLOYEE_COMPANY_NOT_FOUND(HttpStatus.NOT_FOUND, "EMPLOYEE_002", "소속된 회사가 없습니다"),
 
     // Vehicle
     VEHICLE_NOT_FOUND(HttpStatus.NOT_FOUND, "VEHICLE_001", "존재하지 않는 매물입니다"),
