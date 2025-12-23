@@ -4,21 +4,19 @@ import com.usedcar.trading.domain.company.entity.Company;
 import com.usedcar.trading.domain.company.repository.CompanyRepository;
 import com.usedcar.trading.domain.employee.entity.Employee;
 import com.usedcar.trading.domain.employee.repository.EmployeeRepository;
-import com.usedcar.trading.domain.transaction.entity.Transaction;
 import com.usedcar.trading.domain.transaction.entity.TransactionStatus;
 import com.usedcar.trading.domain.user.entity.Role;
 import com.usedcar.trading.domain.user.entity.User;
-import com.usedcar.trading.domain.user.repository.UserRepository;
 import com.usedcar.trading.domain.vehicle.entity.Vehicle;
 import com.usedcar.trading.domain.vehicle.entity.VehicleStatus;
 import com.usedcar.trading.domain.vehicle.repository.VehicleRepository;
+import com.usedcar.trading.global.auth.security.PrincipalDetails;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -36,16 +34,15 @@ public class SalesController {
 
     private final VehicleRepository vehicleRepository;
     private final CompanyRepository companyRepository;
-    private final UserRepository userRepository;
     private final EmployeeRepository employeeRepository;
 
     @GetMapping
     public String salesDashboard(Model model,
-                                 @AuthenticationPrincipal Object principal,
+                                 @AuthenticationPrincipal PrincipalDetails principal,
                                  @RequestParam(required = false, defaultValue = "ALL") String filter,
                                  @PageableDefault(size = 10) Pageable pageable) {
 
-        User user = findUser(principal);
+        User user = principal.getUser();
 
         List<Vehicle> allVehicles;
 
@@ -122,13 +119,5 @@ public class SalesController {
     private boolean hasRequestedTransaction(Vehicle v) {
         return v.getTransactions().stream()
                 .anyMatch(t -> t.getTransactionStatus() == TransactionStatus.REQUESTED);
-    }
-
-    private User findUser(Object principal) {
-        if (principal instanceof UserDetails) {
-            String email = ((UserDetails) principal).getUsername();
-            return userRepository.findByEmail(email).orElseThrow();
-        }
-        throw new IllegalArgumentException("로그인이 필요합니다.");
     }
 }
