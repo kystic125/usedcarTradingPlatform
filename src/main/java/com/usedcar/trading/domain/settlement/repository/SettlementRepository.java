@@ -4,6 +4,8 @@ import com.usedcar.trading.domain.company.entity.Company;
 import com.usedcar.trading.domain.settlement.entity.Settlement;
 import com.usedcar.trading.domain.settlement.entity.SettlementStatus;
 import com.usedcar.trading.domain.transaction.entity.Transaction;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -46,4 +48,7 @@ public interface SettlementRepository extends JpaRepository<Settlement, Long> {
 
     // 업체 + 기간별 정산 목록 조회
     List<Settlement> findByCompanyAndSettledAtBetween(Company company, LocalDateTime start, LocalDateTime end);
+
+    // 업체별 정산 목록 (페이징)
+    Page<Settlement> findByCompany(Company company, Pageable pageable);
 }

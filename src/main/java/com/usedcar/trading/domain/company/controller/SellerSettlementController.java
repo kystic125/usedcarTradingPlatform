@@ -1,17 +1,11 @@
 package com.usedcar.trading.domain.company.controller;
 
-import com.usedcar.trading.domain.company.entity.Company;
-import com.usedcar.trading.domain.company.repository.CompanyRepository;
-import com.usedcar.trading.domain.employee.entity.Employee;
-import com.usedcar.trading.domain.employee.repository.EmployeeRepository;
 import com.usedcar.trading.domain.settlement.entity.Settlement;
-import com.usedcar.trading.domain.settlement.repository.SettlementRepository;
-import com.usedcar.trading.domain.user.entity.Role;
+import com.usedcar.trading.domain.settlement.service.SettlementService;
 import com.usedcar.trading.domain.user.entity.User;
 import com.usedcar.trading.global.auth.security.PrincipalDetails;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -21,42 +15,20 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import java.util.List;
-
 @Controller
 @RequestMapping("/company/settlements")
 @RequiredArgsConstructor
 public class SellerSettlementController {
 
-    private final SettlementRepository settlementRepository;
-    private final CompanyRepository companyRepository;
-    private final EmployeeRepository employeeRepository;
+    private final SettlementService settlementService;
 
     @GetMapping
     public String settlementList(Model model,
                                  @AuthenticationPrincipal PrincipalDetails principal,
                                  @PageableDefault(size = 10, sort = "settledAt", direction = Sort.Direction.DESC) Pageable pageable) {
         User user = principal.getUser();
-        Company company;
 
-        if (user.getRole() == Role.COMPANY_OWNER) {
-            company = companyRepository.findByOwner_UserId(user.getUserId())
-                    .orElseThrow(() -> new IllegalArgumentException("업체 정보가 없습니다."));
-        } else if (user.getRole() == Role.COMPANY_EMPLOYEE) {
-            company = employeeRepository.findByUserUserId(user.getUserId())
-                    .map(Employee::getCompany)
-                    .orElseThrow(() -> new IllegalArgumentException("소속된 회사가 없습니다."));
-        } else {
-            throw new IllegalStateException("판매자 권한이 없습니다.");
-        }
-
-        List<Settlement> allSettlements = settlementRepository.findByCompany(company);
-
-        int start = (int) pageable.getOffset();
-        int end = Math.min((start + pageable.getPageSize()), allSettlements.size());
-        List<Settlement> pagedList = (start > allSettlements.size()) ? List.of() : allSettlements.subList(start, end);
-
-        Page<Settlement> settlementPage = new PageImpl<>(pagedList, pageable, allSettlements.size());
+        Page<Settlement> settlementPage = settlementService.getMySettlements(user, pageable);
 
         model.addAttribute("settlements", settlementPage);
 
