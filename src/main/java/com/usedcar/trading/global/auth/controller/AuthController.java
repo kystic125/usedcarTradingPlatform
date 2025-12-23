@@ -1,11 +1,11 @@
 package com.usedcar.trading.global.auth.controller;
 
 import com.usedcar.trading.domain.user.dto.SignupRequest;
+import com.usedcar.trading.domain.user.entity.User;
+import com.usedcar.trading.global.auth.security.PrincipalDetails;
 import com.usedcar.trading.global.auth.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -43,21 +43,9 @@ public class AuthController {
 
     // 회원 탈퇴 처리
     @PostMapping("/auth/withdraw")
-    public String withdraw(@AuthenticationPrincipal Object principal) {
-        String email = "";
+    public String withdraw(@AuthenticationPrincipal PrincipalDetails principal) {
 
-        if (principal instanceof UserDetails) {
-            email = ((UserDetails) principal).getUsername();
-        } else if (principal instanceof OAuth2User) {
-            OAuth2User oauthUser = (OAuth2User) principal;
-            java.util.Map<String, Object> kakaoAccount = (java.util.Map<String, Object>) oauthUser.getAttributes().get("kakao_account");
-            email = (String) kakaoAccount.get("email");
-            if (email == null) {
-                String providerId = String.valueOf(oauthUser.getAttributes().get("id"));
-                email = providerId + "@kakao.com";
-            }
-        }
-
+        String email = principal.getUser().getEmail();
         authService.withdraw(email);
 
         return "redirect:/logout";
@@ -65,16 +53,14 @@ public class AuthController {
 
     // 연동 해제 요청
     @PostMapping("/auth/unlink")
-    public String unlinkSocial(@AuthenticationPrincipal Object principal) {
+    public String unlinkSocial(@AuthenticationPrincipal PrincipalDetails principal) {
 
-        if (principal instanceof OAuth2User) {
-            OAuth2User oauthUser = (OAuth2User) principal;
-            String providerId = String.valueOf(oauthUser.getAttributes().get("id"));
+        User user = principal.getUser();
 
-            authService.unlinkSocialByProviderId(providerId);
-        } else if (principal instanceof UserDetails) {
-            String email = ((UserDetails) principal).getUsername();
-            authService.unlinkSocial(email);
+        if (user.getProviderId() != null) {
+            authService.unlinkSocialByProviderId(user.getProviderId());
+        } else {
+            authService.unlinkSocial(user.getEmail());
         }
 
         return "redirect:/mypage";
