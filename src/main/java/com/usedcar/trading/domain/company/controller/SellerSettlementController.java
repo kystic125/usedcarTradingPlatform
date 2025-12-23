@@ -8,7 +8,7 @@ import com.usedcar.trading.domain.settlement.entity.Settlement;
 import com.usedcar.trading.domain.settlement.repository.SettlementRepository;
 import com.usedcar.trading.domain.user.entity.Role;
 import com.usedcar.trading.domain.user.entity.User;
-import com.usedcar.trading.domain.user.repository.UserRepository;
+import com.usedcar.trading.global.auth.security.PrincipalDetails;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -16,7 +16,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -32,13 +31,12 @@ public class SellerSettlementController {
     private final SettlementRepository settlementRepository;
     private final CompanyRepository companyRepository;
     private final EmployeeRepository employeeRepository;
-    private final UserRepository userRepository;
 
     @GetMapping
     public String settlementList(Model model,
-                                 @AuthenticationPrincipal Object principal,
+                                 @AuthenticationPrincipal PrincipalDetails principal,
                                  @PageableDefault(size = 10, sort = "settledAt", direction = Sort.Direction.DESC) Pageable pageable) {
-        User user = findUser(principal);
+        User user = principal.getUser();
         Company company;
 
         if (user.getRole() == Role.COMPANY_OWNER) {
@@ -74,13 +72,5 @@ public class SellerSettlementController {
         model.addAttribute("totalPages", totalPages);
 
         return "company/settlement-list";
-    }
-
-    private User findUser(Object principal) {
-        if (principal instanceof UserDetails) {
-            String email = ((UserDetails) principal).getUsername();
-            return userRepository.findByEmail(email).orElseThrow();
-        }
-        throw new IllegalArgumentException("로그인이 필요합니다.");
     }
 }
